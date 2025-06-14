@@ -22,15 +22,6 @@ title: Home
 
 <div class="row mt-5">
     <div class="col-md-12">
-        <h2>Current Research</h2>
-        <p>
-            (May 2025- present) Developing and analyzing compartmental models with a focus on stability analysis and disease control strategies in a summer REU project with 4 others under professor Chuntian Wang's group.
-        </p>
-    </div>
-</div>
-
-<div class="row mt-5">
-    <div class="col-md-12">
         <h2>Experience</h2>
         <div class="card mb-3">
             <div class="card-body">

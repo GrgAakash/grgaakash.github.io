@@ -18,6 +18,11 @@ title: Research
                         <p class="text-muted">May 2025 - Present</p>
                         <p>Developing and analyzing compartmental models with a focus on stability analysis and disease control strategies in a summer REU project with 4 others under professor Chuntian Wang's group.</p>
                     </div>
+                    <div class="research-item mb-4">
+                        <h4>Combinatorial Nature of q,t Catalan Polynomials</h4>
+                        <p class="text-muted">January 2025 - Present</p>
+                        <p>Working on the combinatorial nature of q,t Catalan polynomials under the guidance of Professor Kyungyong Lee.</p>
+                    </div>
                 </div>
             </div>
 
