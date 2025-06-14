@@ -34,7 +34,7 @@ title: Projects
                                 <p>The SIHR model is described by the following system of ordinary differential equations:</p>
                                 <div class="equations">
                                     <p>\[\frac{dS}{dt} = -p_1\beta SI\]</p>
-                                    <p>\[\frac{dI}{dt} = p_1\beta SI - p_2(\phi\gamma_1 + (1-\phi)\gamma_2)I\]</p>
+                                    <p>\[\frac{dI}{dt} = p_1\beta SI - p_2(\p_h\gamma_1 + (1-\p_h)\gamma_2)I\]</p>
                                     <p>\[\frac{dH}{dt} = p_2\phi\gamma_1I - p_3\alpha H\]</p>
                                     <p>\[\frac{dR}{dt} = p_2(1-\phi)\gamma_2I + p_3\alpha H\]</p>
                                 </div>
@@ -45,11 +45,11 @@ title: Projects
                                     <li>\(H\): Hospitalized population</li>
                                     <li>\(R\): Recovered population</li>
                                     <li>\(\beta\): Transmission rate</li>
-                                    <li>\(\gamma_1\): Recovery rate from hospital</li>
-                                    <li>\(\gamma_2\): Recovery rate without hospitalization</li>
-                                    <li>\(\phi\): Probability of hospitalization</li>
-                                    <li>\(\alpha\): Hospital recovery rate</li>
-                                    <li>\(p_1, p_2, p_3\): Control parameters</li>
+                                    <li>\(\gamma_1\): I to H rate</li>
+                                    <li>\(\gamma_2\): I to R rate</li>
+                                    <li>\(\p_h\): Probability of I to H</li>
+                                    <li>\(\alpha\): H to R rate</li>
+                                    <li>\(p_1, p_2, p_3\): Probability of leaving state  S,I,R respectively.</li>
                                 </ul>
                             </div>
                             <p><a href="sihrvsODE-model.html" target="_blank" class="btn btn-primary">View Demo</a></p>
