@@ -67,7 +67,7 @@ title: Projects
                         <p class="text-muted">2025</p>
                         <ul>
                             <li><a href="https://github.com/GrgAakash/GT-S25" target="_blank">Group Theory</a> - Problems which I find interesting. Level Undergrad.</li>
-                            <li><a href="https://github.com/GrgAakash/Top-S25" target="_blank">Topology</a> - Problems which I find interesting. Level Undergrad.</li>
+                            <li><a href="https://github.com/GrgAakash/Top-S25." target="_blank">Topology</a> - Problems which I find interesting. Level Undergrad.</li>
                             <li><a href="https://github.com/GrgAakash/MT-S25" target="_blank">Measure Theory</a> -Problems which I find interesting. Level Grad.</li>
                             <li><a href="https://github.com/GrgAakash/MathGREsubjectT" target="_blank">Math GRE Preparation</a> - Subject test preparation materials based on my own preparation.</li>
                         </ul>
