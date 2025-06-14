@@ -24,7 +24,7 @@ title: Projects
                             <li>Interactive controls for simulation speed and analysis</li>
                         </ul>
                         <p><strong>Technologies used:</strong> HTML5, JavaScript, Chart.js, CSS3</p>
-                        <p><a href="sihr-model.html" target="_blank">View Demo</a></p>
+                        <p><a href="sihrvsODE-model.html" target="_blank">View Demo</a></p>
                     </div>
 
                     <div class="project-item mb-4">
