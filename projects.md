@@ -15,7 +15,7 @@ title: Projects
                 <div class="card-body">
                     <div class="project-item mb-4">
                         <h4>SIHR Model Visualization</h4>
-                        <p class="text-muted">2024</p>
+                        <p class="text-muted">2025</p>
                         <p>An interactive visualization tool for analyzing SIHR (Susceptible-Infected-Hospitalized-Recovered) epidemiological models. Features include:</p>
                         <ul>
                             <li>Real-time parameter adjustment and visualization</li>
@@ -30,19 +30,21 @@ title: Projects
 
             <div class="card mb-4">
                 <div class="card-header">
-                    <h3>Personal Study Ventures</h3>
+                    <h3>Personal Academic Ventures</h3>
                 </div>
                 <div class="card-body">
+                
+
                     <div class="project-item mb-4">
-                        <h4>Mathematical Explorations</h4>
-                        <p class="text-muted">Ongoing</p>
-                        <p>A collection of personal study projects and implementations in various mathematical areas:</p>
+                        <h4>Study Notes and Materials</h4>
+                        <p class="text-muted">2025</p>
+                        <p>Comprehensive study materials and notes for various mathematical topics:</p>
                         <ul>
-                            <li>Number Theory algorithms and visualizations</li>
-                            <li>Graph Theory implementations</li>
-                            <li>Combinatorial problem solvers</li>
+                            <li><a href="https://github.com/GrgAakash/GT-S25" target="_blank">Graph Theory Notes</a> - Detailed notes and problems</li>
+                            <li><a href="https://github.com/GrgAakash/Top-S25" target="_blank">Topology Notes</a> - Study materials and exercises</li>
+                            <li><a href="https://github.com/GrgAakash/MT-S25" target="_blank">Measure Theory Notes</a> - Comprehensive course notes</li>
+                            <li><a href="https://github.com/GrgAakash/MathGREsubjectT" target="_blank">Math GRE Preparation</a> - Subject test preparation materials</li>
                         </ul>
-                        <p><strong>Skills:</strong> Mathematical modeling, Algorithm design, Programming</p>
                     </div>
                 </div>
             </div>
