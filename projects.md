@@ -35,8 +35,8 @@ title: Projects
                                 <div class="equations">
                                     <p>\[\frac{dS}{dt} = -p_1\beta SI\]</p>
                                     <p>\[\frac{dI}{dt} = p_1\beta SI - p_2(p_h\gamma_1 + (1-p_h)\gamma_2)I\]</p>
-                                    <p>\[\frac{dH}{dt} = p_2\phi\gamma_1I - p_3\alpha H\]</p>
-                                    <p>\[\frac{dR}{dt} = p_2(1-\phi)\gamma_2I + p_3\alpha H\]</p>
+                                    <p>\[\frac{dH}{dt} = p_2p_h\gamma_1I - p_3\alpha H\]</p>
+                                    <p>\[\frac{dR}{dt} = p_2(1-p_h)\gamma_2I + p_3\alpha H\]</p>
                                 </div>
                                 <p>where:</p>
                                 <ul>
