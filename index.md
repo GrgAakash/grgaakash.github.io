@@ -8,9 +8,6 @@ title: Home
         <img src="{{ site.author.avatar }}" alt="{{ site.author.name }}" class="rounded-circle img-fluid mb-3" style="max-width: 200px;">
     </div>
     <div class="col-md-8">
-        <h1>{{ site.author.name }}</h1>
-        <h3>{{ site.author.bio }}</h3>
-        <p class="lead">Mathematics and Computer Science student with research interests in combinatorics and mathematical research.</p>
         <div class="mt-4">
             <a href="mailto:{{ site.email }}" class="btn btn-primary me-2">
                 <i class="fas fa-envelope"></i> Contact Me
@@ -25,26 +22,6 @@ title: Home
         <p>
             Accelerated Master's Program(AMP) student in Mathematics with minors in computer science and digital, public and professional writing.
         </p>
-    </div>
-</div>
-
-<div class="row mt-5">
-    <div class="col-md-12">
-        <h2>Current Research</h2>
-        <ul class="list-unstyled">
-            <li class="mb-3">
-                <strong>Combinatorial Nature of q,t Catalan Polynomials</strong>
-                <p>Working with Professor Kyungyong Lee (Jan 2025-present)</p>
-            </li>
-            <li class="mb-3">
-                <strong>Continued Fractions and a-Fibonacci Numbers</strong>
-                <p>Published work with Cheng-Han Pan on "Continued Fractions, a-Fibonacci numbers, and the middle b-noise" in Mathematics Exchange</p>
-            </li>
-            <li class="mb-3">
-                <strong>Game of Cycles on Maximal Plane Graphs</strong>
-                <p>Presented at CUNY Undergraduate Research Day 2024 and MathFest 2024</p>
-            </li>
-        </ul>
     </div>
 </div>
 
