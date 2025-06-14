@@ -1,48 +1,22 @@
-# Personal Website - grgaakash.github.io
+# Aakash Gurung's Academic Website
 
-This is my personal website hosted using GitHub Pages. The website serves as a portfolio and personal blog to showcase my work, skills, and experiences.
+This is my personal academic website built using Jekyll and hosted on GitHub Pages. The website showcases my academic profile, research work, publications, and achievements.
 
 ## Features
 
-- Responsive design
-- Portfolio section
-- About me section
-- Blog/Articles section
-- Contact information
-- Skills and expertise showcase
-
-## Technologies Used
-
-- HTML5
-- CSS3
-- JavaScript
-- Bootstrap 5 (for responsive design)
+- Academic profile and bio
+- Research projects and publications
+- Awards and honors
+- News and updates
+- Responsive design using Bootstrap
 
 ## Local Development
 
-To run this website locally:
-
-1. Clone the repository:
-   ```bash
-   git clone https://github.com/grgaakash/grgaakash.github.io.git
-   ```
-
-2. Open `index.html` in your web browser
-
-## Structure
-
-```
-.
-├── index.html          # Main landing page
-├── css/               # Stylesheets
-├── js/                # JavaScript files
-├── images/            # Image assets
-└── README.md          # Documentation
-```
-
-## Deployment
-
-The website is automatically deployed through GitHub Pages when changes are pushed to the main branch.
+1. Install Ruby and Jekyll
+2. Clone this repository
+3. Run `bundle install`
+4. Run `bundle exec jekyll serve`
+5. Visit `http://localhost:4000`
 
 ## License
 
