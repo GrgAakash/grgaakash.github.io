@@ -38,12 +38,12 @@ title: Research
                     </div>
                     <div class="research-item mb-4">
                         <h4>PolyMath Jr Project</h4>
-                        <p class="text-muted">2024</p>
+                        <p class="text-muted">2023</p>
                         <p>Worked under Dr. Victor H. Moll on analyzing and documenting integrals involving Bessel functions for the Gradshteyn and Ryzhik handbook. This research was presented at JMM 2024 and published in Scientia Series A: Mathematical Sciences.</p>
                     </div>
                     <div class="research-item mb-4">
                         <h4>Continued Fractions and a-Fibonacci Numbers</h4>
-                        <p class="text-muted">2024</p>
+                        <p class="text-muted">2023</p>
                         <p>Collaborated with Cheng-Han Pan on investigating the relationships between continued fractions, a-Fibonacci numbers, and the middle b-noise, resulting in a publication in Mathematics Exchange.</p>
                     </div>
                 </div>
@@ -75,12 +75,6 @@ title: Research
                         <ul>
                             <li>CUNY Undergraduate Research Day 2024</li>
                             <li>MathFest 2024</li>
-                        </ul>
-                    </div>
-                    <div class="presentation-item mb-4">
-                        <h4>The integrals in Gradshteyn and Ryzhik</h4>
-                        <ul>
-                            <li>Joint Mathematics Meetings (JMM) 2024</li>
                         </ul>
                     </div>
                 </div>
