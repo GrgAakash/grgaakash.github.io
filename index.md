@@ -15,7 +15,7 @@ title: Home
     <div class="col-md-12">
         <h2>About Me</h2>
         <p>
-            Accelerated Master's Program(AMP) student in Mathematics with minors in computer science and digital, public and professional writing.
+            The University of Alabama.Accelerated Master's Program(AMP) student in Mathematics with minors in computer science and digital, public and professional writing.
         </p>
     </div>
 </div>
