@@ -28,8 +28,8 @@ title: Home
                 <h5>Current Positions</h5>
                 <ul>
                     <li>Student Technology Assistant - Student Center, University of Alabama</li>
-                    <li>Mechanical Design Team Member - Astrobotics team of UA 2024-25</li>
                     <li>Peer Tutor - Mathematics Technology Learning Center</li>
+                    <li>Membership Associate - University Recreation Center</li>
                 </ul>
             </div>
         </div>
@@ -50,7 +50,7 @@ title: Home
         <h2>Skills</h2>
         <div class="card">
             <div class="card-body">
-                <p>C++, Java, SQL, Python, LaTeX, HTML, CSS, R</p>
+                <p>C++, Java, SQL, Python, LaTeX, HTML, CSS, Matlab</p>
             </div>
         </div>
     </div> 
