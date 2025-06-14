@@ -47,9 +47,9 @@ data:
   display:
     homepage:
       show_news: false
-      show_projects: true
+      show_projects: false
       show_publications: true
-      show_awards: true
+      show_awards: false
       num_news: 5
       num_projects: 6
       num_publications: 5
@@ -85,8 +85,6 @@ nav_order:
     url: /projects
   - name: Research
     url: /research
-  - name: Awards
-    url: /awards
   - name: CV
     url: /assets/cv.pdf
 
