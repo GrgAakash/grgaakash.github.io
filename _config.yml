@@ -85,8 +85,8 @@ nav_order:
     url: /projects
   - name: Research
     url: /research
-  - name: CV
-    url: /assets/cv.pdf
+  - name: Resume
+    url: /assets/resume.pdf
 
 exclude:
   - Gemfile
