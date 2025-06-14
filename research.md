@@ -28,20 +28,39 @@ title: Research
 
             <div class="card mb-4">
                 <div class="card-header">
+                    <h3>Past Research Experience</h3>
+                </div>
+                <div class="card-body">
+                    <div class="research-item mb-4">
+                        <h4>Game of Cycles on Maximal Plane Graphs</h4>
+                        <p class="text-muted">2024</p>
+                        <p>Research on combinatorial game theory, focusing on the analysis of Game of Cycles played on maximal plane graphs. This work was presented at CUNY Undergraduate Research Day 2024 and MathFest 2024.</p>
+                    </div>
+                    <div class="research-item mb-4">
+                        <h4>PolyMath Jr Project</h4>
+                        <p class="text-muted">2024</p>
+                        <p>Worked under Dr. Victor H. Moll on analyzing and documenting integrals involving Bessel functions for the Gradshteyn and Ryzhik handbook. This research was presented at JMM 2024 and published in Scientia Series A: Mathematical Sciences.</p>
+                    </div>
+                    <div class="research-item mb-4">
+                        <h4>Continued Fractions and a-Fibonacci Numbers</h4>
+                        <p class="text-muted">2024</p>
+                        <p>Collaborated with Cheng-Han Pan on investigating the relationships between continued fractions, a-Fibonacci numbers, and the middle b-noise, resulting in a publication in Mathematics Exchange.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card mb-4">
+                <div class="card-header">
                     <h3>Publications</h3>
                 </div>
                 <div class="card-body">
                     <div class="publication-item mb-4">
-                        <h4>Continued Fractions, a-Fibonacci numbers, and the middle b-noise</h4>
-                        <p class="text-muted">Mathematics Exchange 18 (2024), no. 1, 77–87</p>
-                        <p>Authors: Aakash Gurung and Cheng-Han Pan</p>
-                        <p><a href="https://doi.org/10.33043/r6a225bc" target="_blank">https://doi.org/10.33043/r6a225bc</a></p>
+                        <p>Aakash Gurung and Cheng-Han Pan, "Continued Fractions, a-Fibonacci numbers, and the middle b-noise," Mathematics Exchange 18 (2024), no. 1, 77–87. <br>
+                        <a href="https://doi.org/10.33043/r6a225bc" target="_blank">https://doi.org/10.33043/r6a225bc</a></p>
                     </div>
 
                     <div class="publication-item mb-4">
-                        <h4>The integrals in Gradshteyn and Ryzhik. Part 34: Bessel functions</h4>
-                        <p class="text-muted">Scientia Series A: Mathematical Sciences, Volume 34, March 19, 2024</p>
-                        <p>Part of PolyMath Jr project under Dr. Victor H. Moll</p>
+                        <p>Aakash Gurung, "The integrals in Gradshteyn and Ryzhik. Part 34: Bessel functions," Scientia Series A: Mathematical Sciences, Volume 34, March 19, 2024.</p>
                     </div>
                 </div>
             </div>
@@ -56,6 +75,12 @@ title: Research
                         <ul>
                             <li>CUNY Undergraduate Research Day 2024</li>
                             <li>MathFest 2024</li>
+                        </ul>
+                    </div>
+                    <div class="presentation-item mb-4">
+                        <h4>The integrals in Gradshteyn and Ryzhik</h4>
+                        <ul>
+                            <li>Joint Mathematics Meetings (JMM) 2024</li>
                         </ul>
                     </div>
                 </div>
