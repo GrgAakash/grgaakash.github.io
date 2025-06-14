@@ -15,9 +15,6 @@ title: Home
             <a href="mailto:{{ site.email }}" class="btn btn-primary me-2">
                 <i class="fas fa-envelope"></i> Contact Me
             </a>
-            <a href="{{ '/assets/cv.pdf' | relative_url }}" class="btn btn-outline-primary">
-                <i class="fas fa-file-pdf"></i> Download CV
-            </a>
         </div>
     </div>
 </div>
