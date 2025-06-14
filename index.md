@@ -8,11 +8,6 @@ title: Home
         <img src="{{ site.author.avatar }}" alt="{{ site.author.name }}" class="rounded-circle img-fluid mb-3" style="max-width: 200px;">
     </div>
     <div class="col-md-8">
-        <div class="mt-4">
-            <a href="mailto:{{ site.email }}" class="btn btn-primary me-2">
-                <i class="fas fa-envelope"></i> Contact Me
-            </a>
-        </div>
     </div>
 </div>
 
@@ -21,6 +16,15 @@ title: Home
         <h2>About Me</h2>
         <p>
             Accelerated Master's Program(AMP) student in Mathematics with minors in computer science and digital, public and professional writing.
+        </p>
+    </div>
+</div>
+
+<div class="row mt-5">
+    <div class="col-md-12">
+        <h2>Current Research</h2>
+        <p>
+            (May 2025- present) Developing and analyzing compartmental models with a focus on stability analysis and disease control strategies in a summer REU project with 4 others under professor Chuntian Wang's group.
         </p>
     </div>
 </div>

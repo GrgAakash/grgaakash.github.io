@@ -14,9 +14,9 @@ title: Research
                 </div>
                 <div class="card-body">
                     <div class="research-item mb-4">
-                        <h4>Combinatorial Nature of q,t Catalan Polynomials</h4>
-                        <p class="text-muted">January 2025 - Present</p>
-                        <p>Working under the guidance of Professor Kyungyong Lee at The University of Alabama</p>
+                        <h4>Compartmental Models and Disease Control Strategies</h4>
+                        <p class="text-muted">May 2025 - Present</p>
+                        <p>Developing and analyzing compartmental models with a focus on stability analysis and disease control strategies in a summer REU project with 4 others under professor Chuntian Wang's group.</p>
                     </div>
                 </div>
             </div>
@@ -52,11 +52,6 @@ title: Research
                             <li>CUNY Undergraduate Research Day 2024</li>
                             <li>MathFest 2024</li>
                         </ul>
-                    </div>
-
-                    <div class="presentation-item mb-4">
-                        <h4>The integrals in Gradshteyn and Ryzhik</h4>
-                        <p>Presented at Joint Mathematics Meetings (JMM) 2024</p>
                     </div>
                 </div>
             </div>
