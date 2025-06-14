@@ -81,8 +81,8 @@ google_analytics:
 nav_order:
   - name: Home
     url: /
-  - name: Publications
-    url: /publications
+  - name: Projects
+    url: /projects
   - name: Research
     url: /research
   - name: Awards
