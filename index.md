@@ -23,13 +23,7 @@ title: Home
     <div class="col-md-12">
         <h2>About Me</h2>
         <p>
-            I am currently pursuing a BS in Mathematics and Computer Science at The University of Alabama, 
-            with an expected graduation in May 2026. Previously, I studied at Juniata College where I was 
-            awarded the Samuel J. Steinberger, Jr. Memorial Award.
-        </p>
-        <p>
-            My research interests focus on combinatorics and mathematical research. I am currently working 
-            on the combinatorial nature of q,t Catalan polynomials under the guidance of Professor Kyungyong Lee.
+            Accelerated Master's Program(AMP) student in Mathematics with minors in computer science and digital, public and professional writing.
         </p>
     </div>
 </div>
