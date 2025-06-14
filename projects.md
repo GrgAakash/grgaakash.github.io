@@ -14,6 +14,20 @@ title: Projects
                 </div>
                 <div class="card-body">
                     <div class="project-item mb-4">
+                        <h4>SIHR Model Visualization</h4>
+                        <p class="text-muted">2024</p>
+                        <p>An interactive visualization tool for analyzing SIHR (Susceptible-Infected-Hospitalized-Recovered) epidemiological models. Features include:</p>
+                        <ul>
+                            <li>Real-time parameter adjustment and visualization</li>
+                            <li>Comparison between deterministic and stochastic models</li>
+                            <li>Pattern analysis and statistical insights</li>
+                            <li>Interactive controls for simulation speed and analysis</li>
+                        </ul>
+                        <p><strong>Technologies used:</strong> HTML5, JavaScript, Chart.js, CSS3</p>
+                        <p><a href="sihr-model.html" target="_blank">View Demo</a></p>
+                    </div>
+
+                    <div class="project-item mb-4">
                         <h4>Game of Cycles Simulator</h4>
                         <p class="text-muted">2024</p>
                         <p>A Python-based simulator for analyzing Game of Cycles on maximal plane graphs. Features include:</p>

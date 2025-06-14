@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SIHR Model Visualization</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #34495e;
+            --accent-color: #3498db;
+            --background-color: #f8f9fa;
+            --deterministic-color: #805ad5;
+            --stochastic-color: #3182ce;
+            --success-color: #38a169;
+            --error-color: #e53e3e;
+            --border-color: #e2e8f0;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: var(--background-color);
+            color: var(--primary-color);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+            display: grid;
+            grid-template-columns: 300px 1fr;
+            gap: 2rem;
+        }
+
+        .sidebar {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            height: fit-content;
+        }
+
+        .main-content {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+        }
+
+        .chart-container {
+            position: relative;
+            height: 500px;
+            margin-bottom: 1rem;
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: var(--secondary-color);
+        }
+
+        input[type="number"],
+        input[type="range"] {
+            width: 100%;
+            padding: 0.5rem;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            margin-bottom: 0.5rem;
+        }
+
+        input[type="range"] {
+            padding: 0;
+        }
+
+        button {
+            background-color: var(--accent-color);
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 500;
+            width: 100%;
+            margin-bottom: 0.5rem;
+            transition: background-color 0.2s;
+        }
+
+        button:hover {
+            background-color: #2980b9;
+        }
+
+        .button-group {
+            margin-top: 1.5rem;
+        }
+
+        .reset {
+            background-color: var(--error-color);
+        }
+
+        .reset:hover {
+            background-color: #c53030;
+        }
+
+        .parameter-display {
+            font-size: 0.875rem;
+            color: var(--secondary-color);
+            text-align: right;
+        }
+
+        h1 {
+            margin-top: 0;
+            color: var(--primary-color);
+            font-size: 1.75rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .description {
+            margin-bottom: 2rem;
+            color: var(--secondary-color);
+        }
+
+        .legend {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .legend-color {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="sidebar">
+            <h1>SIHR Model Parameters</h1>
+            <div class="form-group">
+                <label for="beta">Transmission Rate (β)</label>
+                <input type="range" id="beta" min="0" max="1" step="0.01" value="0.3">
+                <div class="parameter-display">β = <span id="betaValue">0.3</span></div>
+            </div>
+            <div class="form-group">
+                <label for="gamma">Recovery Rate (γ)</label>
+                <input type="range" id="gamma" min="0" max="1" step="0.01" value="0.1">
+                <div class="parameter-display">γ = <span id="gammaValue">0.1</span></div>
+            </div>
+            <div class="form-group">
+                <label for="delta">Hospitalization Rate (δ)</label>
+                <input type="range" id="delta" min="0" max="1" step="0.01" value="0.1">
+                <div class="parameter-display">δ = <span id="deltaValue">0.1</span></div>
+            </div>
+            <div class="form-group">
+                <label for="xi">Hospital Recovery Rate (ξ)</label>
+                <input type="range" id="xi" min="0" max="1" step="0.01" value="0.05">
+                <div class="parameter-display">ξ = <span id="xiValue">0.05</span></div>
+            </div>
+            <div class="form-group">
+                <label for="initialS">Initial Susceptible Population</label>
+                <input type="number" id="initialS" value="999" min="0">
+            </div>
+            <div class="form-group">
+                <label for="initialI">Initial Infected Population</label>
+                <input type="number" id="initialI" value="1" min="0">
+            </div>
+            <div class="button-group">
+                <button id="startBtn">Start Simulation</button>
+                <button id="pauseBtn">Pause</button>
+                <button id="resetBtn" class="reset">Reset</button>
+            </div>
+        </div>
+        <div class="main-content">
+            <div class="description">
+                <h1>SIHR Model Visualization</h1>
+                <p>This visualization demonstrates the SIHR (Susceptible-Infected-Hospitalized-Recovered) epidemiological model. 
+                   The model extends the classic SIR model by including a hospitalized compartment, making it more relevant for 
+                   studying diseases that may require hospitalization.</p>
+            </div>
+            <div class="legend">
+                <div class="legend-item">
+                    <div class="legend-color" style="background-color: #3498db;"></div>
+                    <span>Susceptible</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background-color: #e74c3c;"></div>
+                    <span>Infected</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background-color: #f1c40f;"></div>
+                    <span>Hospitalized</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background-color: #2ecc71;"></div>
+                    <span>Recovered</span>
+                </div>
+            </div>
+            <div class="chart-container">
+                <canvas id="sihrChart"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Initialize chart
+        const ctx = document.getElementById('sihrChart').getContext('2d');
+        const chart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: [],
+                datasets: [
+                    {
+                        label: 'Susceptible',
+                        data: [],
+                        borderColor: '#3498db',
+                        backgroundColor: 'rgba(52, 152, 219, 0.1)',
+                        fill: true
+                    },
+                    {
+                        label: 'Infected',
+                        data: [],
+                        borderColor: '#e74c3c',
+                        backgroundColor: 'rgba(231, 76, 60, 0.1)',
+                        fill: true
+                    },
+                    {
+                        label: 'Hospitalized',
+                        data: [],
+                        borderColor: '#f1c40f',
+                        backgroundColor: 'rgba(241, 196, 15, 0.1)',
+                        fill: true
+                    },
+                    {
+                        label: 'Recovered',
+                        data: [],
+                        borderColor: '#2ecc71',
+                        backgroundColor: 'rgba(46, 204, 113, 0.1)',
+                        fill: true
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    x: {
+                        display: true,
+                        title: {
+                            display: true,
+                            text: 'Time'
+                        }
+                    },
+                    y: {
+                        display: true,
+                        title: {
+                            display: true,
+                            text: 'Population'
+                        },
+                        min: 0
+                    }
+                },
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                }
+            }
+        });
+
+        // Initialize simulation variables
+        let animationId = null;
+        let timeStep = 0;
+        const dt = 0.1;
+        let S, I, H, R;
+
+        // Get DOM elements
+        const startBtn = document.getElementById('startBtn');
+        const pauseBtn = document.getElementById('pauseBtn');
+        const resetBtn = document.getElementById('resetBtn');
+        const betaSlider = document.getElementById('beta');
+        const gammaSlider = document.getElementById('gamma');
+        const deltaSlider = document.getElementById('delta');
+        const xiSlider = document.getElementById('xi');
+        const initialSInput = document.getElementById('initialS');
+        const initialIInput = document.getElementById('initialI');
+
+        // Update parameter display values
+        function updateParameterDisplay(id, value) {
+            document.getElementById(id + 'Value').textContent = value;
+        }
+
+        // Add event listeners for parameter changes
+        betaSlider.addEventListener('input', () => updateParameterDisplay('beta', betaSlider.value));
+        gammaSlider.addEventListener('input', () => updateParameterDisplay('gamma', gammaSlider.value));
+        deltaSlider.addEventListener('input', () => updateParameterDisplay('delta', deltaSlider.value));
+        xiSlider.addEventListener('input', () => updateParameterDisplay('xi', xiSlider.value));
+
+        // SIHR model differential equations
+        function dSdt(S, I, N, beta) {
+            return -beta * S * I / N;
+        }
+
+        function dIdt(S, I, N, beta, gamma, delta) {
+            return beta * S * I / N - gamma * I - delta * I;
+        }
+
+        function dHdt(I, H, delta, xi) {
+            return delta * I - xi * H;
+        }
+
+        function dRdt(I, H, gamma, xi) {
+            return gamma * I + xi * H;
+        }
+
+        // Initialize simulation
+        function initializeSimulation() {
+            S = Number(initialSInput.value);
+            I = Number(initialIInput.value);
+            H = 0;
+            R = 0;
+            timeStep = 0;
+            
+            chart.data.labels = [];
+            chart.data.datasets.forEach(dataset => dataset.data = []);
+            
+            updateChart();
+        }
+
+        // Update chart with current values
+        function updateChart() {
+            chart.data.labels.push(timeStep.toFixed(1));
+            chart.data.datasets[0].data.push(S);
+            chart.data.datasets[1].data.push(I);
+            chart.data.datasets[2].data.push(H);
+            chart.data.datasets[3].data.push(R);
+            
+            if (timeStep > 20) {
+                chart.data.labels.shift();
+                chart.data.datasets.forEach(dataset => dataset.data.shift());
+            }
+            
+            chart.update();
+        }
+
+        // Simulation step
+        function simulationStep() {
+            const N = S + I + H + R;
+            const beta = Number(betaSlider.value);
+            const gamma = Number(gammaSlider.value);
+            const delta = Number(deltaSlider.value);
+            const xi = Number(xiSlider.value);
+
+            const dS = dSdt(S, I, N, beta) * dt;
+            const dI = dIdt(S, I, N, beta, gamma, delta) * dt;
+            const dH = dHdt(I, H, delta, xi) * dt;
+            const dR = dRdt(I, H, gamma, xi) * dt;
+
+            S += dS;
+            I += dI;
+            H += dH;
+            R += dR;
+
+            timeStep += dt;
+            updateChart();
+
+            if (I < 0.1 && H < 0.1) {
+                pauseSimulation();
+            } else {
+                animationId = requestAnimationFrame(simulationStep);
+            }
+        }
+
+        // Start simulation
+        function startSimulation() {
+            if (!animationId) {
+                simulationStep();
+            }
+            startBtn.disabled = true;
+            pauseBtn.disabled = false;
+        }
+
+        // Pause simulation
+        function pauseSimulation() {
+            if (animationId) {
+                cancelAnimationFrame(animationId);
+                animationId = null;
+            }
+            startBtn.disabled = false;
+            pauseBtn.disabled = true;
+        }
+
+        // Reset simulation
+        function resetSimulation() {
+            pauseSimulation();
+            initializeSimulation();
+        }
+
+        // Add event listeners
+        startBtn.addEventListener('click', startSimulation);
+        pauseBtn.addEventListener('click', pauseSimulation);
+        resetBtn.addEventListener('click', resetSimulation);
+
+        // Initialize on load
+        initializeSimulation();
+        pauseBtn.disabled = true;
+    </script>
+</body>
+</html> 

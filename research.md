@@ -44,7 +44,7 @@ title: Research
                     <div class="research-item mb-4">
                         <h4>Continued Fractions and a-Fibonacci Numbers</h4>
                         <p class="text-muted">2023</p>
-                        <p>Collaborated with Cheng-Han Pan on investigating the relationships between continued fractions, a-Fibonacci numbers, and the middle b-noise, resulting in a publication in Mathematics Exchange.</p>
+                        <p>Worked with Professor Cheng-Han Pan on investigating the relationships between continued fractions, a-Fibonacci numbers, and the middle b-noise, resulting in a publication in Mathematics Exchange.</p>
                     </div>
                 </div>
             </div>
