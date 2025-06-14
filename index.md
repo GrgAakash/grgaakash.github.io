@@ -15,7 +15,7 @@ title: Home
     <div class="col-md-12">
         <h2>About Me</h2>
         <p>
-            The University of Alabama.Accelerated Master's Program(AMP) student in Mathematics with minors in computer science and digital, public and professional writing.
+            The University of Alabama. Accelerated Master's Program(AMP) student in Mathematics with minors in computer science and digital, public and professional writing.
         </p>
     </div>
 </div>
@@ -55,21 +55,6 @@ title: Home
         </div>
     </div>
 </div>
-
-{% if site.data.display.homepage.show_news %}
-<div class="row mt-5">
-    <div class="col-md-12">
-        <h2>Latest News</h2>
-        <ul class="list-unstyled">
-            {% for news in site.news limit:site.data.display.homepage.num_news %}
-            <li class="mb-3">
-                <strong>{{ news.date | date: "%B %d, %Y" }}</strong> - {{ news.content }}
-            </li>
-            {% endfor %}
-        </ul>
-    </div>
-</div>
-{% endif %}
 
 {% if site.data.display.homepage.show_publications %}
 <div class="row mt-5">
