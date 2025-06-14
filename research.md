@@ -34,7 +34,7 @@ title: Research
                     <div class="research-item mb-4">
                         <h4>Game of Cycles on Maximal Plane Graphs</h4>
                         <p class="text-muted">2024</p>
-                        <p>Research on combinatorial game theory, focusing on the analysis of Game of Cycles played on maximal plane graphs. This work was presented at CUNY Undergraduate Research Day 2024 and MathFest 2024.</p>
+                        <p>Research on combinatorial game theory under guidance of Professor Malgorzata Marciniak, focusing on the analysis of Game of Cycles played on maximal plane graphs. This work was presented at CUNY Undergraduate Research Day 2024 and MathFest 2024.</p>
                     </div>
                     <div class="research-item mb-4">
                         <h4>PolyMath Jr Project</h4>
