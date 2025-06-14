@@ -48,7 +48,7 @@ data:
     homepage:
       show_news: false
       show_projects: false
-      show_publications: true
+      show_publications: false
       show_awards: false
       num_news: 5
       num_projects: 6
