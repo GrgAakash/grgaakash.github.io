@@ -15,6 +15,8 @@
             --background-color: #f8f9fa;
             --deterministic-color: #805ad5;
             --stochastic-color: #3182ce;
+            --deterministic_i-color: #ff0000;
+            --stochastic_i-color: #ff0000;
             --success-color: #38a169;
             --error-color: #e53e3e;
             --border-color: #e2e8f0;
@@ -355,6 +357,54 @@
     <div class="container">
         <div class="sidebar">
             <h2>Model Parameters</h2>
+          
+            <div class="parameter-group">
+                <div class="parameter-label">
+                  <span class="parameter-name">s<sub>0</sub> (susceptiple fraction)</span>
+                  <span class="parameter-value" id="s0-value">0.80</span>
+                </div>
+                <div class="parameter-input">
+                  <input type="range" id="s0" min="0" max="1" step="0.01" value="0.80">
+                  <input type="number" id="s0-number" min="0" max="1" step="0.001" value="0.80" style="width: 80px;">
+                </div>
+              </div>
+
+              <!-- Initial infected proportion -->
+              <div class="parameter-group">
+                <div class="parameter-label">
+                  <span class="parameter-name">i<sub>0</sub> (infected fraction)</span>
+                  <span class="parameter-value" id="i0-value">0.10</span>
+                </div>
+                <div class="parameter-input">
+                  <input type="range" id="i0" min="0" max="1" step="0.01" value="0.10">
+                  <input type="number" id="i0-number" min="0" max="1" step="0.001" value="0.10" style="width: 80px;">
+                </div>
+              </div>
+
+              <!-- Initial hospitalized proportion -->
+              <div class="parameter-group">
+                <div class="parameter-label">
+                  <span class="parameter-name">h<sub>0</sub> (hospitalized fraction)</span>
+                  <span class="parameter-value" id="h0-value">0.10</span>
+                </div>
+                <div class="parameter-input">
+                  <input type="range" id="h0" min="0" max="1" step="0.01" value="0.10">
+                  <input type="number" id="h0-number" min="0" max="1" step="0.001" value="0.10" style="width: 80px;">
+                </div>
+              </div>
+
+              <!-- Initial recovered proportion -->
+              <div class="parameter-group">
+                <div class="parameter-label">
+                  <span class="parameter-name">r<sub>0</sub> (recovered fraction)</span>
+                  <span class="parameter-value" id="r0-value">0.00</span>
+                </div>
+                <div class="parameter-input">
+                  <input type="range" id="r0" min="0" max="1" step="0.01" value="0.00">
+                  <input type="number" id="r0-number" min="0" max="1" step="0.001" value="0.00" style="width: 80px;">
+                </div>
+              </div>
+          
             <div class="parameter-controls">
                 <div class="parameter-group">
                     <div class="parameter-label">
@@ -369,23 +419,12 @@
 
                 <div class="parameter-group">
                     <div class="parameter-label">
-                        <span class="parameter-name">γ₁ (I to H Rate)</span>
-                        <span class="parameter-value" id="gamma1-value">1.0</span>
+                        <span class="parameter-name">γ (I to H or R Rate)</span>
+                        <span class="parameter-value" id="gamma-value">1.0</span>
                     </div>
                     <div class="parameter-input">
-                        <input type="range" id="gamma1" min="0.1" max="10" step="0.01" value="1.0">
-                        <input type="number" id="gamma1-number" min="0.1" max="10" step="0.001" value="1.0" style="width: 80px;">
-                    </div>
-                </div>
-
-                <div class="parameter-group">
-                    <div class="parameter-label">
-                        <span class="parameter-name">γ₂ (I to R Rate)</span>
-                        <span class="parameter-value" id="gamma2-value">2.0</span>
-                    </div>
-                    <div class="parameter-input">
-                        <input type="range" id="gamma2" min="0.1" max="10" step="0.01" value="2.0">
-                        <input type="number" id="gamma2-number" min="0.1" max="10" step="0.001" value="2.0" style="width: 80px;">
+                        <input type="range" id="gamma" min="0.1" max="10" step="0.01" value="1.0">
+                        <input type="number" id="gamma-number" min="0.1" max="10" step="0.001" value="1.0" style="width: 80px;">
                     </div>
                 </div>
 
@@ -468,6 +507,35 @@
 
                 <button id="applyParams" class="apply-button">Apply Parameters</button>
             </div>
+          
+          
+            <div class="sidebar">
+              <h2>Threshold Parameters</h2>
+              
+              <div class="stat-card">
+                    <div class="stat-label"><p>&sigma;</p></div>
+                    <div class="stat-value" id="sigma0-value">--</div>
+               </div>
+              
+              <div class="stat-card">
+                    <div class="stat-label"><p>&sigma;~</p></div>
+                    <div class="stat-value" id="sigma1-value">--</div>
+               </div>
+              
+              <div class="stat-card">
+                    <div class="stat-label"><p>&sigma;~~</p></div>
+                    <div class="stat-value" id="sigma2-value">--</div>
+               </div>
+              <div class="stat-card">
+                    <div class="stat-label"><p>time of peak I(tpi)</p></div>
+                    <div class="stat-value" id="tpi-value">--</div>
+               </div>
+              <div class="stat-card">
+                    <div class="stat-label"><p>h(tpi)</p></div>
+                    <div class="stat-value" id="h_tpi-value">--</div>
+               </div>
+            </div>
+          
 
             <div class="stats">
                 <div class="stat-card">
@@ -480,7 +548,7 @@
                 </div>
                 <div class="stat-card">
                     <div class="stat-label">R₀</div>
-                    <div class="stat-value" id="r0Value">1.90</div>
+                    <div class="stat-value" id="R_0-value">1.90</div>
                 </div>
                 <div class="stat-card">
                     <div class="stat-label">Peak Hospitalization</div>
@@ -565,8 +633,7 @@
         // SIHR model parameters
         const params = {
             beta: 2.00,     // infection rate
-            gamma1: 1.0,   // I to H rate
-            gamma2: 2.0,   // I to R rate
+            gamma: 1.0,   // I to H rate
             alpha: 1.0,    // H to R rate
             p1: 0.5,       // probability of infection
             p2: 0.66,       // probability of leaving I
@@ -578,7 +645,7 @@
             h0: 0.1,       // initial hospitalized proportion
             r0: 0.0,       // initial recovered proportion
             N: 300,
-            r0_value: 0    // Add R₀ value to params
+            R_0_value: 0    // Add R₀ value to params
         };
 
         // Population size
@@ -599,11 +666,17 @@
         let chart = null;
 
         // Calculate R0
-        const R0 = params.p1 * params.beta / (params.p2 * (params.ph * params.gamma1 + (1 - params.ph) * params.gamma2));
+        const R_0 = params.p1 * params.beta / (params.p2 * params.gamma);
+        const sigma0 = calculate_thresholds(params)[0];
+        const sigma1 = calculate_thresholds(params)[1];
+        
+        const tpi = compute_T( params.p2 * params.gamma /(params.p1 * params.beta));
+        const h_tpi = compute_h_tpi;
+        const sigma2 = calculate_thresholds(params)[2];
 
         // Validate parameters
         function validateParameters(params) {
-            if ([params.beta, params.gamma1, params.gamma2, params.alpha].some(x => x <= 0)) {
+            if ([params.beta, params.gamma, params.alpha].some(x => x <= 0)) {
                 throw new Error('All rates must be positive');
             }
             if ([params.p1, params.p2, params.p3, params.ph].some(x => x <= 0 || x > 1)) {
@@ -619,7 +692,7 @@
             console.log(`🎲 Running stochastic simulation ${runNumber}/${totalRuns}`);
             
             // Calculate R₀ for this run
-            const r0 = params.p1 * params.beta / (params.p2 * (params.ph * params.gamma1 + (1 - params.ph) * params.gamma2));
+            const R_0 = params.p1 * params.beta / (params.p2 * params.gamma);
             
             // Initial conditions
             let s = Math.round(params.s0 * N);
@@ -631,18 +704,17 @@
                 s += N - total;
             }
 
-            const T = [0];
-            const H_prop = [h / N];
+            const T = [0], I_prop = [i / N], H_prop = [h / N];
             let t = 0;
 
             // Main simulation loop
-            while (i > 0 && t < params.tmax) {
+            while ((i > 0 || h > 0) && t < params.tmax)  {
                 const nS = s, nI = i, nH = h;
 
                 // Calculate event rates
                 const infectionRate = params.p1 * params.beta * nS * nI / N;
-                const toHospitalRate = params.p2 * params.ph * params.gamma1 * nI;
-                const toRecoveredFromIRate = params.p2 * (1 - params.ph) * params.gamma2 * nI;
+                const toHospitalRate = params.p2 * params.ph * params.gamma * nI;
+                const toRecoveredFromIRate = params.p2 * (1 - params.ph) * params.gamma * nI;
                 const toRecoveredFromHRate = params.p3 * params.alpha * nH;
                 const totalRate = infectionRate + toHospitalRate + toRecoveredFromIRate + toRecoveredFromHRate;
 
@@ -655,6 +727,7 @@
                 if (t > params.tmax) {
                     t = params.tmax;
                     T.push(t);
+                    I_prop.push(i / (s + i + h + r))
                     H_prop.push(h / (s + i + h + r));
                     break;
                 }
@@ -672,15 +745,11 @@
                 }
 
                 T.push(t);
+                I_prop.push(i / (s + i + h + r));
                 H_prop.push(h / (s + i + h + r));
             }
 
-            return { 
-                T, 
-                H_prop, 
-                maxH: Math.max(...H_prop),
-                r0: r0  // Add R₀ to the results
-            };
+            return { T, I_prop, H_prop, maxI: Math.max(...I_prop), maxH: Math.max(...H_prop) };
         }
 
         // Deterministic SIHR model (RK4 integration)
@@ -698,9 +767,9 @@
                     
                     // ODE system
                     const dsdt = -params.p1 * params.beta * s * i;
-                    const didt = params.p1 * params.beta * s * i - params.p2 * (params.ph * params.gamma1 + (1 - params.ph) * params.gamma2) * i;
-                    const dhdt = params.p2 * params.ph * params.gamma1 * i - params.p3 * params.alpha * h;
-                    const drdt = params.p2 * (1 - params.ph) * params.gamma2 * i + params.p3 * params.alpha * h;
+                    const didt = params.p1 * params.beta * s * i - params.p2 * params.gamma * i;
+                    const dhdt = params.p2 * params.ph * params.gamma * i - params.p3 * params.alpha * h;
+                    const drdt = params.p2 * (1 - params.ph) * params.gamma * i + params.p3 * params.alpha * h;
                     
                     // Euler method (simplified for performance)
                     const yNext = [
@@ -713,7 +782,7 @@
                 }
             }
 
-            return { T, H_prop: Y.map(y => y[2]) };
+            return { T, I_prop: Y.map(y => y[1]), H_prop: Y.map(y => y[2]) };
         }
 
         // Update status
@@ -769,21 +838,19 @@
         // Update chart with current run
         function updateChart() {
             if (!chart || !results[currentRun]) return;
-            
-            chart.data.datasets[1].data = results[currentRun].T.map((t, i) => ({
-                x: t,
-                y: results[currentRun].H_prop[i]
-            }));
-            
-            chart.options.plugins.title.text = `Hospitalized Proportion Over Time - Run ${currentRun + 1}/${totalRuns} (N=${N})`;
-            chart.update('none'); // No animation for smoother performance
+
+            chart.data.datasets[1].data = results[currentRun].T.map((t, i) => ({ x: t, y: results[currentRun].I_prop[i] }));
+            chart.data.datasets[3].data = results[currentRun].T.map((t, i) => ({ x: t, y: results[currentRun].H_prop[i] }));
+
+            chart.options.plugins.title.text = `Infected/Hospitalized Proportion Over Time - Run ${currentRun + 1}/${totalRuns} (N=${N})`;
+            chart.update('none');
         }
 
         // Update statistics display
         function updateStatistics() {
             document.getElementById('currentRun').textContent = `${currentRun + 1}/${totalRuns}`;
             document.getElementById('populationSize').textContent = N;
-            document.getElementById('r0Value').textContent = params.r0_value.toFixed(2);
+            document.getElementById('R_0-value').textContent = params.R_0_value.toFixed(2);
             
             if (results[currentRun]) {
                 const maxH = Math.max(...results[currentRun].H_prop);
@@ -822,12 +889,22 @@
             document.getElementById(`${paramName}-value`).textContent = value;
             document.getElementById(`${paramName}`).value = value;
             document.getElementById(`${paramName}-number`).value = value;
-            params.r0_value = calculateR0(params);
-            document.getElementById('r0Value').textContent = params.r0_value.toFixed(2);
+            params.R_0_value = calculateR0(params);
+            const sigma0 = calculate_thresholds(params)[0];
+            const sigma1 = calculate_thresholds(params)[1];
+            const tpi = compute_T(params.p2 * params.gamma / (params.p1 * params.beta));
+            const h_tpi = compute_h_tpi();
+            const sigma2 = calculate_thresholds(params)[2];
+            document.getElementById('R_0-value').textContent = params.R_0_value.toFixed(2);
+            document.getElementById('sigma0-value').textContent = sigma0.toFixed(2);
+            document.getElementById('sigma1-value').textContent = sigma1.toFixed(2);
+            document.getElementById('sigma2-value').textContent = sigma2.toFixed(2);
+            document.getElementById('tpi-value').textContent = tpi.toFixed(2);
+            document.getElementById('h_tpi-value').textContent = h_tpi.toFixed(2);
         }
 
         // Set up event listeners for all parameters
-        ['beta', 'gamma1', 'gamma2', 'alpha', 'p1', 'p2', 'p3', 'ph'].forEach(param => {
+        ['s0','i0','r0','h0','beta', 'gamma', 'alpha', 'p1', 'p2', 'p3', 'ph'].forEach(param => {
             const rangeInput = document.getElementById(param);
             const numberInput = document.getElementById(`${param}-number`);
             
@@ -919,10 +996,70 @@
                 updateRuns(value);
             }
         });
+        
+      // Function to integrate by Simpson's rule
+        function simpsonsRule(f, a, b, n) {
+            if (n % 2 === 1) n++; // Ensure even number of intervals
+            const h = (b - a) / n;
+            let sum = f(a) + f(b);
 
+            for (let i = 1; i < n; i++) {
+              const x = a + i * h;
+              sum += (i % 2 === 0 ? 2 : 4) * f(x);
+            }
+
+            return (h / 3) * sum;
+          }
+      
+      
+        
+      //function to calculate T(s): (-1/beta) * integral from s0 to s of dm/mI(m) 
+        function compute_T(s) {
+          
+          const I = m => params.s0 + params.i0 - m + (params.p2 * params.gamma/(params.p1 * params.beta)) * Math.log(m/params.s0);
+          const f = m => (-1 / (params.p1 * params.beta)) * 1 / (m * I(m) );
+          const a = params.s0;
+          const b = s;
+          const n = 50;
+
+          return simpsonsRule(f,a,b,n);
+          
+        }
+      
+        function i_peak(){
+          
+          const s_p = params.p2 * params.gamma/(params.p1 * params.beta);
+          const i_p =  params.s0 + params.i0 - s_p + (params.p2 * params.gamma/(params.p1 * params.beta)) * Math.log(s_p/params.s0);
+          
+          return i_p;
+        }
+      
+        function compute_h_tpi(){
+          
+          const y = params.p2 * params.gamma / (params.p1 * params.beta); // R_0 ^ -1
+          const tpi = compute_T(y);
+          f = s => (1/s) * Math.exp(params.p3 * params.alpha * compute_T(s) );
+          
+          const h_tpi = Math.exp(-params.p3 * params.alpha * tpi) * ( params.h0 + params.ph * params.p1 * params.gamma * (-1/(params.p1 * params.beta)) * simpsonsRule(f,params.s0,y,100) );
+          
+          return h_tpi;
+          
+        }
+      
         // Function to calculate R₀ based on current parameter values
         function calculateR0(params) {
-            return params.p1 * params.beta / (params.p2 * (params.ph * params.gamma1 + (1 - params.ph) * params.gamma2));
+            return params.p1 * params.beta / (params.p2 * params.gamma);
+        }
+      
+        function calculate_thresholds(params) {
+          const sigma = params.p1 * params.beta * params.s0/ (params.p2 * params.gamma);
+          const sigma1 = params.gamma * params.ph * params.p2 * params.i0 / (params.alpha * params.p3 * params.h0);
+         
+          const i_p = i_peak();
+          const h_tpi = compute_h_tpi();
+          const sigma2 =  params.gamma * params.ph * params.p2 * i_p / (params.alpha * params.p3 * h_tpi);
+          
+          return [sigma, sigma1, sigma2];
         }
 
         // Setup apply button
@@ -934,13 +1071,16 @@
 
             // Update parameters
             params.beta = parseFloat(document.getElementById('beta').value);
-            params.gamma1 = parseFloat(document.getElementById('gamma1').value);
-            params.gamma2 = parseFloat(document.getElementById('gamma2').value);
+            params.gamma = parseFloat(document.getElementById('gamma').value);
             params.alpha = parseFloat(document.getElementById('alpha').value);
             params.p1 = parseFloat(document.getElementById('p1').value);
             params.p2 = parseFloat(document.getElementById('p2').value);
             params.p3 = parseFloat(document.getElementById('p3').value);
             params.ph = parseFloat(document.getElementById('ph').value);
+            params.s0 = parseFloat(document.getElementById('s0').value);
+            params.i0 = parseFloat(document.getElementById('i0').value);
+            params.r0 = parseFloat(document.getElementById('r0').value);
+            params.h0 = parseFloat(document.getElementById('h0').value);
             N = parseInt(document.getElementById('population').value);
             totalRuns = parseInt(document.getElementById('runs').value);
 
@@ -949,7 +1089,7 @@
                 validateParameters(params);
                 
                 // Calculate R₀ once when parameters are applied
-                params.r0_value = calculateR0(params);
+                params.R_0_value = calculateR0(params);
                 
                 // Clear existing results
                 results.length = 0;
@@ -970,12 +1110,21 @@
                 // Update both curves in the chart
                 chart.data.datasets[0].data = detResult.T.map((t, i) => ({ 
                     x: t, 
-                    y: detResult.H_prop[i] 
+                    y: detResult.I_prop[i] 
                 }));
                 chart.data.datasets[1].data = results[currentRun].T.map((t, i) => ({ 
                     x: t, 
+                    y: results[currentRun].I_prop[i] 
+                }));
+                chart.data.datasets[2].data = detResult.T.map((t, i) => ({ 
+                    x: t, 
+                    y: detResult.H_prop[i] 
+                }));
+                chart.data.datasets[3].data = results[currentRun].T.map((t, i) => ({ 
+                    x: t, 
                     y: results[currentRun].H_prop[i] 
                 }));
+              
                 
                 // Update chart and statistics
                 chart.update('none');
@@ -1015,13 +1164,38 @@
                 if (chart) {
                     chart.destroy();
                 }
+              
+                const icolor = getComputedStyle(document.documentElement)
+                    .getPropertyValue('--deterministic_i-color')
+                    .trim();
                 
                 chart = new Chart(ctx, {
                     type: 'line',
                     data: {
                         datasets: [
                             {
-                                label: 'Deterministic',
+                                label: 'Deterministic i',
+                                data: detResult.T.map((t, i) => ({ x: t, y: detResult.I_prop[i] })),
+                                borderColor: icolor,
+                                backgroundColor: 'rgba(128, 90, 213, 0.1)',
+                                borderDash: [8, 4],
+                                borderWidth: 3,
+                                pointRadius: 0,
+                                fill: false,
+                                tension: 0.1
+                            },
+                            {
+                                label: 'Stochastic i',
+                                data: results[0].T.map((t, i) => ({ x: t, y: results[0].I_prop[i] })),
+                                borderColor: icolor,
+                                backgroundColor: 'rgba(49, 130, 206, 0.1)',
+                                borderWidth: 2,
+                                pointRadius: 0,
+                                fill: false,
+                                tension: 0.2
+                            },
+                            {
+                                label: 'Deterministic h',
                                 data: detResult.T.map((t, i) => ({ x: t, y: detResult.H_prop[i] })),
                                 borderColor: 'var(--deterministic-color)',
                                 backgroundColor: 'rgba(128, 90, 213, 0.1)',
@@ -1032,7 +1206,7 @@
                                 tension: 0.1
                             },
                             {
-                                label: 'Stochastic',
+                                label: 'Stochastic h',
                                 data: results[0].T.map((t, i) => ({ x: t, y: results[0].H_prop[i] })),
                                 borderColor: 'var(--stochastic-color)',
                                 backgroundColor: 'rgba(49, 130, 206, 0.1)',
