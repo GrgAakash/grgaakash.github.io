@@ -93,4 +93,8 @@ exclude:
   - Gemfile.lock
   - README.md
   - LICENSE
-  - .gitignore 
+  - .gitignore
+
+include:
+  - "SIHR Stochastic vs ODE/src"
+ 
