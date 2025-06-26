@@ -111,11 +111,8 @@ function calculateShapeSimilarity(curve1, curve2) {
 
 // Function to compute average curve for a group
 function computeAverageCurve(group, results) {
-    // Get all curves for this group
     const curves = group.runs.map(runIdx => results[runIdx].H_prop);
-    // Find the minimum length (in case runs are of different lengths)
     const minLength = Math.min(...curves.map(c => c.length));
-    // Compute the average at each time point
     const avgCurve = [];
     for (let t = 0; t < minLength; t++) {
         let sum = 0;
@@ -170,12 +167,13 @@ function createPatternCards(groups, results, params) {
 
         // Create mini chart for this pattern
         const ctx = document.getElementById(`pattern${index}Chart`).getContext('2d');
+        const avgCurve = computeAverageCurve(group, results);
         new Chart(ctx, {
             type: 'line',
             data: {
-                labels: Array.from({length: computeAverageCurve(group, results).length}, (_, i) => i),
+                labels: Array.from({length: avgCurve.length}, (_, i) => i),
                 datasets: [{
-                    data: computeAverageCurve(group, results),
+                    data: avgCurve,
                     borderColor: `hsl(${index * 360 / groups.length}, 70%, 50%)`,
                     borderWidth: 2,
                     pointRadius: 0,
