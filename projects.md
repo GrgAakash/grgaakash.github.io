@@ -52,7 +52,7 @@ title: Projects
                                     <li>\(p_1, p_2, p_3\): Probability of leaving state S,I,R respectively.</li>
                                 </ul>
                                 <p>In this model we assume</p>
-                                <p>\[\gamma_1 = \gamma_2\=\gamma\]</p>
+                                <p>\[\gamma_1 = \gamma_2 = \gamma\]</p>
                             </div>
                             <p><a href="SIHR Stochastic vs ODE/index.html" target="_blank" class="btn btn-primary">View Demo</a></p>
                         </div>
