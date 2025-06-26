@@ -109,21 +109,6 @@ function calculateShapeSimilarity(curve1, curve2) {
     return Math.abs(numerator / Math.sqrt(denom1 * denom2));
 }
 
-// Function to compute average curve for a group
-function computeAverageCurve(group, results) {
-    const curves = group.runs.map(runIdx => results[runIdx].H_prop);
-    const minLength = Math.min(...curves.map(c => c.length));
-    const avgCurve = [];
-    for (let t = 0; t < minLength; t++) {
-        let sum = 0;
-        for (let c = 0; c < curves.length; c++) {
-            sum += curves[c][t];
-        }
-        avgCurve.push(sum / curves.length);
-    }
-    return avgCurve;
-}
-
 // Function to create pattern cards
 function createPatternCards(groups, results, params) {
     const container = document.getElementById('patternCards');
@@ -167,13 +152,12 @@ function createPatternCards(groups, results, params) {
 
         // Create mini chart for this pattern
         const ctx = document.getElementById(`pattern${index}Chart`).getContext('2d');
-        const avgCurve = computeAverageCurve(group, results);
         new Chart(ctx, {
             type: 'line',
             data: {
-                labels: Array.from({length: avgCurve.length}, (_, i) => i),
+                labels: Array.from({length: group.representative.curve.length}, (_, i) => i),
                 datasets: [{
-                    data: avgCurve,
+                    data: group.representative.curve,
                     borderColor: `hsl(${index * 360 / groups.length}, 70%, 50%)`,
                     borderWidth: 2,
                     pointRadius: 0,
@@ -284,7 +268,6 @@ if (typeof module !== 'undefined' && module.exports) {
         groupSimilarRuns,
         areRunsSimilar,
         calculateShapeSimilarity,
-        computeAverageCurve,
         createPatternCards,
         createPatternChart,
         updatePatternAnalysis
