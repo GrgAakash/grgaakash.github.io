@@ -52,7 +52,7 @@ title: Projects
                                     <li>\(p_1, p_2, p_3\): Probability of leaving state S,I,R respectively.</li>
                                 </ul>
                             </div>
-                            <p><a href="sihrvsODE-model.html" target="_blank" class="btn btn-primary">View Demo</a></p>
+                            <p><a href="SIHR Stochastic vs ODE/index.html" target="_blank" class="btn btn-primary">View Demo</a></p>
                         </div>
                     </div>
                 </div>
