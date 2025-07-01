@@ -4,12 +4,14 @@
 // Global variables (shared across modules)
 let params = {
     beta: 2.00,     // infection rate
-    gamma: 1.0,   // I to H rate
-    alpha: 1.0,    // H to R rate
-    p1: 0.5,       // probability of infection
-    p2: 0.66,       // probability of leaving I
-    p3: 0.2,       // probability of leaving H
-    ph: 0.50,      // probability of I to H vs R
+    gamma: 1.0,   // I outflow rate
+    alpha: 1.0,    // H outflow rate
+    p_SI: 0.5,     // S->I probability
+    p_II: 0.1,     // I->I (remains infected)
+    p_IH: 0.5,     // I->H
+    p_IR: 0.4,     // I->R
+    p_HR: 0.8,     // H->R
+    p_HH: 0.2,     // H->H (remains hospitalized)
     tmax: 30,      // simulation end time
     s0: 0.8,       // initial susceptible proportion
     i0: 0.1,       // initial infected proportion
@@ -247,40 +249,31 @@ async function initialize() {
 }
 
 // Set up event listeners for all parameters
-['s0','i0','r0','h0','beta', 'gamma', 'alpha', 'p1', 'p2', 'p3', 'ph'].forEach(param => {
+['s0','i0','r0','h0','beta', 'gamma', 'alpha', 'p_SI'].forEach(param => {
     const rangeInput = document.getElementById(param);
     const numberInput = document.getElementById(`${param}-number`);
-    
+    if (!rangeInput || !numberInput) return;
     rangeInput.addEventListener('input', (e) => {
-        playCoinSound(); // Play coin sound for slider movement
+        playCoinSound();
         updateParameter(param, e.target.value);
     });
-
     numberInput.addEventListener('input', (e) => {
         let value = e.target.value;
-        
-        // Allow partial decimal input
-        if (value === '' || value === '.' || value === '-.') {
-            return;
-        }
-
-        // Convert to number and validate
+        if (value === '' || value === '.' || value === '-.') return;
         const numValue = parseFloat(value);
         if (!isNaN(numValue)) {
             const min = parseFloat(rangeInput.min);
             const max = parseFloat(rangeInput.max);
             if (numValue >= min && numValue <= max) {
-                playCoinSound(); // Play coin sound for number input
+                playCoinSound();
                 updateParameter(param, numValue);
             }
         }
     });
-
-    // Update on blur (when input loses focus)
     numberInput.addEventListener('blur', (e) => {
         let value = e.target.value;
         if (value === '' || value === '.' || value === '-.') {
-            value = rangeInput.value; // Reset to current range value
+            value = rangeInput.value;
             e.target.value = value;
         }
         const numValue = parseFloat(value);
@@ -291,6 +284,51 @@ async function initialize() {
                 updateParameter(param, numValue);
             }
         }
+    });
+});
+
+// Auto-update logic for I outflow group (p_II, p_IH, p_IR)
+function updateIOutflow(changed) {
+    let p_II = parseFloat(document.getElementById('p_II-number').value);
+    let p_IH = parseFloat(document.getElementById('p_IH-number').value);
+    let p_IR = parseFloat(document.getElementById('p_IR-number').value);
+    if (changed === 'p_II') {
+        p_IH = Math.max(0, Math.min(1, 1 - p_II - p_IR));
+        document.getElementById('p_IH-number').value = p_IH.toFixed(3);
+    } else if (changed === 'p_IH') {
+        p_IR = Math.max(0, Math.min(1, 1 - p_II - p_IH));
+        document.getElementById('p_IR-number').value = p_IR.toFixed(3);
+    } else if (changed === 'p_IR') {
+        p_II = Math.max(0, Math.min(1, 1 - p_IH - p_IR));
+        document.getElementById('p_II-number').value = p_II.toFixed(3);
+    }
+    params.p_II = parseFloat(document.getElementById('p_II-number').value);
+    params.p_IH = parseFloat(document.getElementById('p_IH-number').value);
+    params.p_IR = parseFloat(document.getElementById('p_IR-number').value);
+}
+['p_II', 'p_IH', 'p_IR'].forEach(param => {
+    document.getElementById(`${param}-number`).addEventListener('input', (e) => {
+        updateIOutflow(param);
+    });
+});
+
+// Auto-update logic for H outflow group (p_HR, p_HH)
+function updateHOutflow(changed) {
+    let p_HR = parseFloat(document.getElementById('p_HR-number').value);
+    let p_HH = parseFloat(document.getElementById('p_HH-number').value);
+    if (changed === 'p_HR') {
+        p_HH = Math.max(0, Math.min(1, 1 - p_HR));
+        document.getElementById('p_HH-number').value = p_HH.toFixed(3);
+    } else if (changed === 'p_HH') {
+        p_HR = Math.max(0, Math.min(1, 1 - p_HH));
+        document.getElementById('p_HR-number').value = p_HR.toFixed(3);
+    }
+    params.p_HR = parseFloat(document.getElementById('p_HR-number').value);
+    params.p_HH = parseFloat(document.getElementById('p_HH-number').value);
+}
+['p_HR', 'p_HH'].forEach(param => {
+    document.getElementById(`${param}-number`).addEventListener('input', (e) => {
+        updateHOutflow(param);
     });
 });
 
@@ -348,20 +386,19 @@ runsNumberInput.addEventListener('input', (e) => {
 
 // Setup apply button
 document.getElementById('applyParams').addEventListener('click', () => {
-    playPowerUpSound(); // Play power-up sound for applying parameters
-    // Pause animation if running
+    playPowerUpSound();
     if (isRunning) {
         toggleAnimation();
     }
-
-    // Update parameters
     params.beta = parseFloat(document.getElementById('beta').value);
     params.gamma = parseFloat(document.getElementById('gamma').value);
     params.alpha = parseFloat(document.getElementById('alpha').value);
-    params.p1 = parseFloat(document.getElementById('p1').value);
-    params.p2 = parseFloat(document.getElementById('p2').value);
-    params.p3 = parseFloat(document.getElementById('p3').value);
-    params.ph = parseFloat(document.getElementById('ph').value);
+    params.p_SI = parseFloat(document.getElementById('p_SI').value);
+    params.p_II = parseFloat(document.getElementById('p_II-number').value);
+    params.p_IH = parseFloat(document.getElementById('p_IH-number').value);
+    params.p_IR = parseFloat(document.getElementById('p_IR-number').value);
+    params.p_HR = parseFloat(document.getElementById('p_HR-number').value);
+    params.p_HH = parseFloat(document.getElementById('p_HH-number').value);
     params.s0 = parseFloat(document.getElementById('s0').value);
     params.i0 = parseFloat(document.getElementById('i0').value);
     params.r0 = parseFloat(document.getElementById('r0').value);

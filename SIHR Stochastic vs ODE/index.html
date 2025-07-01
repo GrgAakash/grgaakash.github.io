@@ -41,16 +41,32 @@
         <div class="sidebar">
             <h2>Model Parameters</h2>
           
-            <div class="parameter-group">
-                <div class="parameter-label">
-                  <span class="parameter-name">s<sub>0</sub> (susceptiple fraction)</span>
-                  <span class="parameter-value" id="s0-value">0.80</span>
+            <div class="threshold-box">
+              <h3>Threshold Parameters</h3>
+              <div class="threshold-grid">
+                <div class="threshold-item">
+                  <div class="threshold-label">σ</div>
+                  <div class="threshold-value" id="sigma0-value">--</div>
                 </div>
-                <div class="parameter-input">
-                  <input type="range" id="s0" min="0" max="1" step="0.01" value="0.80">
-                  <input type="number" id="s0-number" min="0" max="1" step="0.001" value="0.80" style="width: 80px;">
+                <div class="threshold-item">
+                  <div class="threshold-label">σ̃</div>
+                  <div class="threshold-value" id="sigma1-value">--</div>
+                </div>
+                <div class="threshold-item">
+                  <div class="threshold-label">σ̃̃</div>
+                  <div class="threshold-value" id="sigma2-value">--</div>
+                </div>
+                <div class="threshold-item">
+                  <div class="threshold-label">tpi</div>
+                  <div class="threshold-value" id="tpi-value">--</div>
+                </div>
+                <div class="threshold-item">
+                  <div class="threshold-label">h(tpi)</div>
+                  <div class="threshold-value" id="h_tpi-value">--</div>
                 </div>
               </div>
+            </div>
+          
 
               <!-- Initial infected proportion -->
               <div class="parameter-group">
@@ -102,7 +118,7 @@
 
                 <div class="parameter-group">
                     <div class="parameter-label">
-                        <span class="parameter-name">γ (I to H rate)</span>
+                        <span class="parameter-name">γ (I outflow rate)</span>
                         <span class="parameter-value" id="gamma-value">1.0</span>
                     </div>
                     <div class="parameter-input">
@@ -113,7 +129,7 @@
 
                 <div class="parameter-group">
                     <div class="parameter-label">
-                        <span class="parameter-name">α (H to R Rate)</span>
+                        <span class="parameter-name">α (H outflow rate)</span>
                         <span class="parameter-value" id="alpha-value">1.0</span>
                     </div>
                     <div class="parameter-input">
@@ -124,46 +140,49 @@
 
                 <div class="parameter-group">
                     <div class="parameter-label">
-                        <span class="parameter-name">p₁ (Leave S Prob)</span>
-                        <span class="parameter-value" id="p1-value">0.5</span>
+                        <span class="parameter-name">p<sub>SI</sub> (S→I probability)</span>
+                        <span class="parameter-value" id="p_SI-value">0.5</span>
                     </div>
                     <div class="parameter-input">
-                        <input type="range" id="p1" min="0.1" max="1" step="0.01" value="0.5">
-                        <input type="number" id="p1-number" min="0.1" max="1" step="0.001" value="0.5" style="width: 80px;">
+                        <input type="range" id="p_SI" min="0.01" max="1" step="0.01" value="0.5">
+                        <input type="number" id="p_SI-number" min="0.01" max="1" step="0.001" value="0.5" style="width: 80px;">
                     </div>
                 </div>
 
                 <div class="parameter-group">
-                    <div class="parameter-label">
-                        <span class="parameter-name">p₂ (Leave I Prob)</span>
-                        <span class="parameter-value" id="p2-value">0.66</span>
+                  <div class="parameter-label">
+                    <span class="parameter-name mario-text">I outflow probabilities (sum = 1)</span>
+                  </div>
+                  <div class="parameter-input" style="display: flex; gap: 8px;">
+                    <div>
+                      <label for="p_II" class="mario-label">p<sub>II</sub> (I→I)</label>
+                      <input type="number" id="p_II-number" min="0" max="1" step="0.001" value="0.1" style="width: 60px;">
                     </div>
-                    <div class="parameter-input">
-                        <input type="range" id="p2" min="0.1" max="1" step="0.01" value="0.66">
-                        <input type="number" id="p2-number" min="0.1" max="1" step="0.001" value="0.66" style="width: 80px;">
+                    <div>
+                      <label for="p_IH" class="mario-label">p<sub>IH</sub> (I→H)</label>
+                      <input type="number" id="p_IH-number" min="0" max="1" step="0.001" value="0.5" style="width: 60px;">
                     </div>
+                    <div>
+                      <label for="p_IR" class="mario-label">p<sub>IR</sub> (I→R)</label>
+                      <input type="number" id="p_IR-number" min="0" max="1" step="0.001" value="0.4" style="width: 60px;">
+                    </div>
+                  </div>
                 </div>
 
                 <div class="parameter-group">
-                    <div class="parameter-label">
-                        <span class="parameter-name">p₃ (Leave H Prob)</span>
-                        <span class="parameter-value" id="p3-value">0.2</span>
+                  <div class="parameter-label">
+                    <span class="parameter-name mario-text">H outflow probabilities (sum = 1)</span>
+                  </div>
+                  <div class="parameter-input" style="display: flex; gap: 8px;">
+                    <div>
+                      <label for="p_HR" class="mario-label">p<sub>HR</sub> (H→R)</label>
+                      <input type="number" id="p_HR-number" min="0" max="1" step="0.001" value="0.8" style="width: 60px;">
                     </div>
-                    <div class="parameter-input">
-                        <input type="range" id="p3" min="0.1" max="1" step="0.01" value="0.2">
-                        <input type="number" id="p3-number" min="0.1" max="1" step="0.001" value="0.2" style="width: 80px;">
+                    <div>
+                      <label for="p_HH" class="mario-label">p<sub>HH</sub> (H→H)</label>
+                      <input type="number" id="p_HH-number" min="0" max="1" step="0.001" value="0.2" style="width: 60px;">
                     </div>
-                </div>
-
-                <div class="parameter-group">
-                    <div class="parameter-label">
-                        <span class="parameter-name">pₕ (I to H Prob)</span>
-                        <span class="parameter-value" id="ph-value">0.50</span>
-                    </div>
-                    <div class="parameter-input">
-                        <input type="range" id="ph" min="0.1" max="1" step="0.01" value="0.50">
-                        <input type="number" id="ph-number" min="0.1" max="1" step="0.001" value="0.50" style="width: 80px;">
-                    </div>
+                  </div>
                 </div>
 
                 <div class="parameter-group">
@@ -189,34 +208,6 @@
                 </div>
 
                 <button id="applyParams" class="apply-button">Apply Parameters</button>
-            </div>
-          
-          
-            <div class="sidebar">
-              <h2>Threshold Parameters</h2>
-              
-              <div class="stat-card">
-                    <div class="stat-label"><p>&sigma;</p></div>
-                    <div class="stat-value" id="sigma0-value">--</div>
-               </div>
-              
-              <div class="stat-card">
-                    <div class="stat-label"><p>&sigma;~</p></div>
-                    <div class="stat-value" id="sigma1-value">--</div>
-               </div>
-              
-              <div class="stat-card">
-                    <div class="stat-label"><p>&sigma;~~</p></div>
-                    <div class="stat-value" id="sigma2-value">--</div>
-               </div>
-              <div class="stat-card">
-                    <div class="stat-label"><p>time of peak I(tpi)</p></div>
-                    <div class="stat-value" id="tpi-value">--</div>
-               </div>
-              <div class="stat-card">
-                    <div class="stat-label"><p>h(tpi)</p></div>
-                    <div class="stat-value" id="h_tpi-value">--</div>
-               </div>
             </div>
           
 
@@ -266,15 +257,15 @@
             <div id="odeModal" class="modal" style="display:none;">
               <div class="modal-content">
                 <span class="close-modal" id="closeOdeModal" style="float:right; font-size:2rem; cursor:pointer;">&times;</span>
-                <h2>SIHR Model: System of ODEs</h2>
+                <h2>SIHR-IPC Model: System of ODEs</h2>
                 <div id="odeMath" style="font-size:1.2rem; margin-top:1rem;">
                   <p>
                     \[
                     \begin{align*}
-                    \frac{dS}{dt} &= -p_1 \beta S I \\
-                    \frac{dI}{dt} &= p_1 \beta S I - p_2 \gamma I \\
-                    \frac{dH}{dt} &= p_2 p_h \gamma I - p_3 \alpha H \\
-                    \frac{dR}{dt} &= p_2 (1-p_h) \gamma I + p_3 \alpha H
+                    \frac{dS}{dt} &= -\beta p_{SI} S I \\
+                    \frac{dI}{dt} &= \beta p_{SI} S I - \gamma (1-p_{II}) I \\
+                    \frac{dH}{dt} &= p_{IH} \gamma I - p_{HR} \alpha H \\
+                    \frac{dR}{dt} &= p_{IR} \gamma I + p_{HR} \alpha H
                     \end{align*}
                     \]
                   </p>
@@ -284,7 +275,13 @@
                     <li><b>H</b>: Hospitalized</li>
                     <li><b>R</b>: Recovered</li>
                     <li><b>β, γ, α</b>: rates</li>
-                    <li><b>p₁, p₂, p₃, pₕ</b>: probabilities</li>
+                    <li><b>p<sub>SI</sub></b>: S→I probability</li>
+                    <li><b>p<sub>II</sub></b>: I→I probability (remains infected)</li>
+                    <li><b>p<sub>IH</sub></b>: I→H probability</li>
+                    <li><b>p<sub>IR</sub></b>: I→R probability</li>
+                    <li><b>p<sub>HR</sub></b>: H→R probability</li>
+                    <li><b>p<sub>HH</sub></b>: H→H probability (remains hospitalized)</li>
+                    <li><b>Constraints</b>: p<sub>IH</sub> + p<sub>IR</sub> + p<sub>II</sub> = 1, p<sub>HR</sub> + p<sub>HH</sub> = 1</li>
                   </ul>
                 </div>
               </div>
@@ -297,13 +294,13 @@
                 <h2>Hospitalization Pattern Classification</h2>
                 <div style="font-size:1.1rem; margin-top:1rem;">
                   <p>
-                    The SIHR model's hospitalized population \( h(t) \) exhibits <b>diminishing</b> (monotonically decreasing), <b>viral</b> (initially increasing, then decreasing after a peak), or <b>outbreak</b> (initially decreasing, then increasing to a peak, then decreasing) behavior, determined by:
+                    The SIHR-IPC model's hospitalized population \( h(t) \) exhibits <b>diminishing</b> (monotonically decreasing), <b>viral</b> (initially increasing, then decreasing after a peak), or <b>outbreak</b> (initially decreasing, then increasing to a peak, then decreasing) behavior, determined by:
                   </p>
                   <p>
                     \[
-                    \sigma_0 = s_0 \frac{\beta}{\gamma}, \quad
-                    \tilde{\sigma}_0 = \frac{\gamma p_{IH} i_0}{\alpha h_0}, \quad
-                    \tilde{\tilde{\sigma}}_0 = \frac{\gamma p_{IH} i(t_{p,i})}{\alpha h(t_{p,i})}
+                    \sigma_0 = s_0 \frac{\beta p_{SI}}{\gamma (1-p_{II})}, \quad
+                    \tilde{\sigma}_0 = \frac{\gamma p_{IH} i_0}{\alpha p_{HR} h_0}, \quad
+                    \tilde{\tilde{\sigma}}_0 = \frac{\gamma p_{IH} i(t_{p,i})}{\alpha p_{HR} h(t_{p,i})}
                     \]
                     where \( t_{p,i} \) is the peak time of \( i \).
                   </p>
@@ -311,32 +308,24 @@
                   <div style="overflow-x:auto;">
                   \[
                   \begin{aligned}
-                  &\textbf{If } h_0 = 0: &&\quad \boxed{\text{viral}} \\[10pt]
-                  &\textbf{If } h_0 > 0: && \quad
-                    \left\{
-                      \begin{array}{ll}
-                        \sigma_0 \leq 1: &
-                          \left\{
-                            \begin{array}{ll}
-                              \tilde{\sigma}_0 \geq 1 &\Rightarrow \text{viral} \\
-                              \tilde{\sigma}_0 < 1 &\Rightarrow \text{diminishing}
-                            \end{array}
-                          \right. \\[12pt]
-                        \sigma_0 > 1: &
-                          \left\{
-                            \begin{array}{ll}
-                              \tilde{\sigma}_0 > 1 &\Rightarrow \text{viral} \\
-                              \tilde{\sigma}_0 \leq 1 &
-                                \left\{
-                                  \begin{array}{ll}
-                                    \tilde{\tilde{\sigma}}_0 < 1 &\Rightarrow \text{diminishing} \\
-                                    \tilde{\tilde{\sigma}}_0 \geq 1 &\Rightarrow \text{outbreak}
-                                  \end{array}
-                                \right.
-                            \end{array}
-                          \right.
-                      \end{array}
-                    \right.
+                  &\boxed{h_0 = 0} \Rightarrow \text{viral} \\[5pt]
+                  &\boxed{h_0 > 0} \Rightarrow
+                    \begin{cases}
+                      \sigma_0 \leq 1 \Rightarrow
+                        \begin{cases}
+                          \tilde{\sigma}_0 > 1 \Rightarrow \text{viral} \\
+                          \tilde{\sigma}_0 \leq 1 \Rightarrow \text{diminishing}
+                        \end{cases} \\[10pt]
+                      \sigma_0 > 1 \Rightarrow
+                        \begin{cases}
+                          \tilde{\sigma}_0 \geq 1 \Rightarrow \text{viral} \\
+                          \tilde{\sigma}_0 < 1 \Rightarrow
+                            \begin{cases}
+                              \tilde{\tilde{\sigma}}_0 \leq 1 \Rightarrow \text{diminishing} \\
+                              \tilde{\tilde{\sigma}}_0 > 1 \Rightarrow \text{outbreak}
+                            \end{cases}
+                        \end{cases}
+                    \end{cases}
                   \end{aligned}
                   \]
                   </div>
@@ -425,5 +414,66 @@
       svg: { fontCache: 'global' }
     };
     </script>
+
+    <style>
+    .threshold-box {
+        background: linear-gradient(135deg, rgba(0, 0, 0, 0.05), rgba(0, 0, 0, 0.1));
+        border: 2px solid #000;
+        border-radius: 12px;
+        padding: 16px;
+        margin: 16px 0;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    .threshold-box h3 {
+        margin: 0 0 12px 0;
+        color: #000;
+        font-size: 1.1em;
+        text-align: center;
+        font-weight: bold;
+    }
+
+    .threshold-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+    }
+
+    .threshold-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 8px 12px;
+        background: rgba(255, 255, 255, 0.9);
+        border-radius: 6px;
+        border-left: 3px solid #000;
+    }
+
+    .threshold-label {
+        font-weight: bold;
+        color: #000;
+        font-size: 0.9em;
+    }
+
+    .threshold-value {
+        color: #2d3748;
+        font-family: 'Courier New', monospace;
+        font-weight: bold;
+        font-size: 0.9em;
+    }
+
+    .mario-text {
+        color: #000 !important;
+        font-weight: bold;
+    }
+
+    .mario-label {
+        color: #000;
+        font-weight: bold;
+        font-size: 0.85em;
+        display: block;
+        margin-bottom: 4px;
+    }
+    </style>
 </body>
 </html> 
