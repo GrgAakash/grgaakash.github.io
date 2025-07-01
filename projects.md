@@ -22,21 +22,24 @@ title: Projects
                         </h4>
                         <div id="sihrDetails" class="collapse">
                             <p class="text-muted">2025</p>
-                            <p>An interactive visualization tool for analyzing SIHR (Susceptible-Infected-Hospitalized-Recovered) epidemiological models. Features include:</p>
+                            <p>An interactive visualization tool for analyzing SIHR-IPC (Susceptible-Infected-Hospitalized-Recovered with Individual Probability Control) epidemiological models. Features include:</p>
                             <ul>
                                 <li>Real-time parameter adjustment and visualization</li>
                                 <li>Comparison between deterministic and stochastic models</li>
+                                <li>Advanced threshold parameter analysis (σ, σ̃, σ̃̃, tpi, h(tpi))</li>
+                                <li>Individual probability controls for state transitions</li>
                                 <li>Pattern analysis and statistical insights</li>
                                 <li>Interactive controls for simulation speed and analysis</li>
+                                <li>Mario-themed gaming interface for enhanced user experience</li>
                             </ul>
                             <div class="math-section">
                                 <h5>Mathematical Model</h5>
-                                <p>The SIHR model is described by the following system of ordinary differential equations:</p>
+                                <p>The SIHR-IPC model is described by the following system of ordinary differential equations:</p>
                                 <div class="equations">
-                                    <p>\[\frac{dS}{dt} = -p_1\beta SI\]</p>
-                                    <p>\[\frac{dI}{dt} = p_1\beta SI - p_2(p_h\gamma_1 + (1-p_h)\gamma_2)I\]</p>
-                                    <p>\[\frac{dH}{dt} = p_2p_h\gamma_1I - p_3\alpha H\]</p>
-                                    <p>\[\frac{dR}{dt} = p_2(1-p_h)\gamma_2I + p_3\alpha H\]</p>
+                                    <p>\[\frac{dS}{dt} = -p_{SI}\beta SI\]</p>
+                                    <p>\[\frac{dI}{dt} = p_{SI}\beta SI - \gamma(1-p_{II})I\]</p>
+                                    <p>\[\frac{dH}{dt} = p_{IH}\gamma I - p_{HR}\alpha H\]</p>
+                                    <p>\[\frac{dR}{dt} = p_{IR}\gamma I + p_{HR}\alpha H\]</p>
                                 </div>
                                 <p>where:</p>
                                 <ul>
@@ -45,14 +48,18 @@ title: Projects
                                     <li>\(H\): Hospitalized population</li>
                                     <li>\(R\): Recovered population</li>
                                     <li>\(\beta\): Transmission rate</li>
-                                    <li>\(\gamma_1\): I to H rate</li>
-                                    <li>\(\gamma_2\): I to R rate</li>
-                                    <li>\(p_h\): Probability of I to H</li>
-                                    <li>\(\alpha\): H to R rate</li>
-                                    <li>\(p_1, p_2, p_3\): Probability of leaving state S,I,R respectively.</li>
+                                    <li>\(\gamma\): I outflow rate</li>
+                                    <li>\(\alpha\): H outflow rate</li>
+                                    <li>\(p_{SI}\): Probability of S→I transition</li>
+                                    <li>\(p_{II}, p_{IH}, p_{IR}\): I outflow probabilities (sum = 1)</li>
+                                    <li>\(p_{HR}, p_{HH}\): H outflow probabilities (sum = 1)</li>
                                 </ul>
-                                <p>In this model we assume</p>
-                                <p>\[\gamma_1 = \gamma_2 = \gamma\]</p>
+                                <p>Key threshold parameters:</p>
+                                <ul>
+                                    <li>\(\sigma = \frac{p_{SI}\beta s_0}{\gamma(1-p_{II})}\): Basic reproduction number</li>
+                                    <li>\(\tilde{\sigma} = \frac{\gamma p_{IH} i_0}{\alpha p_{HR} h_0}\): Initial condition ratio</li>
+                                    <li>\(\tilde{\tilde{\sigma}} = \frac{\gamma p_{IH} i_{peak}}{\alpha p_{HR} h(t_{pi})}\): Peak condition ratio</li>
+                                </ul>
                             </div>
                             <p><a href="SIHR Stochastic vs ODE/index.html" target="_blank" class="btn btn-primary">View Demo</a></p>
                         </div>
