@@ -22,16 +22,7 @@ title: Projects
                         </h4>
                         <div id="sihrDetails" class="collapse">
                             <p class="text-muted">2025</p>
-                            <p>An interactive visualization tool for analyzing SIHR-IPC (Susceptible-Infected-Hospitalized-Recovered with Individual Probability Control) epidemiological models. Features include:</p>
-                            <ul>
-                                <li>Real-time parameter adjustment and visualization</li>
-                                <li>Comparison between deterministic and stochastic models</li>
-                                <li>Advanced threshold parameter analysis (σ, σ̃, σ̃̃, tpi, h(tpi))</li>
-                                <li>Individual probability controls for state transitions</li>
-                                <li>Pattern analysis and statistical insights</li>
-                                <li>Interactive controls for simulation speed and analysis</li>
-                                <li>Mario-themed gaming interface for enhanced user experience</li>
-                            </ul>
+                            <p>An interactive visualization tool for analyzing SIHR-IPC (Susceptible-Infected-Hospitalized-Recovered with Individual Probability Control) epidemiological models.</p>
                             <div class="math-section">
                                 <h5>Mathematical Model</h5>
                                 <p>The SIHR-IPC model is described by the following system of ordinary differential equations:</p>
