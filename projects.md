@@ -22,7 +22,7 @@ title: Projects
                         </h4>
                         <div id="sihrDetails" class="collapse">
                             <p class="text-muted">2025</p>
-                            <p>An interactive visualization tool for analyzing SIHR-IPC (Susceptible-Infected-Hospitalized-Recovered with Individual Probability Control) epidemiological models.</p>
+                            <p>An interactive visualization tool for analyzing SIHR-IPC (Susceptible-Infected-Hospitalized-Recovered with Individual Possion Clock) epidemiological models.</p>
                             <div class="math-section">
                                 <h5>Mathematical Model</h5>
                                 <p>The SIHR-IPC model is described by the following system of ordinary differential equations:</p>
