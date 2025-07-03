@@ -136,12 +136,17 @@ function simpsonsRule(f, a, b, n) {
 // Function to calculate T(s): (-1/beta) * integral from s0 to s of dm/mI(m) 
 function compute_T(s) {
   const I = m => params.s0 + params.i0 - m + (params.gamma * (1 - params.p_II)/(params.beta * params.p_SI)) * Math.log(m/params.s0);
-  const f = m => (-1 / (params.beta * params.p_SI)) * 1 / (m * I(m) );
+  const f = m => {
+    const Im = I(m);
+    if (m <= 0 || !isFinite(Im) || Im === 0) return 0; // skip invalid points
+    return (-1 / (params.beta * params.p_SI)) * 1 / (m * Im);
+  };
   const a = params.s0;
   const b = s;
   const n = 50;
-
-  return simpsonsRule(f,a,b,n);
+  // Check for valid integration range
+  if (b <= 0 || b >= a) return null;
+  return simpsonsRule(f, a, b, n);
 }
 
 function i_peak(){

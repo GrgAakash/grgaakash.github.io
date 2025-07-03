@@ -68,6 +68,18 @@
             </div>
           
 
+              <!-- Initial susceptible proportion -->
+              <div class="parameter-group">
+                <div class="parameter-label">
+                  <span class="parameter-name">s<sub>0</sub> (susceptible fraction)</span>
+                  <span class="parameter-value" id="s0-value">0.80</span>
+                </div>
+                <div class="parameter-input">
+                  <input type="range" id="s0" min="0" max="1" step="0.01" value="0.80">
+                  <input type="number" id="s0-number" min="0" max="1" step="0.001" value="0.80" style="width: 80px;">
+                </div>
+              </div>
+
               <!-- Initial infected proportion -->
               <div class="parameter-group">
                 <div class="parameter-label">
@@ -92,15 +104,14 @@
                 </div>
               </div>
 
-              <!-- Initial recovered proportion -->
+              <!-- Initial recovered proportion (auto-calculated) -->
               <div class="parameter-group">
                 <div class="parameter-label">
                   <span class="parameter-name">r<sub>0</sub> (recovered fraction)</span>
                   <span class="parameter-value" id="r0-value">0.00</span>
                 </div>
                 <div class="parameter-input">
-                  <input type="range" id="r0" min="0" max="1" step="0.01" value="0.00">
-                  <input type="number" id="r0-number" min="0" max="1" step="0.001" value="0.00" style="width: 80px;">
+                  <input type="number" id="r0-number" min="0" max="1" step="0.001" value="0.00" style="width: 80px;" readonly>
                 </div>
               </div>
           

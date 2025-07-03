@@ -714,6 +714,60 @@ if (sihrFlowModal && closeSihrFlowModal && dragonBall3) {
     });
 }
 
+// --- Dynamic initial conditions logic ---
+function updateInitialConditions(changed) {
+    let s0 = parseFloat(document.getElementById('s0-number').value);
+    let i0 = parseFloat(document.getElementById('i0-number').value);
+    let h0 = parseFloat(document.getElementById('h0-number').value);
+    let r0 = 1 - (s0 + i0 + h0);
+    // If sum > 1, cap the changed value
+    if (r0 < 0) {
+        if (changed === 's0') {
+            s0 = Math.max(0, 1 - i0 - h0);
+            document.getElementById('s0').value = s0.toFixed(3);
+            document.getElementById('s0-number').value = s0.toFixed(3);
+        } else if (changed === 'i0') {
+            i0 = Math.max(0, 1 - s0 - h0);
+            document.getElementById('i0').value = i0.toFixed(3);
+            document.getElementById('i0-number').value = i0.toFixed(3);
+        } else if (changed === 'h0') {
+            h0 = Math.max(0, 1 - s0 - i0);
+            document.getElementById('h0').value = h0.toFixed(3);
+            document.getElementById('h0-number').value = h0.toFixed(3);
+        }
+        r0 = 0;
+    }
+    document.getElementById('r0-number').value = r0.toFixed(3);
+    document.getElementById('r0-value').textContent = r0.toFixed(3);
+    document.getElementById('s0-value').textContent = s0.toFixed(3);
+    document.getElementById('i0-value').textContent = i0.toFixed(3);
+    document.getElementById('h0-value').textContent = h0.toFixed(3);
+    // Update params
+    params.s0 = s0;
+    params.i0 = i0;
+    params.h0 = h0;
+    params.r0 = r0;
+    // Update thresholds and chart if needed
+    params.R_0_value = calculateR0(params);
+    const [sigma0, sigma1, sigma2] = calculate_thresholds(params);
+    const tpi = compute_T(params.gamma * (1 - params.p_II) / (params.beta * params.p_SI));
+    const h_tpi = compute_h_tpi();
+    document.getElementById('R_0-value').textContent = params.R_0_value.toFixed(2);
+    document.getElementById('sigma0-value').textContent = sigma0.toFixed(2);
+    document.getElementById('sigma1-value').textContent = sigma1.toFixed(2);
+    document.getElementById('sigma2-value').textContent = sigma2.toFixed(2);
+    document.getElementById('tpi-value').textContent = isNaN(tpi) ? '--' : tpi.toFixed(2);
+    document.getElementById('h_tpi-value').textContent = isNaN(h_tpi) ? '--' : h_tpi.toFixed(2);
+}
+['s0', 'i0', 'h0'].forEach(param => {
+    document.getElementById(param).addEventListener('input', (e) => {
+        updateInitialConditions(param);
+    });
+    document.getElementById(param + '-number').addEventListener('input', (e) => {
+        updateInitialConditions(param);
+    });
+});
+
 // Start when page loads
 window.addEventListener('load', async () => {
     // Hide pattern details modal on load
@@ -729,4 +783,41 @@ window.addEventListener('load', async () => {
     } else if (typeof initDraggableDragonBalls === 'function') {
         initDraggableDragonBalls();
     }
+});
+
+function safeUpdateThresholds() {
+    const sum = params.s0 + params.i0 + params.h0 + params.r0;
+    if (Math.abs(sum - 1) > 1e-8 || params.s0 <= 0) {
+        document.getElementById('tpi-value').textContent = '--';
+        document.getElementById('sigma0-value').textContent = '--';
+        document.getElementById('sigma1-value').textContent = '--';
+        document.getElementById('sigma2-value').textContent = '--';
+        document.getElementById('h_tpi-value').textContent = '--';
+        document.getElementById('R_0-value').textContent = '--';
+        return;
+    }
+    const s_p = params.gamma * (1 - params.p_II) / (params.beta * params.p_SI);
+    if (s_p <= 0 || s_p >= params.s0) {
+        document.getElementById('tpi-value').textContent = '--';
+        document.getElementById('h_tpi-value').textContent = '--';
+        return;
+    }
+    const [sigma0, sigma1, sigma2] = calculate_thresholds(params);
+    const tpi = compute_T(s_p);
+    const h_tpi = compute_h_tpi();
+    params.R_0_value = calculateR0(params);
+    document.getElementById('R_0-value').textContent = isNaN(params.R_0_value) ? '--' : params.R_0_value.toFixed(2);
+    document.getElementById('sigma0-value').textContent = isNaN(sigma0) ? '--' : sigma0.toFixed(2);
+    document.getElementById('sigma1-value').textContent = isNaN(sigma1) ? '--' : sigma1.toFixed(2);
+    document.getElementById('sigma2-value').textContent = isNaN(sigma2) ? '--' : sigma2.toFixed(2);
+    document.getElementById('tpi-value').textContent = isNaN(tpi) ? '--' : tpi.toFixed(2);
+    document.getElementById('h_tpi-value').textContent = isNaN(h_tpi) ? '--' : h_tpi.toFixed(2);
+}
+
+// Call safeUpdateThresholds after any parameter change
+['s0', 'i0', 'h0', 'beta', 'gamma', 'alpha', 'p_SI', 'p_II', 'p_IH', 'p_IR', 'p_HR', 'p_HH'].forEach(param => {
+    const rangeInput = document.getElementById(param);
+    const numberInput = document.getElementById(`${param}-number`);
+    if (rangeInput) rangeInput.addEventListener('input', safeUpdateThresholds);
+    if (numberInput) numberInput.addEventListener('input', safeUpdateThresholds);
 }); 
