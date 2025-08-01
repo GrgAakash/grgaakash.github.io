@@ -55,6 +55,54 @@ title: Projects
                             <p><a href="SIHR Stochastic vs ODE/index.html" target="_blank" class="btn btn-primary">View Demo</a></p>
                         </div>
                     </div>
+
+                    <div class="project-item mb-4">
+                        <h4>
+                            <a href="#" class="sihrs-toggle" data-bs-toggle="collapse" data-bs-target="#sihrsDetails">
+                                SIHRS Model Visualization
+                                <i class="fas fa-chevron-down ms-2"></i>
+                            </a>
+                        </h4>
+                        <div id="sihrsDetails" class="collapse">
+                            <p class="text-muted">2025</p>
+                            <p>An advanced interactive visualization tool for analyzing SIHRS (Susceptible-Infected-Hospitalized-Recovered-Death) epidemiological models with reinfection dynamics and mortality tracking.</p>
+                            <div class="math-section">
+                                <h5>Mathematical Model</h5>
+                                <p>The SIHRS model is described by the following system of ordinary differential equations:</p>
+                                <div class="equations">
+                                    <p>\[\frac{dS}{dt} = -\beta p_{SI} SI + p_{RS}\Lambda R\]</p>
+                                    <p>\[\frac{dI}{dt} = \beta p_{SI} SI - \gamma(1-p_{II})I\]</p>
+                                    <p>\[\frac{dH}{dt} = p_{IH}\gamma I - \alpha(1-p_{HH})H\]</p>
+                                    <p>\[\frac{dR}{dt} = p_{IR}\gamma I + p_{HR}\alpha H - p_{RS}\Lambda R\]</p>
+                                    <p>\[\frac{dD}{dt} = p_{ID}\gamma I + p_{HD}\alpha H\]</p>
+                                </div>
+                                <p>where:</p>
+                                <ul>
+                                    <li>\(S\): Susceptible population</li>
+                                    <li>\(I\): Infected population</li>
+                                    <li>\(H\): Hospitalized population</li>
+                                    <li>\(R\): Recovered population</li>
+                                    <li>\(D\): Death population</li>
+                                    <li>\(\beta\): Transmission rate</li>
+                                    <li>\(\gamma\): I outflow rate</li>
+                                    <li>\(\alpha\): H outflow rate</li>
+                                    <li>\(\Lambda\): R outflow rate (reinfection)</li>
+                                    <li>\(p_{SI}\): Probability of S→I transition</li>
+                                    <li>\(p_{II}, p_{IH}, p_{IR}, p_{ID}\): I outflow probabilities (sum = 1)</li>
+                                    <li>\(p_{HH}, p_{HR}, p_{HD}\): H outflow probabilities (sum = 1)</li>
+                                    <li>\(p_{RR}, p_{RS}\): R outflow probabilities (sum = 1)</li>
+                                </ul>
+                                <p>Key features:</p>
+                                <ul>
+                                    <li><strong>Mortality tracking:</strong> Death pathways from both I and H compartments</li>
+                                    <li><strong>Reinfection dynamics:</strong> Waning immunity allows R→S transitions</li>
+                                    <li><strong>Advanced statistics:</strong> Peak infection, mortality rates, reinfection counts</li>
+                                    <li><strong>Realistic parameters:</strong> Based on COVID-19 epidemiological data</li>
+                                </ul>
+                            </div>
+                            <p><a href="SIHR Stochastic vs ODE/index_sihrs.html" target="_blank" class="btn btn-primary">View SIHRS Demo</a></p>
+                        </div>
+                    </div>
                 </div>
             </div>
 
@@ -137,7 +185,19 @@ title: Projects
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     const sihrToggle = document.querySelector('.sihr-toggle');
+    const sihrsToggle = document.querySelector('.sihrs-toggle');
+    
     sihrToggle.addEventListener('click', function(e) {
+        e.preventDefault();
+        const icon = this.querySelector('.fa-chevron-down');
+        if (this.getAttribute('aria-expanded') === 'true') {
+            this.setAttribute('aria-expanded', 'false');
+        } else {
+            this.setAttribute('aria-expanded', 'true');
+        }
+    });
+    
+    sihrsToggle.addEventListener('click', function(e) {
         e.preventDefault();
         const icon = this.querySelector('.fa-chevron-down');
         if (this.getAttribute('aria-expanded') === 'true') {
