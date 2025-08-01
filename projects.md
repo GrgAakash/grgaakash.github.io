@@ -34,10 +34,10 @@ title: Projects
                                 </div>
                                 <p>where:</p>
                                 <ul>
-                                    <li>\(S\): Susceptible population</li>
-                                    <li>\(I\): Infected population</li>
-                                    <li>\(H\): Hospitalized population</li>
-                                    <li>\(R\): Recovered population</li>
+                                    <li>\(s\): Susceptible proportion</li>
+                                    <li>\(i\): Infected proportion</li>
+                                    <li>\(h\): Hospitalized proportion</li>
+                                    <li>\(r\): Recovered proportion</li>
                                     <li>\(\beta\): Transmission rate</li>
                                     <li>\(\gamma\): I outflow rate</li>
                                     <li>\(\alpha\): H outflow rate</li>
@@ -78,11 +78,11 @@ title: Projects
                                 </div>
                                 <p>where:</p>
                                 <ul>
-                                    <li>\(S\): Susceptible population</li>
-                                    <li>\(I\): Infected population</li>
-                                    <li>\(H\): Hospitalized population</li>
-                                    <li>\(R\): Recovered population</li>
-                                    <li>\(D\): Death population</li>
+                                    <li>\(s\): Susceptible proportion</li>
+                                    <li>\(i\): Infected proportion</li>
+                                    <li>\(h\): Hospitalized proportion</li>
+                                    <li>\(r\): Recovered proportion</li>
+                                    <li>\(d\): Death proportion</li>
                                     <li>\(\beta\): Transmission rate</li>
                                     <li>\(\gamma\): I outflow rate</li>
                                     <li>\(\alpha\): H outflow rate</li>
@@ -91,13 +91,6 @@ title: Projects
                                     <li>\(p_{II}, p_{IH}, p_{IR}, p_{ID}\): I outflow probabilities (sum = 1)</li>
                                     <li>\(p_{HH}, p_{HR}, p_{HD}\): H outflow probabilities (sum = 1)</li>
                                     <li>\(p_{RR}, p_{RS}\): R outflow probabilities (sum = 1)</li>
-                                </ul>
-                                <p>Key features:</p>
-                                <ul>
-                                    <li><strong>Mortality tracking:</strong> Death pathways from both I and H compartments</li>
-                                    <li><strong>Reinfection dynamics:</strong> Waning immunity allows R→S transitions</li>
-                                    <li><strong>Advanced statistics:</strong> Peak infection, mortality rates, reinfection counts</li>
-                                    <li><strong>Realistic parameters:</strong> Based on COVID-19 epidemiological data</li>
                                 </ul>
                             </div>
                             <p><a href="SIHR Stochastic vs ODE/index_sihrs.html" target="_blank" class="btn btn-primary">View SIHRS Demo</a></p>
