@@ -27,10 +27,10 @@ title: Projects
                                 <h5>Mathematical Model</h5>
                                 <p>The SIHR-IPC model is described by the following system of ordinary differential equations:</p>
                                 <div class="equations">
-                                    <p>\[\frac{dS}{dt} = -p_{SI}\beta SI\]</p>
-                                    <p>\[\frac{dI}{dt} = p_{SI}\beta SI - \gamma(1-p_{II})I\]</p>
-                                    <p>\[\frac{dH}{dt} = p_{IH}\gamma I - p_{HR}\alpha H\]</p>
-                                    <p>\[\frac{dR}{dt} = p_{IR}\gamma I + p_{HR}\alpha H\]</p>
+                                    <p>\[\frac{ds}{dt} = -p_{SI}\beta si\]</p>
+                                    <p>\[\frac{di}{dt} = p_{SI}\beta si - \gamma(1-p_{II})i\]</p>
+                                    <p>\[\frac{dh}{dt} = p_{IH}\gamma i - p_{HR}\alpha h\]</p>
+                                    <p>\[\frac{dr}{dt} = p_{IR}\gamma i + p_{HR}\alpha h\]</p>
                                 </div>
                                 <p>where:</p>
                                 <ul>
@@ -52,7 +52,7 @@ title: Projects
                                     <li>\(\tilde{\tilde{\sigma}} = \frac{\gamma p_{IH} i_{peak}}{\alpha p_{HR} h(t_{pi})}\): Peak condition ratio</li>
                                 </ul>
                             </div>
-                            <p><a href="SIHR Stochastic vs ODE/sihr_index.html" target="_blank" class="btn btn-primary">View Demo</a></p>
+                            <p><a href="SIHR Stochastic vs ODE/index_sihr.html" target="_blank" class="btn btn-primary">View Demo</a></p>
                         </div>
                     </div>
 
@@ -65,16 +65,16 @@ title: Projects
                         </h4>
                         <div id="sihrsDetails" class="collapse">
                             <p class="text-muted">2025</p>
-                            <p>An advanced interactive visualization tool for analyzing SIHRS (Susceptible-Infected-Hospitalized-Recovered-Death) epidemiological models with reinfection dynamics and mortality tracking.</p>
+                            <p>An advanced interactive visualization tool for analyzing SIHRS (Susceptible-Infected-Hospitalized-Recovered with Death) epidemiological models with reinfection dynamics and mortality tracking.</p>
                             <div class="math-section">
                                 <h5>Mathematical Model</h5>
                                 <p>The SIHRS model is described by the following system of ordinary differential equations:</p>
                                 <div class="equations">
-                                    <p>\[\frac{dS}{dt} = -\beta p_{SI} SI + p_{RS}\Lambda R\]</p>
-                                    <p>\[\frac{dI}{dt} = \beta p_{SI} SI - \gamma(1-p_{II})I\]</p>
-                                    <p>\[\frac{dH}{dt} = p_{IH}\gamma I - \alpha(1-p_{HH})H\]</p>
-                                    <p>\[\frac{dR}{dt} = p_{IR}\gamma I + p_{HR}\alpha H - p_{RS}\Lambda R\]</p>
-                                    <p>\[\frac{dD}{dt} = p_{ID}\gamma I + p_{HD}\alpha H\]</p>
+                                    <p>\[\frac{ds}{dt} = -\beta p_{SI} si + p_{RS}\Lambda r\]</p>
+                                    <p>\[\frac{di}{dt} = \beta p_{SI} si - \gamma(1-p_{II})i\]</p>
+                                    <p>\[\frac{dh}{dt} = p_{IH}\gamma i - \alpha(1-p_{HH})h\]</p>
+                                    <p>\[\frac{dr}{dt} = p_{IR}\gamma i + p_{HR}\alpha h - p_{RS}\Lambda r\]</p>
+                                    <p>\[\frac{dd}{dt} = p_{ID}\gamma i + p_{HD}\alpha h\]</p>
                                 </div>
                                 <p>where:</p>
                                 <ul>
