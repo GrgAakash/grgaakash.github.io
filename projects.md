@@ -147,23 +147,23 @@ title: Projects
     text-align: center;
 }
 
-.sihr-toggle {
-    color: inherit;
+.sihr-toggle, .sihrs-toggle {
+    color: #007bff;
     text-decoration: none;
     display: flex;
     align-items: center;
     justify-content: space-between;
 }
 
-.sihr-toggle:hover {
-    color: #007bff;
+.sihr-toggle:hover, .sihrs-toggle:hover {
+    color: #0056b3;
 }
 
-.sihr-toggle .fa-chevron-down {
+.sihr-toggle .fa-chevron-down, .sihrs-toggle .fa-chevron-down {
     transition: transform 0.3s ease;
 }
 
-.sihr-toggle[aria-expanded="true"] .fa-chevron-down {
+.sihr-toggle[aria-expanded="true"] .fa-chevron-down, .sihrs-toggle[aria-expanded="true"] .fa-chevron-down {
     transform: rotate(180deg);
 }
 
