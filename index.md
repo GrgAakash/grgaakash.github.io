@@ -51,7 +51,7 @@ title: Home
         <h2>Skills</h2>
         <div class="card">
             <div class="card-body">
-                <p>C++, Java, SQL, Python, LaTeX, HTML, CSS, Matlab</p>
+                <p>Python, Julia, Matlab, PowerQuery, JavaScript, CSS, HTML.</p>
             </div>
         </div>
     </div> 
