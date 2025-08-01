@@ -61,7 +61,8 @@ title: Research
                     </div>
 
                     <div class="publication-item mb-4">
-                        <p>Aakash Gurung, "The integrals in Gradshteyn and Ryzhik. Part 34: Bessel functions," Scientia Series A: Mathematical Sciences, Volume 34, March 19, 2024.</p>
+                        <p>Aakash Gurung, "The integrals in Gradshteyn and Ryzhik. Part 34: Bessel functions," Scientia Series A: Mathematical Sciences, Volume 34, March 19, 2024. <br>
+                        <a href="https://doi.org/10.71712/cf8k-0x77" target="_blank">https://doi.org/10.71712/cf8k-0x77</a></p>
                     </div>
                 </div>
             </div>
