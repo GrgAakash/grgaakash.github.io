@@ -52,7 +52,7 @@ title: Projects
                                     <li>\(\tilde{\tilde{\sigma}} = \frac{\gamma p_{IH} i_{peak}}{\alpha p_{HR} h(t_{pi})}\): Peak condition ratio</li>
                                 </ul>
                             </div>
-                            <p><a href="SIHR Stochastic vs ODE/index.html" target="_blank" class="btn btn-primary">View Demo</a></p>
+                            <p><a href="SIHR Stochastic vs ODE/sihr_index.html" target="_blank" class="btn btn-primary">View Demo</a></p>
                         </div>
                     </div>
 
