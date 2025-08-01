@@ -14,12 +14,6 @@ title: Research
                 </div>
                 <div class="card-body">
                     <div class="research-item mb-4">
-                        <h4>Stochastic Epidemic Modeling</h4>
-                        <p class="text-muted">May 2025 - July 2025</p>
-                        <p>As part of a Summer 2025 REU research team, we (5 members)analyzed "finite size effects" in epidemic modeling by co-developing an agent-based stochastic model. We studied the stochastic behavior of disease spread, compared it with its deterministic ODE counterpart, and conducted case studies based on COVID-19.</p>
-                        <p>Mentors: Professor Chuntian Wang, Professor Yuanzhen Shao, Professor Yuanyuan Song</p>
-                    </div>
-                    <div class="research-item mb-4">
                         <h4>Combinatorial Nature of Q,T Catalan Polynomials</h4>
                         <p class="text-muted">Feb 2025 - Present</p>
                         <p>Exploring combinatorial proofs of Q,T Catalan numbers while also exploring its algebraic structure under the guidance of Professor Kyungyong Lee.</p>
@@ -32,6 +26,12 @@ title: Research
                     <h3>Past Research Experience</h3>
                 </div>
                 <div class="card-body">
+                     <div class="research-item mb-4">
+                        <h4>Stochastic Epidemic Modeling</h4>
+                        <p class="text-muted">May 2025 - July 2025</p>
+                        <p>As part of a Summer 2025 REU research team, we (5 members)analyzed "finite size effects" in epidemic modeling by co-developing an agent-based stochastic model. We studied the stochastic behavior of disease spread, compared it with its deterministic ODE counterpart, and conducted case studies based on COVID-19.</p>
+                        <p>Mentors: Professor Chuntian Wang, Professor Yuanzhen Shao, Professor Yuanyuan Song</p>
+                    </div>
                     <div class="research-item mb-4">
                         <h4>Game of Cycles on Maximal Plane Graphs</h4>
                         <p class="text-muted">2024</p>
