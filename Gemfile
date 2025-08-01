@@ -2,8 +2,6 @@ source "https://rubygems.org"
 
 gem "jekyll"
 gem "jekyll-sitemap"
-gem "jekyll-scholar"
-gem "jekyll-last-modified-at"
 gem "csv"
 gem "logger"
 gem "base64"
