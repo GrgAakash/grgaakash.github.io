@@ -36,7 +36,7 @@ title: Home
             <div class="card-body">
                 <h5>Previous Roles</h5>
                 <ul>
-                 <li>Student Technology Assistant - Student Center, University of Alabama</li>
+                 <li>Student Technology Assistant - Student Center, University of Alabama (2024)</li>
                     <li>Membership Associate - University Recreation Center (Summer 2025)</li>     
                     <li>Junior Member and Outreach Coordinator - Nepal Astronomical Society (2020-2022) </li>
                     <li>Content Department and Outreach Department Head - Mathematics Initiatives in Nepal (2020-2022)</li>
