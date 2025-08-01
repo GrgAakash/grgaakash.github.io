@@ -16,12 +16,13 @@ title: Research
                     <div class="research-item mb-4">
                         <h4>Compartmental Models and Disease Control Strategies</h4>
                         <p class="text-muted">May 2025 - Present</p>
-                        <p>Developing and analyzing compartmental models with a focus on stability analysis and disease control strategies in a summer REU project with 4 others under professor Chuntian Wang's group.</p>
+                        <p>As part of a Summer 2025 REU research team, we (5 members)analyzed "finite size effects" in epidemic modeling by co-developing an agent-based stochastic model. We studied the stochastic behavior of disease spread, compared it with its deterministic ODE counterpart, and conducted case studies based on COVID-19.</p>
+                        <p>Mentors: Professor Chuntian Wang, Professor Yuanzhen Shao, Professor Yuanyuan Song</p>
                     </div>
                     <div class="research-item mb-4">
                         <h4>Combinatorial Nature of q,t Catalan Polynomials</h4>
                         <p class="text-muted">January 2025 - Present</p>
-                        <p>Working on the combinatorial nature of q,t Catalan polynomials under the guidance of Professor Kyungyong Lee.</p>
+                        <p>Exploring combinatorial proofs of Q,T Catalan numbers while also exploring its algebraic structure under the guidance of Professor Kyungyong Lee.</p>
                     </div>
                 </div>
             </div>
