@@ -105,7 +105,7 @@ title: Projects
                 </div>
                 <div class="card-body">
                     <div class="project-item mb-4">
-                        <p><a href="https://github.com/GrgAakash/InterestingMathProblems" target="_blank">Interesting Math Problems</a></p>
+                        <p><a href="https://github.com/GrgAakash/InterestingProblems" target="_blank">Interesting Math Problems</a></p>
                     </div>
                 </div>
             </div>
