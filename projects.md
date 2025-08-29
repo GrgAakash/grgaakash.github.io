@@ -101,17 +101,12 @@ title: Projects
 
             <div class="card mb-4">
                 <div class="card-header">
-                    <h3>Personal Academic Ventures</h3>
+                    <h3>Others</h3>
                 </div>
                 <div class="card-body">
                     <div class="project-item mb-4">
                         <p class="text-muted">2025</p>
-                        <ul>
-                            <li><a href="https://github.com/GrgAakash/GT-S25" target="_blank">Group Theory</a> - Problems which I find interesting. Level Undergrad.</li>
-                            <li><a href="https://github.com/GrgAakash/Top-S25." target="_blank">Topology</a> - Problems which I find interesting. Level Undergrad.</li>
-                            <li><a href="https://github.com/GrgAakash/MT-S25" target="_blank">Measure Theory</a> -Problems which I find interesting. Level Grad.</li>
-                            <li><a href="https://github.com/GrgAakash/MathGREsubjectT" target="_blank">Math GRE Preparation</a> - Subject test preparation materials based on my own preparation.</li>
-                        </ul>
+                        <p><a href="https://github.com/GrgAakash/InterestingProblems" target="_blank">Interesting Math Problems</a></p>
                     </div>
                 </div>
             </div>
