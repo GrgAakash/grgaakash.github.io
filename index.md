@@ -28,7 +28,6 @@ title: Home
                 <h5>Current Positions</h5>
                 <ul>
                     <li>IT Desk Assistant - OIT, University of Alabama (Aug 2025 - ) </li>  
-                    <li>Peer Tutor - Mathematics Technology Learning Center (Sept 2024 - )</li>
                 </ul>
             </div>
         </div>
@@ -36,10 +35,9 @@ title: Home
             <div class="card-body">
                 <h5>Previous Roles</h5>
                 <ul>
-                 <li>Student Technology Assistant - Student Center, University of Alabama (Jan 2025- July 2025)</li>
+                    <li>Peer Tutor - Mathematics Technology Learning Center (Sept 2024 - May 2025)</li>
+                    <li>Student Technology Assistant - Student Center, University of Alabama (Jan 2025- July 2025)</li>
                     <li>Membership Associate - University Recreation Center (Summer 2025)</li>     
-                    <li>Junior Member and Outreach Coordinator - Nepal Astronomical Society (Nov 2020-July 2022) </li>
-                    <li>Content Department and Outreach Department Head - Mathematics Initiatives in Nepal (Aug 2020- April 2022)</li>
                 </ul>
             </div>
         </div>
