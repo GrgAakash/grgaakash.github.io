@@ -1,15 +1,3 @@
-/**
- * ND₁ Sequence Generator - JavaScript Implementation
- * 
- * This file contains all the mathematical functions for the ND₁ transformation
- * and the interactive web interface functionality.
- */
-
-// Mathematical Functions (translated from Python/Julia)
-
-/**
- * Converts a Dyck vector to an integer partition
- */
 function dyckToPartition(v) {
     const n = v.length;
     const partition = [];
@@ -21,47 +9,31 @@ function dyckToPartition(v) {
         }
     }
     
-    return partition.sort((a, b) => b - a); // Sort in decreasing order
+    return partition.sort((a, b) => b - a);
 }
 
-/**
- * Applies the ND₁ map to an integer partition (Method 1)
- */
 function nd1OnPartition(gamma) {
     if (gamma.length === 0) {
-        return null; // ND₁ is undefined on the empty partition
+        return null;
     }
     
-    const g1 = gamma[0]; // The first part (driver)
-    const l = gamma.length; // Length of partition
+    const g1 = gamma[0];
+    const l = gamma.length;
     
-    // Domain condition: first part >= length
     if (g1 < l) {
-        return null; // Outside the domain
+        return null;
     }
     
-    // Step 1: Remove first part, add 1 to each remaining part
     const newParts = gamma.slice(1).map(p => p + 1);
-    
-    // Step 2: Add (g1 - l) parts of size 1
     const onesToAdd = new Array(g1 - l).fill(1);
-    
-    // Combine and sort
     const newPartition = [...newParts, ...onesToAdd];
     return newPartition.sort((a, b) => b - a);
 }
 
-/**
- * Converts an integer partition back to a Dyck vector of length n
- */
 function partitionToDyck(p, n) {
-    // Pad the partition with zeros
     const paddedP = [...p, ...new Array(n - p.length).fill(0)];
-    
-    // Initialize the Dyck vector with zeros
     const v = new Array(n).fill(0);
     
-    // Apply the inverse conversion formula
     for (let i = 1; i <= n; i++) {
         v[i - 1] = (i - 1) - paddedP[n - i];
     }
@@ -69,9 +41,6 @@ function partitionToDyck(p, n) {
     return v;
 }
 
-/**
- * Calculates the dinv (diagonal inversions) of an integer partition using the arm-leg rule
- */
 function calculateDinvPartition(partition) {
     if (partition.length === 0) {
         return 0;
@@ -82,11 +51,7 @@ function calculateDinvPartition(partition) {
     for (let i = 0; i < partition.length; i++) {
         const part = partition[i];
         for (let j = 1; j <= part; j++) {
-            // Box at position (i, j) in the partition diagram
-            // Arm = number of boxes to the right
             const arm = part - j;
-            
-            // Leg = number of boxes below
             let leg = 0;
             for (let k = i + 1; k < partition.length; k++) {
                 if (j <= partition[k]) {
@@ -94,7 +59,6 @@ function calculateDinvPartition(partition) {
                 }
             }
             
-            // Count if balanced (arm === leg or arm === leg + 1)
             if (arm === leg || arm === leg + 1) {
                 dinvCount++;
             }
@@ -104,9 +68,6 @@ function calculateDinvPartition(partition) {
     return dinvCount;
 }
 
-/**
- * Calculates the deficit (defc) of an integer partition using the arm-leg rule
- */
 function calculateDefcPartition(partition) {
     if (partition.length === 0) {
         return 0;
@@ -117,47 +78,34 @@ function calculateDefcPartition(partition) {
     return totalBoxes - dinvCount;
 }
 
-/**
- * Calculates the deficit (defc) of a Dyck vector
- */
 function calculateDefc(v) {
     const partition = dyckToPartition(v);
     return calculateDefcPartition(partition);
 }
 
-/**
- * Calculates the dinv of a Dyck vector
- */
 function calculateDinv(v) {
     const partition = dyckToPartition(v);
     return calculateDinvPartition(partition);
 }
 
-/**
- * Apply ND₁ directly to a Dyck vector using Method 2
- */
 function nd1OnDyckVector(v) {
     const n = v.length;
     if (n === 0) {
         return null;
     }
     
-    // Find the leader d (largest k where v starts with [0,1,...,k])
     let d = 0;
     while (d < n && v[d] === d) {
         d++;
     }
-    d--; // Adjust to get the actual leader
+    d--;
     
-    // Get the last symbol
     const s = v[n - 1];
     
-    // Check condition: d >= s
     if (d < s) {
-        return null; // ND₁ is undefined
+        return null;
     }
     
-    // Find the first occurrence of s
     let insertPos = -1;
     for (let i = 0; i < n; i++) {
         if (v[i] === s) {
@@ -167,29 +115,20 @@ function nd1OnDyckVector(v) {
     }
     
     if (insertPos === -1) {
-        return null; // Should not happen
+        return null;
     }
     
-    // Create new vector: remove last element, insert (s+1) after first s
-    const newV = v.slice(0, -1); // Remove last element
-    newV.splice(insertPos + 1, 0, s + 1); // Insert s+1 after first occurrence of s
+    const newV = v.slice(0, -1);
+    newV.splice(insertPos + 1, 0, s + 1);
     
     return newV;
 }
 
-/**
- * Generate all Dyck vectors of length n with target defc
- * 
- * A Dyck vector must satisfy:
- * 1. v[0] = 0 (must start with 0)
- * 2. v[i+1] <= v[i] + 1 for all i
- */
 function generateAllDyckVectors(n, targetDefc = null) {
     const vectors = [];
     
     function generateRecursive(current, remainingPositions) {
         if (remainingPositions === 0) {
-            // Calculate actual defc for filtering
             if (targetDefc === null) {
                 vectors.push([...current]);
             } else {
@@ -201,14 +140,9 @@ function generateAllDyckVectors(n, targetDefc = null) {
             return;
         }
         
-        // For Dyck vectors:
-        // 1. The first element must be 0
-        // 2. Each subsequent component must satisfy v[i+1] <= v[i] + 1
         if (current.length === 0) {
-            // First element must be 0
             generateRecursive([...current, 0], remainingPositions - 1);
         } else {
-            // Subsequent elements: v[i+1] <= v[i] + 1
             const maxVal = current[current.length - 1] + 1;
             for (let val = 0; val <= maxVal; val++) {
                 generateRecursive([...current, val], remainingPositions - 1);
@@ -220,11 +154,6 @@ function generateAllDyckVectors(n, targetDefc = null) {
     return vectors;
 }
 
-// UI Functions
-
-/**
- * Parse input string to array of integers
- */
 function parseDyckVector(input) {
     try {
         const cleaned = input.replace(/[()]/g, '');
@@ -235,9 +164,6 @@ function parseDyckVector(input) {
     }
 }
 
-/**
- * Generate ND₁ sequence and display results
- */
 function generateSequence() {
     const input = document.getElementById('dyck-vector').value;
     const method = document.querySelector('input[name="method"]:checked').value;
@@ -247,7 +173,6 @@ function generateSequence() {
         const vCurrent = parseDyckVector(input);
         const vectorLength = vCurrent.length;
         
-        // Initialize sequence data
         const sequence = [vCurrent];
         const partitions = [];
         const deficiencies = [calculateDefc(vCurrent)];
@@ -257,15 +182,12 @@ function generateSequence() {
         let iteration = 0;
         const maxIterations = 100;
         
-        // Generate sequence
         while (iteration < maxIterations) {
             let nextVector;
             
             if (useMethod2) {
-                // Method 2: Direct Dyck vector transformation
                 nextVector = nd1OnDyckVector(currentVector);
             } else {
-                // Method 1: Partition-based transformation
                 const pCurrent = dyckToPartition(currentVector);
                 partitions.push(pCurrent);
                 
@@ -281,7 +203,6 @@ function generateSequence() {
                 break;
             }
             
-            // Check for fixed point
             if (JSON.stringify(nextVector) === JSON.stringify(currentVector)) {
                 break;
             }
@@ -294,7 +215,6 @@ function generateSequence() {
             iteration++;
         }
         
-        // Display results
         displayResults(sequence, deficiencies, dinvs, partitions, useMethod2, iteration);
         
     } catch (error) {
@@ -302,29 +222,22 @@ function generateSequence() {
     }
 }
 
-/**
- * Display sequence results
- */
 function displayResults(sequence, deficiencies, dinvs, partitions, useMethod2, iterations) {
     const resultsSection = document.getElementById('results-section');
     resultsSection.style.display = 'block';
     
-    // Update initial state
     document.getElementById('initial-vector').textContent = `[${sequence[0].join(', ')}]`;
     document.getElementById('initial-defc').textContent = deficiencies[0];
     document.getElementById('initial-dinv').textContent = dinvs[0];
     
-    // Update final state
     const finalVector = sequence[sequence.length - 1];
     document.getElementById('final-vector').textContent = `[${finalVector.join(', ')}]`;
     document.getElementById('final-defc').textContent = deficiencies[deficiencies.length - 1];
     document.getElementById('final-dinv').textContent = dinvs[dinvs.length - 1];
     
-    // Update statistics
     document.getElementById('total-iterations').textContent = iterations;
     document.getElementById('method-used').textContent = useMethod2 ? 'Method 2 (Direct)' : 'Method 1 (Partition-based)';
     
-    // Determine termination reason
     let terminationReason = 'Sequence completed';
     if (iterations >= 100) {
         terminationReason = 'Maximum iterations reached';
@@ -344,16 +257,10 @@ function displayResults(sequence, deficiencies, dinvs, partitions, useMethod2, i
     }
     document.getElementById('termination-reason').textContent = terminationReason;
     
-    // Create sequence table
     createSequenceTable(sequence, deficiencies, dinvs);
-    
-    // Create visualization
     createVisualization(sequence, deficiencies, dinvs);
 }
 
-/**
- * Create sequence table
- */
 function createSequenceTable(sequence, deficiencies, dinvs) {
     const tableContainer = document.getElementById('sequence-table');
     let tableHTML = `
@@ -395,13 +302,9 @@ function createSequenceTable(sequence, deficiencies, dinvs) {
     tableContainer.innerHTML = tableHTML;
 }
 
-/**
- * Create simple visualization
- */
 function createVisualization(sequence, deficiencies, dinvs) {
     const chartContainer = document.getElementById('sequence-chart');
     
-    // Simple text-based visualization for now
     let chartHTML = '<div class="visualization">';
     chartHTML += '<h4>Sequence Progression</h4>';
     
@@ -422,9 +325,6 @@ function createVisualization(sequence, deficiencies, dinvs) {
     chartContainer.innerHTML = chartHTML;
 }
 
-/**
- * List available defc values for a given length
- */
 function listAvailableDefcValues(length) {
     try {
         const allVectors = generateAllDyckVectors(length);
@@ -463,9 +363,6 @@ function listAvailableDefcValues(length) {
     }
 }
 
-/**
- * Analyze vectors with arbitrary defc
- */
 function analyzeArbitraryDefc() {
     const length = parseInt(document.getElementById('vector-length').value);
     const targetDefc = parseInt(document.getElementById('target-defc').value);
@@ -495,7 +392,6 @@ function analyzeArbitraryDefc() {
             let iteration = 0;
             const maxIterations = 100;
             
-            // Generate sequence
             while (iteration < maxIterations) {
                 const nextVector = nd1OnDyckVector(currentVector);
                 if (nextVector === null) {
@@ -535,59 +431,41 @@ function analyzeArbitraryDefc() {
     }
 }
 
-/**
- * Show error message
- */
 function showError(message) {
     const errorDiv = document.createElement('div');
     errorDiv.className = 'error';
     errorDiv.textContent = message;
     
-    // Remove existing errors
     document.querySelectorAll('.error').forEach(el => el.remove());
-    
-    // Add new error
     document.querySelector('main').insertBefore(errorDiv, document.querySelector('main').firstChild);
     
-    // Auto-remove after 5 seconds
     setTimeout(() => {
         errorDiv.remove();
     }, 5000);
 }
 
-/**
- * Show success message
- */
 function showSuccess(message) {
     const successDiv = document.createElement('div');
     successDiv.className = 'success';
     successDiv.textContent = message;
     
-    // Remove existing messages
     document.querySelectorAll('.success').forEach(el => el.remove());
-    
-    // Add new message
     document.querySelector('main').insertBefore(successDiv, document.querySelector('main').firstChild);
     
-    // Auto-remove after 3 seconds
     setTimeout(() => {
         successDiv.remove();
     }, 3000);
 }
 
-// Event Listeners
 document.addEventListener('DOMContentLoaded', function() {
-    // Generate sequence button
     document.getElementById('generate-sequence').addEventListener('click', generateSequence);
     
-    // Arbitrary defc analysis buttons
     document.getElementById('analyze-arbitrary-defc').addEventListener('click', analyzeArbitraryDefc);
     document.getElementById('show-available-defc').addEventListener('click', function() {
         const length = parseInt(document.getElementById('vector-length').value);
         listAvailableDefcValues(length);
     });
     
-    // Enter key support for inputs
     document.getElementById('dyck-vector').addEventListener('keypress', function(e) {
         if (e.key === 'Enter') {
             generateSequence();
@@ -606,6 +484,5 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
     
-    // Initial demo
     generateSequence();
 });
