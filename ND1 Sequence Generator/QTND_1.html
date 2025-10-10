@@ -17,21 +17,22 @@
             <!-- Input Section -->
             <section class="input-section">
                 <h2 class="text-3d">Generate ND₁ Sequence</h2>
-                <div class="input-group">
-                    <label for="dyck-vector">Dyck Vector (comma-separated):</label>
-                    <input type="text" id="dyck-vector" placeholder="0,1,2,2,0,1,1" value="0,1,2,2,0,1,1">
-                    <button id="generate-sequence" class="btn btn-primary">Generate Sequence</button>
-                </div>
                 
                 <div class="method-selection">
                     <label>
-                        <input type="radio" name="method" value="method2" checked>
-                        Method 2 (Direct Dyck Vector)
-                    </label>
-                    <label>
-                        <input type="radio" name="method" value="method1">
+                        <input type="radio" name="method" value="method1" checked>
                         Method 1 (Partition-based)
                     </label>
+                    <label>
+                        <input type="radio" name="method" value="method2">
+                        Method 2 (Direct Dyck Vector)
+                    </label>
+                </div>
+                
+                <div class="input-group">
+                    <label for="input-vector" id="input-label">Partition (comma-separated):</label>
+                    <input type="text" id="input-vector" placeholder="5,4,4,1" value="5,4,4,1">
+                    <button id="generate-sequence" class="btn btn-primary">Generate Sequence</button>
                 </div>
             </section>
 

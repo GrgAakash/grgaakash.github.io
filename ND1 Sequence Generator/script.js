@@ -154,23 +154,42 @@ function generateAllDyckVectors(n, targetDefc = null) {
     return vectors;
 }
 
-function parseDyckVector(input) {
+function parseInput(input, method) {
     try {
         const cleaned = input.replace(/[()]/g, '');
         const parts = cleaned.split(',');
-        return parts.map(x => parseInt(x.trim()));
+        const values = parts.map(x => parseInt(x.trim()));
+        
+        if (method === 'method1') {
+            const dyckVector = partitionToDyck(values, values.length + 1);
+            return { type: 'partition', vector: dyckVector, originalPartition: values };
+        } else {
+            if (values[0] !== 0) {
+                throw new Error('Dyck vector must start with 0');
+            }
+            for (let i = 0; i < values.length - 1; i++) {
+                if (values[i + 1] > values[i] + 1) {
+                    throw new Error(`Invalid Dyck vector: v[${i + 1}] = ${values[i + 1]} > ${values[i]} + 1`);
+                }
+            }
+            return { type: 'dyck', vector: values };
+        }
     } catch (error) {
+        if (error.message.includes('Dyck vector') || error.message.includes('Invalid')) {
+            throw error;
+        }
         throw new Error('Invalid input format. Please use comma-separated integers.');
     }
 }
 
 function generateSequence() {
-    const input = document.getElementById('dyck-vector').value;
+    const input = document.getElementById('input-vector').value;
     const method = document.querySelector('input[name="method"]:checked').value;
     const useMethod2 = method === 'method2';
     
     try {
-        const vCurrent = parseDyckVector(input);
+        const parsed = parseInput(input, method);
+        const vCurrent = parsed.vector;
         const vectorLength = vCurrent.length;
         
         const sequence = [vCurrent];
@@ -215,18 +234,23 @@ function generateSequence() {
             iteration++;
         }
         
-        displayResults(sequence, deficiencies, dinvs, partitions, useMethod2, iteration);
+        displayResults(sequence, deficiencies, dinvs, partitions, useMethod2, iteration, parsed);
         
     } catch (error) {
         showError(error.message);
     }
 }
 
-function displayResults(sequence, deficiencies, dinvs, partitions, useMethod2, iterations) {
+function displayResults(sequence, deficiencies, dinvs, partitions, useMethod2, iterations, parsed) {
     const resultsSection = document.getElementById('results-section');
     resultsSection.style.display = 'block';
     
-    document.getElementById('initial-vector').textContent = `[${sequence[0].join(', ')}]`;
+    let inputInfo = '';
+    if (parsed.type === 'partition') {
+        inputInfo = ` (from partition [${parsed.originalPartition.join(', ')}])`;
+    }
+    
+    document.getElementById('initial-vector').textContent = `[${sequence[0].join(', ')}]${inputInfo}`;
     document.getElementById('initial-defc').textContent = deficiencies[0];
     document.getElementById('initial-dinv').textContent = dinvs[0];
     
@@ -457,8 +481,28 @@ function showSuccess(message) {
     }, 3000);
 }
 
+function updateInputLabel() {
+    const method = document.querySelector('input[name="method"]:checked').value;
+    const label = document.getElementById('input-label');
+    const input = document.getElementById('input-vector');
+    
+    if (method === 'method1') {
+        label.textContent = 'Partition (comma-separated):';
+        input.placeholder = '5,4,4,1';
+        input.value = '5,4,4,1';
+    } else {
+        label.textContent = 'Dyck Vector (comma-separated):';
+        input.placeholder = '0,1,2,2,0,1,1';
+        input.value = '0,1,2,2,0,1,1';
+    }
+}
+
 document.addEventListener('DOMContentLoaded', function() {
     document.getElementById('generate-sequence').addEventListener('click', generateSequence);
+    
+    document.querySelectorAll('input[name="method"]').forEach(radio => {
+        radio.addEventListener('change', updateInputLabel);
+    });
     
     document.getElementById('analyze-arbitrary-defc').addEventListener('click', analyzeArbitraryDefc);
     document.getElementById('show-available-defc').addEventListener('click', function() {
@@ -466,7 +510,7 @@ document.addEventListener('DOMContentLoaded', function() {
         listAvailableDefcValues(length);
     });
     
-    document.getElementById('dyck-vector').addEventListener('keypress', function(e) {
+    document.getElementById('input-vector').addEventListener('keypress', function(e) {
         if (e.key === 'Enter') {
             generateSequence();
         }
@@ -484,5 +528,6 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
     
+    updateInputLabel();
     generateSequence();
 });
