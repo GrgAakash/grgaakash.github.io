@@ -2,14 +2,10 @@ function dyckToPartition(v) {
     const n = v.length;
     const partition = [];
     
-    // Inverse of the formula: v_i = (i-1) - λ_{n-i+1}
-    // So: λ_{n-i+1} = (i-1) - v_i
-    // Convert to 0-based indexing: λ_j = (n-j) - v_j
-    
-    for (let j = 0; j < n; j++) {
-        const lambdaValue = (n - j) - v[j];
-        if (lambdaValue > 0) {
-            partition.push(lambdaValue);
+    for (let i = 1; i <= n; i++) {
+        const part = (n - i) - v[n - i];
+        if (part > 0) {
+            partition.push(part);
         }
     }
     
@@ -35,24 +31,23 @@ function nd1OnPartition(gamma) {
 }
 
 function partitionToDyck(partition) {
-    // Step 1: Find minimum triangle height (correct length n)
-    let maxSum = 0;
-    for (let i = 0; i < partition.length; i++) {
-        const sum = partition[i] + (i + 1);
-        maxSum = Math.max(maxSum, sum);
-    }
-    const n = maxSum;
-    
-    // Step 2: Construct Dyck vector using correct formula
-    // v_i = (i-1) - λ_{n-i+1}
+    // Convert partition to proper Dyck vector
+    const n = partition.length + 1;
     const dyck = new Array(n);
+    dyck[0] = 0;
     
-    for (let i = 1; i <= n; i++) {
-        const lambdaIndex = n - i + 1 - 1; // Convert to 0-based indexing
-        const lambdaValue = (lambdaIndex >= 0 && lambdaIndex < partition.length) 
-            ? partition[lambdaIndex] 
-            : 0;
-        dyck[i-1] = (i - 1) - lambdaValue;
+    // Build Dyck vector step by step ensuring constraints
+    for (let i = 1; i < n; i++) {
+        const maxAllowed = dyck[i-1] + 1;
+        const partitionIndex = n - i - 1;
+        
+        if (partitionIndex < 0 || partitionIndex >= partition.length) {
+            dyck[i] = 0;
+        } else {
+            const partitionValue = partition[partitionIndex];
+            const calculatedValue = (n - i - 1) - partitionValue;
+            dyck[i] = Math.max(0, Math.min(maxAllowed, calculatedValue));
+        }
     }
     
     return dyck;
@@ -472,37 +467,6 @@ function analyzeArbitraryDefc() {
     }
 }
 
-function clearResults() {
-    // Hide the results section
-    const resultsSection = document.getElementById('results-section');
-    if (resultsSection) {
-        resultsSection.style.display = 'none';
-    }
-    
-    // Clear all result content
-    const elementsToClear = [
-        'initial-vector',
-        'sequence-info', 
-        'sequence-table',
-        'sequence-chart',
-        'termination-reason',
-        'defc-analysis-results',
-        'available-defc-info'
-    ];
-    
-    elementsToClear.forEach(id => {
-        const element = document.getElementById(id);
-        if (element) {
-            element.innerHTML = '';
-        }
-    });
-    
-    // Hide analysis sections
-    const analysisResults = document.getElementById('defc-analysis-results');
-    const availableDefcInfo = document.getElementById('available-defc-info');
-    if (analysisResults) analysisResults.style.display = 'none';
-    if (availableDefcInfo) availableDefcInfo.style.display = 'none';
-}
 
 function showError(message) {
     const errorDiv = document.createElement('div');
@@ -521,8 +485,6 @@ function showError(message) {
     `;
     errorDiv.textContent = message;
     
-    // Clear any previous results when showing error
-    clearResults();
     
     document.querySelectorAll('.error').forEach(el => el.remove());
     document.querySelector('main').insertBefore(errorDiv, document.querySelector('main').firstChild);
