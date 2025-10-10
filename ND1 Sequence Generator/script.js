@@ -217,19 +217,7 @@ function generateSequence() {
         while (iteration < maxIterations) {
             let nextVector;
             
-            if (useMethod2) {
-                nextVector = nd1OnDyckVector(currentVector);
-            } else {
-                const pCurrent = dyckToPartition(currentVector);
-                partitions.push(pCurrent);
-                
-                const pNext = nd1OnPartition(pCurrent);
-                if (pNext === null) {
-                    break;
-                }
-                
-                nextVector = partitionToDyck(pNext);
-            }
+            nextVector = nd1OnDyckVector(currentVector);
             
             if (nextVector === null) {
                 break;
@@ -280,13 +268,7 @@ function displayResults(sequence, deficiencies, dinvs, partitions, useMethod2, i
         terminationReason = 'Maximum iterations reached';
     } else if (sequence.length > 1) {
         const lastVector = sequence[sequence.length - 1];
-        const nextVector = useMethod2 ? 
-            nd1OnDyckVector(lastVector) : 
-            (() => {
-                const p = dyckToPartition(lastVector);
-                const pNext = nd1OnPartition(p);
-                return pNext === null ? null : partitionToDyck(pNext, lastVector.length);
-            })();
+        const nextVector = nd1OnDyckVector(lastVector);
         
         if (nextVector === null) {
             terminationReason = 'Outside domain of ND₁';
