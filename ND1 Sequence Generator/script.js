@@ -30,15 +30,28 @@ function nd1OnPartition(gamma) {
     return newPartition.sort((a, b) => b - a);
 }
 
-function partitionToDyck(p, n) {
-    const paddedP = [...p, ...new Array(n - p.length).fill(0)];
-    const v = new Array(n).fill(0);
+function partitionToDyck(partition) {
+    // Step 1: Find minimum triangle height (correct length n)
+    let maxSum = 0;
+    for (let i = 0; i < partition.length; i++) {
+        const sum = partition[i] + (i + 1);
+        maxSum = Math.max(maxSum, sum);
+    }
+    const n = maxSum;
+    
+    // Step 2: Construct Dyck vector using correct formula
+    // v_i = (i-1) - λ_{n-i+1}
+    const dyck = new Array(n);
     
     for (let i = 1; i <= n; i++) {
-        v[i - 1] = (i - 1) - paddedP[n - i];
+        const lambdaIndex = n - i + 1 - 1; // Convert to 0-based indexing
+        const lambdaValue = (lambdaIndex >= 0 && lambdaIndex < partition.length) 
+            ? partition[lambdaIndex] 
+            : 0;
+        dyck[i-1] = (i - 1) - lambdaValue;
     }
     
-    return v;
+    return dyck;
 }
 
 function calculateDinvPartition(partition) {
@@ -161,7 +174,7 @@ function parseInput(input, method) {
         const values = parts.map(x => parseInt(x.trim()));
         
         if (method === 'method1') {
-            const dyckVector = partitionToDyck(values, values.length + 1);
+            const dyckVector = partitionToDyck(values);
             return { type: 'partition', vector: dyckVector, originalPartition: values };
         } else {
             if (values[0] !== 0) {
@@ -215,7 +228,7 @@ function generateSequence() {
                     break;
                 }
                 
-                nextVector = partitionToDyck(pNext, vectorLength);
+                nextVector = partitionToDyck(pNext);
             }
             
             if (nextVector === null) {
@@ -458,6 +471,18 @@ function analyzeArbitraryDefc() {
 function showError(message) {
     const errorDiv = document.createElement('div');
     errorDiv.className = 'error';
+    errorDiv.style.cssText = `
+        background-color: #ffebee;
+        color: #c62828;
+        border: 2px solid #e57373;
+        border-radius: 8px;
+        padding: 15px;
+        margin: 20px 0;
+        font-weight: bold;
+        font-size: 16px;
+        box-shadow: 0 2px 8px rgba(229, 115, 115, 0.3);
+        animation: slideIn 0.3s ease-out;
+    `;
     errorDiv.textContent = message;
     
     document.querySelectorAll('.error').forEach(el => el.remove());
