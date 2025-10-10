@@ -107,7 +107,7 @@ title: Projects
                         <div id="nd1Details" class="collapse">
                             <p class="text-muted">2025</p>
                             <p>An interactive tool for exploring the dynamics of Dyck vectors and integer partitions through the ND₁ transformation map.</p>
-                            <p><a href="QTND_1.html" target="_blank" class="btn btn-primary">Explore ND₁ Sequences</a></p>
+                            <p><a href="ND1 Sequence Generator/QTND_1.html" target="_blank" class="btn btn-primary">Explore ND₁ Sequences</a></p>
                         </div>
                     </div>
                 </div>
