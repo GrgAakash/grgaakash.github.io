@@ -2,10 +2,14 @@ function dyckToPartition(v) {
     const n = v.length;
     const partition = [];
     
-    for (let i = 1; i <= n; i++) {
-        const part = (n - i) - v[n - i];
-        if (part > 0) {
-            partition.push(part);
+    // Inverse of the formula: v_i = (i-1) - λ_{n-i+1}
+    // So: λ_{n-i+1} = (i-1) - v_i
+    // Convert to 0-based indexing: λ_j = (n-j) - v_j
+    
+    for (let j = 0; j < n; j++) {
+        const lambdaValue = (n - j) - v[j];
+        if (lambdaValue > 0) {
+            partition.push(lambdaValue);
         }
     }
     
@@ -31,23 +35,24 @@ function nd1OnPartition(gamma) {
 }
 
 function partitionToDyck(partition) {
-    // Convert partition to proper Dyck vector
-    const n = partition.length + 1;
-    const dyck = new Array(n);
-    dyck[0] = 0;
+    // Step 1: Find minimum triangle height (correct length n)
+    let maxSum = 0;
+    for (let i = 0; i < partition.length; i++) {
+        const sum = partition[i] + (i + 1);
+        maxSum = Math.max(maxSum, sum);
+    }
+    const n = maxSum;
     
-    // Build Dyck vector step by step ensuring constraints
-    for (let i = 1; i < n; i++) {
-        const maxAllowed = dyck[i-1] + 1;
-        const partitionIndex = n - i - 1;
-        
-        if (partitionIndex < 0 || partitionIndex >= partition.length) {
-            dyck[i] = 0;
-        } else {
-            const partitionValue = partition[partitionIndex];
-            const calculatedValue = (n - i - 1) - partitionValue;
-            dyck[i] = Math.max(0, Math.min(maxAllowed, calculatedValue));
-        }
+    // Step 2: Construct Dyck vector using correct formula
+    // v_i = (i-1) - λ_{n-i+1}
+    const dyck = new Array(n);
+    
+    for (let i = 1; i <= n; i++) {
+        const lambdaIndex = n - i + 1 - 1; // Convert to 0-based indexing
+        const lambdaValue = (lambdaIndex >= 0 && lambdaIndex < partition.length) 
+            ? partition[lambdaIndex] 
+            : 0;
+        dyck[i-1] = (i - 1) - lambdaValue;
     }
     
     return dyck;
