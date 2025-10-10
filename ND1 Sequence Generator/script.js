@@ -2,14 +2,10 @@ function dyckToPartition(v) {
     const n = v.length;
     const partition = [];
     
-    // Inverse of the formula: v_i = (i-1) - λ_{n-i+1}
-    // So: λ_{n-i+1} = (i-1) - v_i
-    // Convert to 0-based indexing: λ_j = (n-j) - v_j
-    
-    for (let j = 0; j < n; j++) {
-        const lambdaValue = (n - j) - v[j];
-        if (lambdaValue > 0) {
-            partition.push(lambdaValue);
+    for (let i = 1; i <= n; i++) {
+        const part = (n - i) - v[n - i];
+        if (part > 0) {
+            partition.push(part);
         }
     }
     
@@ -289,7 +285,7 @@ function displayResults(sequence, deficiencies, dinvs, partitions, useMethod2, i
             (() => {
                 const p = dyckToPartition(lastVector);
                 const pNext = nd1OnPartition(p);
-                return pNext === null ? null : partitionToDyck(pNext);
+                return pNext === null ? null : partitionToDyck(pNext, lastVector.length);
             })();
         
         if (nextVector === null) {
@@ -472,7 +468,6 @@ function analyzeArbitraryDefc() {
     }
 }
 
-
 function showError(message) {
     const errorDiv = document.createElement('div');
     errorDiv.className = 'error';
@@ -489,7 +484,6 @@ function showError(message) {
         animation: slideIn 0.3s ease-out;
     `;
     errorDiv.textContent = message;
-    
     
     document.querySelectorAll('.error').forEach(el => el.remove());
     document.querySelector('main').insertBefore(errorDiv, document.querySelector('main').firstChild);
