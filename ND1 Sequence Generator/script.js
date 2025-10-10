@@ -2,10 +2,14 @@ function dyckToPartition(v) {
     const n = v.length;
     const partition = [];
     
-    for (let i = 1; i <= n; i++) {
-        const part = (n - i) - v[n - i];
-        if (part > 0) {
-            partition.push(part);
+    // Inverse of the formula: v_i = (i-1) - λ_{n-i+1}
+    // So: λ_{n-i+1} = (i-1) - v_i
+    // Convert to 0-based indexing: λ_j = (n-j) - v_j
+    
+    for (let j = 0; j < n; j++) {
+        const lambdaValue = (n - j) - v[j];
+        if (lambdaValue > 0) {
+            partition.push(lambdaValue);
         }
     }
     
@@ -285,7 +289,7 @@ function displayResults(sequence, deficiencies, dinvs, partitions, useMethod2, i
             (() => {
                 const p = dyckToPartition(lastVector);
                 const pNext = nd1OnPartition(p);
-                return pNext === null ? null : partitionToDyck(pNext, lastVector.length);
+                return pNext === null ? null : partitionToDyck(pNext);
             })();
         
         if (nextVector === null) {
@@ -468,6 +472,38 @@ function analyzeArbitraryDefc() {
     }
 }
 
+function clearResults() {
+    // Hide the results section
+    const resultsSection = document.getElementById('results-section');
+    if (resultsSection) {
+        resultsSection.style.display = 'none';
+    }
+    
+    // Clear all result content
+    const elementsToClear = [
+        'initial-vector',
+        'sequence-info', 
+        'sequence-table',
+        'sequence-chart',
+        'termination-reason',
+        'defc-analysis-results',
+        'available-defc-info'
+    ];
+    
+    elementsToClear.forEach(id => {
+        const element = document.getElementById(id);
+        if (element) {
+            element.innerHTML = '';
+        }
+    });
+    
+    // Hide analysis sections
+    const analysisResults = document.getElementById('defc-analysis-results');
+    const availableDefcInfo = document.getElementById('available-defc-info');
+    if (analysisResults) analysisResults.style.display = 'none';
+    if (availableDefcInfo) availableDefcInfo.style.display = 'none';
+}
+
 function showError(message) {
     const errorDiv = document.createElement('div');
     errorDiv.className = 'error';
@@ -484,6 +520,9 @@ function showError(message) {
         animation: slideIn 0.3s ease-out;
     `;
     errorDiv.textContent = message;
+    
+    // Clear any previous results when showing error
+    clearResults();
     
     document.querySelectorAll('.error').forEach(el => el.remove());
     document.querySelector('main').insertBefore(errorDiv, document.querySelector('main').firstChild);
