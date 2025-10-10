@@ -101,6 +101,48 @@ title: Projects
 
             <div class="card mb-4">
                 <div class="card-header">
+                    <h3>Combinatorial Mathematics</h3>
+                </div>
+                <div class="card-body">
+                    <div class="project-item mb-4">
+                        <h4>
+                            <a href="#" class="nd1-toggle" data-bs-toggle="collapse" data-bs-target="#nd1Details">
+                                ND₁ Sequence Generator - Dyck Vector Explorer
+                                <i class="fas fa-chevron-down ms-2"></i>
+                            </a>
+                        </h4>
+                        <div id="nd1Details" class="collapse">
+                            <p class="text-muted">2025</p>
+                            <p>An interactive tool for exploring the dynamics of Dyck vectors and integer partitions through the ND₁ transformation map. Features comprehensive analysis of deficit (defc) and diagonal inversions (dinv) in combinatorial sequences.</p>
+                            <div class="math-section">
+                                <h5>Mathematical Background</h5>
+                                <p>The ND₁ sequence generator implements two methods for applying the ND₁ map:</p>
+                                <div class="equations">
+                                    <p><strong>Method 1 (Partition-based):</strong> Converts Dyck vectors to integer partitions, applies ND₁, then converts back</p>
+                                    <p><strong>Method 2 (Direct):</strong> Applies ND₁ directly to Dyck vectors using combinatorial rules</p>
+                                </div>
+                                <p>Key calculations:</p>
+                                <ul>
+                                    <li><strong>Deficit (defc):</strong> Total boxes - diagonal inversions in partition diagrams</li>
+                                    <li><strong>Diagonal inversions (dinv):</strong> Counted using arm-leg rule for balanced boxes</li>
+                                    <li><strong>Dyck vector constraints:</strong> v[0] = 0, v[i+1] ≤ v[i] + 1</li>
+                                </ul>
+                                <p>Features:</p>
+                                <ul>
+                                    <li><strong>Interactive sequence generation:</strong> Real-time ND₁ sequence computation</li>
+                                    <li><strong>Arbitrary defc analysis:</strong> Explore all Dyck vectors with specific deficit values</li>
+                                    <li><strong>Sequence visualization:</strong> Detailed progression tables and statistics</li>
+                                    <li><strong>Mathematical validation:</strong> Domain condition checking and termination analysis</li>
+                                </ul>
+                            </div>
+                            <p><a href="QTND_1.html" target="_blank" class="btn btn-primary">Explore ND₁ Sequences</a></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card mb-4">
+                <div class="card-header">
                     <h3>Others</h3>
                 </div>
                 <div class="card-body">
@@ -134,7 +176,7 @@ title: Projects
     text-align: center;
 }
 
-.sihr-toggle, .sihrs-toggle {
+.sihr-toggle, .sihrs-toggle, .nd1-toggle {
     color: #007bff;
     text-decoration: none;
     display: flex;
@@ -142,15 +184,15 @@ title: Projects
     justify-content: space-between;
 }
 
-.sihr-toggle:hover, .sihrs-toggle:hover {
+.sihr-toggle:hover, .sihrs-toggle:hover, .nd1-toggle:hover {
     color: #0056b3;
 }
 
-.sihr-toggle .fa-chevron-down, .sihrs-toggle .fa-chevron-down {
+.sihr-toggle .fa-chevron-down, .sihrs-toggle .fa-chevron-down, .nd1-toggle .fa-chevron-down {
     transition: transform 0.3s ease;
 }
 
-.sihr-toggle[aria-expanded="true"] .fa-chevron-down, .sihrs-toggle[aria-expanded="true"] .fa-chevron-down {
+.sihr-toggle[aria-expanded="true"] .fa-chevron-down, .sihrs-toggle[aria-expanded="true"] .fa-chevron-down, .nd1-toggle[aria-expanded="true"] .fa-chevron-down {
     transform: rotate(180deg);
 }
 
@@ -173,6 +215,7 @@ title: Projects
 document.addEventListener('DOMContentLoaded', function() {
     const sihrToggle = document.querySelector('.sihr-toggle');
     const sihrsToggle = document.querySelector('.sihrs-toggle');
+    const nd1Toggle = document.querySelector('.nd1-toggle');
     
     sihrToggle.addEventListener('click', function(e) {
         e.preventDefault();
@@ -185,6 +228,16 @@ document.addEventListener('DOMContentLoaded', function() {
     });
     
     sihrsToggle.addEventListener('click', function(e) {
+        e.preventDefault();
+        const icon = this.querySelector('.fa-chevron-down');
+        if (this.getAttribute('aria-expanded') === 'true') {
+            this.setAttribute('aria-expanded', 'false');
+        } else {
+            this.setAttribute('aria-expanded', 'true');
+        }
+    });
+    
+    nd1Toggle.addEventListener('click', function(e) {
         e.preventDefault();
         const icon = this.querySelector('.fa-chevron-down');
         if (this.getAttribute('aria-expanded') === 'true') {
