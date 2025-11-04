@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Q,T-Catalan Chain Decompositions - NU₁ & NU₂ Maps Explorer</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1 class="text-3d-large">Q,T-Catalan Chain Decompositions</h1>
+            <p class="subtitle">Explore NU₁-tails, NU₂-bridging, and global chain construction for q,t-Catalan numbers</p>
+        </header>
+
+        <main>
+            <!-- Input Section -->
+            <section class="input-section">
+                <h2 class="text-3d">Generate Chain Sequence</h2>
+                
+                <div class="method-selection">
+                    <label>
+                        <input type="radio" name="method" value="NU1" checked>
+                        NU₁ (Successor Map)
+                    </label>
+                    <label>
+                        <input type="radio" name="method" value="ND1">
+                        ND₁ (Predecessor Map)
+                    </label>
+                    <label>
+                        <input type="radio" name="method" value="NU2">
+                        NU₂ (Extension Map)
+                    </label>
+                    <label>
+                        <input type="radio" name="method" value="ND2">
+                        ND₂ (Extension Inverse)
+                    </label>
+                    <label>
+                        <input type="radio" name="method" value="NU">
+                        Extended NU (NU₁ ∪ NU₂)
+                    </label>
+                    <label>
+                        <input type="radio" name="method" value="ND">
+                        Extended ND (ND₁ ∪ ND₂)
+                    </label>
+                </div>
+                
+                <div class="input-group">
+                    <label for="input-type">Input Type:</label>
+                    <select id="input-type">
+                        <option value="partition">Integer Partition (comma-separated integers)</option>
+                        <option value="qdv">Quasi-Dyck Vector (comma-separated, can include negatives)</option>
+                    </select>
+                </div>
+                
+                <div class="input-group">
+                    <label for="input-vector" id="input-label">Input (comma-separated):</label>
+                    <input type="text" id="input-vector" placeholder="5,4,4,1" value="5,4,4,1">
+                    <button id="generate-sequence" class="btn btn-primary">Generate Sequence</button>
+                </div>
+                
+                <div class="input-group">
+                    <label for="max-iterations">Max Iterations:</label>
+                    <input type="number" id="max-iterations" min="1" max="500" value="50">
+                </div>
+                
+                <div class="input-group">
+                    <label for="show-vectors">Show Dyck Vectors:</label>
+                    <input type="checkbox" id="show-vectors" checked>
+                </div>
+            </section>
+
+            <!-- Results Section -->
+            <section class="results-section" id="results-section" style="display: none;">
+                <h2 class="text-3d">Sequence Results</h2>
+                <div class="sequence-info">
+                    <div class="info-card">
+                        <h3>Initial State</h3>
+                        <p><strong>Partition:</strong> <span id="initial-partition"></span></p>
+                        <p><strong>Dyck Vector:</strong> <span id="initial-vector"></span></p>
+                        <p><strong>Deficit:</strong> <span id="initial-deficit"></span></p>
+                        <p><strong>Dinv:</strong> <span id="initial-dinv"></span></p>
+                        <p><strong>Min Triangle Height:</strong> <span id="initial-min-triangle"></span></p>
+                        <p><strong>Type:</strong> <span id="initial-type"></span></p>
+                    </div>
+                    <div class="info-card">
+                        <h3>Final State</h3>
+                        <p><strong>Partition:</strong> <span id="final-partition"></span></p>
+                        <p><strong>Dyck Vector:</strong> <span id="final-vector"></span></p>
+                        <p><strong>Deficit:</strong> <span id="final-deficit"></span></p>
+                        <p><strong>Dinv:</strong> <span id="final-dinv"></span></p>
+                        <p><strong>Min Triangle Height:</strong> <span id="final-min-triangle"></span></p>
+                        <p><strong>Type:</strong> <span id="final-type"></span></p>
+                    </div>
+                    <div class="info-card">
+                        <h3>Chain Statistics</h3>
+                        <p><strong>Iterations:</strong> <span id="total-iterations"></span></p>
+                        <p><strong>Termination:</strong> <span id="termination-reason"></span></p>
+                        <p><strong>Method:</strong> <span id="method-used"></span></p>
+                        <p><strong>Chain Type:</strong> <span id="chain-type"></span></p>
+                        <p><strong>Deficit Preserved:</strong> <span id="deficit-preserved"></span></p>
+                    </div>
+                </div>
+
+                <div class="sequence-visualization">
+                    <h3>Sequence Visualization</h3>
+                    <div id="sequence-chart" class="chart-container"></div>
+                </div>
+
+                <div class="detailed-sequence">
+                    <h3>Detailed Sequence</h3>
+                    <div id="sequence-table" class="sequence-table"></div>
+                </div>
+            </section>
+
+            
+
+            <!-- NU₁-Final Object Analysis Section -->
+            <section class="analysis-section">
+                <h2 class="text-3d">NU₁-Final Object Analysis</h2>
+                <p>Analyze all partitions with specific deficit values and identify NU₁-final objects:</p>
+                <div class="input-group">
+                    <label for="partition-length">Partition Length:</label>
+                    <input type="number" id="partition-length" min="1" max="8" value="5">
+                </div>
+                <div class="input-group">
+                    <label for="target-deficit">Target Deficit:</label>
+                    <input type="number" id="target-deficit" min="0" value="0">
+                    <button id="analyze-deficit" class="btn btn-secondary">Analyze Partitions</button>
+                </div>
+                <div class="input-group">
+                    <button id="show-available-deficits" class="btn btn-outline">Show Available Deficit Values</button>
+                </div>
+                
+                <div id="available-deficit-info" class="available-deficit-info" style="display: none;">
+                    <h3>Available Deficit Values</h3>
+                    <div id="deficit-values-display" class="deficit-values-display"></div>
+                </div>
+                
+                <div id="deficit-analysis-results" class="deficit-analysis-results" style="display: none;">
+                    <h3>Analysis Results</h3>
+                    <div id="deficit-analysis-summary" class="summary-card"></div>
+                    <div id="deficit-analysis-details" class="deficit-analysis-details"></div>
+                </div>
+            </section>
+
+            
+
+            <!-- Mathematical Background -->
+            <section class="math-section">
+                <h2 class="text-3d">Mathematical Background</h2>
+                <div class="math-content">
+                    <div class="math-card">
+                        <h3>Quasi-Dyck Vectors</h3>
+                        <ul>
+                            <li><strong>Definition:</strong> Sequences (v₁, v₂, ..., vₙ) where v₁ = 0 and v_{i+1} ≤ v_i + 1</li>
+                            <li><strong>Dyck Vectors:</strong> QDVs where all entries are non-negative</li>
+                            <li><strong>Reduced Dyck Vector:</strong> Vector of minimum length in a Dyck class</li>
+                            <li><strong>Key Formula:</strong> QDV_n(λ) = (0-λ_n, 1-λ_{n-1}, ..., n-1-λ_1)</li>
+                        </ul>
+                    </div>
+                    <div class="math-card">
+                        <h3>NU₁ Operator (Successor Map)</h3>
+                        <ul>
+                            <li><strong>Definition:</strong> NU₁(γ) = ⟨ℓ+1, γ₁-1, γ₂-1, ..., γₗ-1⟩</li>
+                            <li><strong>Domain:</strong> γ₁ ≤ ℓ(γ) + 2</li>
+                            <li><strong>Properties:</strong> Preserves deficit, increases dinv by 1</li>
+                            <li><strong>Termination:</strong> NU₁-final objects where γ₁ > ℓ(γ) + 2</li>
+                        </ul>
+                    </div>
+                    <div class="math-card">
+                        <h3>ND₁ Operator (Predecessor Map)</h3>
+                        <ul>
+                            <li><strong>Definition:</strong> ND₁(γ) = ⟨γ₂+1, γ₃+1, ..., γₗ+1, 1^{γ₁-ℓ}⟩</li>
+                            <li><strong>Domain:</strong> γ₁ ≥ ℓ(γ)</li>
+                            <li><strong>Properties:</strong> Preserves deficit, decreases dinv by 1</li>
+                        </ul>
+                    </div>
+                    <div class="math-card">
+                        <h3>NU₂ Operator (Extension Map)</h3>
+                        <ul>
+                            <li><strong>Rule (a):</strong> [012^h A(-1)^{h-1}] → [00^{h-1}1A1^h]</li>
+                            <li><strong>Rule (b):</strong> [012^k B(-1)^k] → [00^k B01^k]</li>
+                            <li><strong>Domain:</strong> NU₁-final objects</li>
+                            <li><strong>Range:</strong> NU₁-initial objects</li>
+                            <li><strong>Properties:</strong> Preserves deficit, increases dinv by 1</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="math-card">
+                        <h3>Chain Types</h3>
+                        <ul>
+                            <li><strong>NU₁-fragment:</strong> Finite chain terminated by NU₁-final object</li>
+                            <li><strong>NU₁-tail:</strong> Infinite chain starting from TI(μ)</li>
+                            <li><strong>Second-order tail:</strong> Extended tail starting from TI₂(μ)</li>
+                            <li><strong>Global chain:</strong> Complete chain C_μ for partition μ</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+        </main>
+
+        <footer>
+            <p>&copy; 2024 q,t-Catalan Chain Decompositions - Exploring NU₁-tails and NU₂-bridging for combinatorial chain construction</p>
+        </footer>
+    </div>
+
+    <script src="corrected_nu_nd_script.js?v=5"></script>
+    <script>
+        (function(){
+            function parseCSVNumbers(s){
+                return s.split(',').map(x=>x.trim()).filter(x=>x.length).map(Number).sort((a,b)=>b-a);
+            }
+            function ensureTIUI(){
+                if(document.getElementById('ti-section')) return; // already added
+                const main = document.querySelector('main');
+                const sec = document.createElement('section');
+                sec.className = 'analysis-section';
+                sec.id = 'ti-section';
+                sec.innerHTML = `
+                    <h2 class="text-3d">Tail Initiators (TI / TI₂)</h2>
+                    <div class="input-group">
+                        <label for="ti-mu">Partition μ (comma-separated):</label>
+                        <input type="text" id="ti-mu" placeholder="3,1,1" value="3,1,1">
+                        <button id="btn-ti" class="btn btn-secondary">Compute TI</button>
+                        <button id="btn-ti2" class="btn btn-outline">Compute TI₂</button>
+                    </div>
+                    <div id="ti-output" class="summary-card" style="margin-top:12px;">
+                        <p><strong>TI(μ) QDV:</strong> <span id="ti-qdv">—</span></p>
+                        <p><strong>TI(μ) Partition:</strong> <span id="ti-part">—</span></p>
+                        <p><strong>TI₂(μ) Final QDV:</strong> <span id="ti2-qdv">—</span></p>
+                        <p><strong>Steps:</strong></p>
+                        <div id="ti-steps" style="white-space:pre-wrap; font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;">—</div>
+                    </div>
+                `;
+                // insert before Mathematical Background section
+                const math = document.querySelector('.math-section');
+                (math && math.parentNode) ? math.parentNode.insertBefore(sec, math) : main.appendChild(sec);
+                // Wire buttons
+                document.getElementById('btn-ti').addEventListener('click', function(){
+                    try {
+                        const mu = parseCSVNumbers(document.getElementById('ti-mu').value);
+                        if (!window.TIFromPartition || !window.QDVToPartition) { alert('Helpers not loaded yet. Hard-reload the page.'); return; }
+                        const tiQ = window.TIFromPartition(mu);
+                        const tiP = window.QDVToPartition(tiQ);
+                        document.getElementById('ti-qdv').textContent = `[${tiQ.join(', ')}]`;
+                        document.getElementById('ti-part').textContent = `⟨${tiP.join(', ')}⟩`;
+                        document.getElementById('ti2-qdv').textContent = '—';
+                        document.getElementById('ti-steps').textContent = '—';
+                    } catch(e){ alert(e.message); }
+                });
+                document.getElementById('btn-ti2').addEventListener('click', function(){
+                    try {
+                        const mu = parseCSVNumbers(document.getElementById('ti-mu').value);
+                        if (!window.computeTI2 || !window.QDVToPartition) { alert('Helpers not loaded yet. Hard-reload the page.'); return; }
+                        const res = window.computeTI2(mu);
+                        const finalQ = res.finalQDV || [];
+                        const steps = res.steps || [];
+                        document.getElementById('ti2-qdv').textContent = finalQ.length ? `[${finalQ.join(', ')}]` : '—';
+                        const lines = steps.map(s => `${s.used}: [${s.qdv.join(', ')}]`);
+                        document.getElementById('ti-steps').textContent = lines.length ? lines.join('\n') : '—';
+                        // Also show TI if we have it
+                        if (steps.length) {
+                            document.getElementById('ti-qdv').textContent = `[${steps[0].qdv.join(', ')}]`;
+                            const tiP = window.QDVToPartition(steps[0].qdv);
+                            document.getElementById('ti-part').textContent = `⟨${tiP.join(', ')}⟩`;
+                        }
+                    } catch(e){ alert(e.message); }
+                });
+            }
+            // Attach after script load
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', ensureTIUI);
+            } else {
+                ensureTIUI();
+            }
+        })();
+    </script>
+</body>
+</html>
