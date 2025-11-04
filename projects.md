@@ -99,20 +99,6 @@ title: Projects
 
                     <div class="project-item mb-4">
                         <h4>
-                            <a href="#" class="nd1-toggle" data-bs-toggle="collapse" data-bs-target="#nd1Details">
-                                ND₁ Sequence Generator
-                                <i class="fas fa-chevron-down ms-2"></i>
-                            </a>
-                        </h4>
-                        <div id="nd1Details" class="collapse">
-                            <p class="text-muted">2025</p>
-                            <p>An interactive tool for exploring the dynamics of Dyck vectors and integer partitions through the ND₁ transformation map.</p>
-                            <p><a href="ND1 Sequence Generator/QTND_1.html" target="_blank" class="btn btn-primary">Explore ND₁ Sequences</a></p>
-                        </div>
-                    </div>
-
-                    <div class="project-item mb-4">
-                        <h4>
                             <a href="#" class="qtcat-toggle" data-bs-toggle="collapse" data-bs-target="#qtcatDetails">
                                 Q,T-Catalan Chain Decompositions
                                 <i class="fas fa-chevron-down ms-2"></i>
@@ -162,7 +148,7 @@ title: Projects
     text-align: center;
 }
 
-.sihr-toggle, .sihrs-toggle, .nd1-toggle, .qtcat-toggle {
+.sihr-toggle, .sihrs-toggle, .qtcat-toggle {
     color: #007bff;
     text-decoration: none;
     display: flex;
@@ -170,15 +156,15 @@ title: Projects
     justify-content: space-between;
 }
 
-.sihr-toggle:hover, .sihrs-toggle:hover, .nd1-toggle:hover, .qtcat-toggle:hover {
+.sihr-toggle:hover, .sihrs-toggle:hover, .qtcat-toggle:hover {
     color: #0056b3;
 }
 
-.sihr-toggle .fa-chevron-down, .sihrs-toggle .fa-chevron-down, .nd1-toggle .fa-chevron-down, .qtcat-toggle .fa-chevron-down {
+.sihr-toggle .fa-chevron-down, .sihrs-toggle .fa-chevron-down, .qtcat-toggle .fa-chevron-down {
     transition: transform 0.3s ease;
 }
 
-.sihr-toggle[aria-expanded="true"] .fa-chevron-down, .sihrs-toggle[aria-expanded="true"] .fa-chevron-down, .nd1-toggle[aria-expanded="true"] .fa-chevron-down, .qtcat-toggle[aria-expanded="true"] .fa-chevron-down {
+.sihr-toggle[aria-expanded="true"] .fa-chevron-down, .sihrs-toggle[aria-expanded="true"] .fa-chevron-down, .qtcat-toggle[aria-expanded="true"] .fa-chevron-down {
     transform: rotate(180deg);
 }
 
@@ -201,7 +187,6 @@ title: Projects
 document.addEventListener('DOMContentLoaded', function() {
     const sihrToggle = document.querySelector('.sihr-toggle');
     const sihrsToggle = document.querySelector('.sihrs-toggle');
-    const nd1Toggle = document.querySelector('.nd1-toggle');
     const qtcatToggle = document.querySelector('.qtcat-toggle');
     
     sihrToggle.addEventListener('click', function(e) {
@@ -215,16 +200,6 @@ document.addEventListener('DOMContentLoaded', function() {
     });
     
     sihrsToggle.addEventListener('click', function(e) {
-        e.preventDefault();
-        const icon = this.querySelector('.fa-chevron-down');
-        if (this.getAttribute('aria-expanded') === 'true') {
-            this.setAttribute('aria-expanded', 'false');
-        } else {
-            this.setAttribute('aria-expanded', 'true');
-        }
-    });
-    
-    nd1Toggle.addEventListener('click', function(e) {
         e.preventDefault();
         const icon = this.querySelector('.fa-chevron-down');
         if (this.getAttribute('aria-expanded') === 'true') {

@@ -1056,6 +1056,24 @@ function generateNuSequence() {
                     terminationReason = 'ND₂ not applicable to this QDV pattern';
                     window.lastQDVSequence = [qdv];
                 }
+            } else if (method === 'ND1') {
+                // QDV input: apply ND₁ vector rule iteratively until blocked
+                const qList = [qdv];
+                let cur = qdv;
+                while (true) {
+                    const next = ND1_QDV(cur);
+                    if (!next) break;
+                    qList.push(next);
+                    cur = next;
+                }
+                const parts = qList.map(QDVToPartition);
+                sequence = parts;
+                deficits = parts.map(p => calculateDeficit(p));
+                dinvs = parts.map(p => calculateDinv(p));
+                types = parts.map(p => getPartitionType(p));
+                iterations = Math.max(0, parts.length - 1);
+                terminationReason = 'ND₁ (vector) completed';
+                window.lastQDVSequence = qList;
             } else if (method === 'NU') {
                 // Unified NU: try NU₂ on QDV first; if not applicable, fall back to NU₁ on partition
                 const resultQDV = NU2(qdv);
