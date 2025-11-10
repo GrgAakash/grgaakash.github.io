@@ -110,6 +110,20 @@ title: Projects
                             <p><a href="Codes_QTCat/QTNU_1and2.html" target="_blank" class="btn btn-primary">Explore Q,T-Catalan Chains</a></p>
                         </div>
                     </div>
+
+                    <div class="project-item mb-4">
+                        <h4>
+                            <a href="#" class="blog-toggle" data-bs-toggle="collapse" data-bs-target="#blogDetails">
+                                Science Blog: abc Conjecture and IUTT
+                                <i class="fas fa-chevron-down ms-2"></i>
+                            </a>
+                        </h4>
+                        <div id="blogDetails" class="collapse">
+                            <p class="text-muted">2025</p>
+                            <p>An educational blog exploring the abc conjecture, its connection to Fermat's Last Theorem, and the controversial Inter-Universal Teichmüller Theory (IUTT) proof by Shinichi Mochizuki, including the debate with Peter Scholze and Jakob Stix.</p>
+                            <p><a href="EN381Blog/Scienceblog.html" target="_blank" class="btn btn-primary">Read Blog</a></p>
+                        </div>
+                    </div>
                 </div>
             </div>
 
@@ -148,7 +162,7 @@ title: Projects
     text-align: center;
 }
 
-.sihr-toggle, .sihrs-toggle, .qtcat-toggle {
+.sihr-toggle, .sihrs-toggle, .qtcat-toggle, .blog-toggle {
     color: #007bff;
     text-decoration: none;
     display: flex;
@@ -156,15 +170,15 @@ title: Projects
     justify-content: space-between;
 }
 
-.sihr-toggle:hover, .sihrs-toggle:hover, .qtcat-toggle:hover {
+.sihr-toggle:hover, .sihrs-toggle:hover, .qtcat-toggle:hover, .blog-toggle:hover {
     color: #0056b3;
 }
 
-.sihr-toggle .fa-chevron-down, .sihrs-toggle .fa-chevron-down, .qtcat-toggle .fa-chevron-down {
+.sihr-toggle .fa-chevron-down, .sihrs-toggle .fa-chevron-down, .qtcat-toggle .fa-chevron-down, .blog-toggle .fa-chevron-down {
     transition: transform 0.3s ease;
 }
 
-.sihr-toggle[aria-expanded="true"] .fa-chevron-down, .sihrs-toggle[aria-expanded="true"] .fa-chevron-down, .qtcat-toggle[aria-expanded="true"] .fa-chevron-down {
+.sihr-toggle[aria-expanded="true"] .fa-chevron-down, .sihrs-toggle[aria-expanded="true"] .fa-chevron-down, .qtcat-toggle[aria-expanded="true"] .fa-chevron-down, .blog-toggle[aria-expanded="true"] .fa-chevron-down {
     transform: rotate(180deg);
 }
 
@@ -188,6 +202,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const sihrToggle = document.querySelector('.sihr-toggle');
     const sihrsToggle = document.querySelector('.sihrs-toggle');
     const qtcatToggle = document.querySelector('.qtcat-toggle');
+    const blogToggle = document.querySelector('.blog-toggle');
     
     sihrToggle.addEventListener('click', function(e) {
         e.preventDefault();
@@ -210,6 +225,16 @@ document.addEventListener('DOMContentLoaded', function() {
     });
     
     qtcatToggle.addEventListener('click', function(e) {
+        e.preventDefault();
+        const icon = this.querySelector('.fa-chevron-down');
+        if (this.getAttribute('aria-expanded') === 'true') {
+            this.setAttribute('aria-expanded', 'false');
+        } else {
+            this.setAttribute('aria-expanded', 'true');
+        }
+    });
+    
+    blogToggle.addEventListener('click', function(e) {
         e.preventDefault();
         const icon = this.querySelector('.fa-chevron-down');
         if (this.getAttribute('aria-expanded') === 'true') {
