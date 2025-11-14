@@ -14,7 +14,7 @@
         </header>
 
         <main>
-            <!-- Input Section -->
+           
             <section class="input-section">
                 <h2 class="text-3d">Generate Chain Sequence</h2>
                 
@@ -61,7 +61,7 @@
                 
                 <div class="input-group">
                     <label for="max-iterations">Max Iterations:</label>
-                    <input type="number" id="max-iterations" min="1" max="500" value="50">
+                    <input type="number" id="max-iterations" min="1" max="500" value="5">
                 </div>
                 
                 <div class="input-group">
@@ -115,32 +115,27 @@
 
             
 
-            <!-- NU₁-Final Object Analysis Section -->
+            <!-- SMALL Condition Verification -->
             <section class="analysis-section">
-                <h2 class="text-3d">NU₁-Final Object Analysis</h2>
-                <p>Analyze all partitions with specific deficit values and identify NU₁-final objects:</p>
+                <h2 class="text-3d">SMALL Condition Verification</h2>
+                <p>Find all partitions μ of size k where ρ(μ) = k+2-r and verify the SMALL condition.</p>
+                
                 <div class="input-group">
-                    <label for="partition-length">Partition Length:</label>
-                    <input type="number" id="partition-length" min="1" max="8" value="5">
+                    <label for="small-k">Partition Size (k):</label>
+                    <input type="number" id="small-k" min="1" max="8" value="4">
                 </div>
                 <div class="input-group">
-                    <label for="target-deficit">Target Deficit:</label>
-                    <input type="number" id="target-deficit" min="0" value="0">
-                    <button id="analyze-deficit" class="btn btn-secondary">Analyze Partitions</button>
+                    <label for="small-r">SMALL number (r):</label>
+                    <input type="number" id="small-r" min="0" max="8" value="2">
                 </div>
                 <div class="input-group">
-                    <button id="show-available-deficits" class="btn btn-outline">Show Available Deficit Values</button>
+                    <button id="verify-small" class="btn btn-secondary">Verify SMALL Condition</button>
                 </div>
                 
-                <div id="available-deficit-info" class="available-deficit-info" style="display: none;">
-                    <h3>Available Deficit Values</h3>
-                    <div id="deficit-values-display" class="deficit-values-display"></div>
-                </div>
-                
-                <div id="deficit-analysis-results" class="deficit-analysis-results" style="display: none;">
-                    <h3>Analysis Results</h3>
-                    <div id="deficit-analysis-summary" class="summary-card"></div>
-                    <div id="deficit-analysis-details" class="deficit-analysis-details"></div>
+                <div id="small-results" class="deficit-analysis-results" style="display: none;">
+                    <h3>SMALL Condition Results</h3>
+                    <div id="small-summary" class="summary-card"></div>
+                    <div id="small-details" class="deficit-analysis-details"></div>
                 </div>
             </section>
 
@@ -223,33 +218,22 @@
                     <div class="input-group">
                         <label for="ti-mu">Partition μ (comma-separated):</label>
                         <input type="text" id="ti-mu" placeholder="3,1,1" value="3,1,1">
-                        <button id="btn-ti" class="btn btn-secondary">Compute TI</button>
                         <button id="btn-ti2" class="btn btn-outline">Compute TI₂</button>
                     </div>
                     <div id="ti-output" class="summary-card" style="margin-top:12px;">
                         <p><strong>TI(μ) QDV:</strong> <span id="ti-qdv">—</span></p>
                         <p><strong>TI(μ) Partition:</strong> <span id="ti-part">—</span></p>
                         <p><strong>TI₂(μ) Final QDV:</strong> <span id="ti2-qdv">—</span></p>
+                        <p><strong>TI₂(μ) Type:</strong> <span id="ti2-type">—</span></p>
+                        <p><strong>Is Flagpole:</strong> <span id="ti2-flagpole">—</span></p>
                         <p><strong>Steps:</strong></p>
                         <div id="ti-steps" style="white-space:pre-wrap; font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;">—</div>
                     </div>
                 `;
-                // insert before Mathematical Background section
+                
                 const math = document.querySelector('.math-section');
                 (math && math.parentNode) ? math.parentNode.insertBefore(sec, math) : main.appendChild(sec);
-                // Wire buttons
-                document.getElementById('btn-ti').addEventListener('click', function(){
-                    try {
-                        const mu = parseCSVNumbers(document.getElementById('ti-mu').value);
-                        if (!window.TIFromPartition || !window.QDVToPartition) { alert('Helpers not loaded yet. Hard-reload the page.'); return; }
-                        const tiQ = window.TIFromPartition(mu);
-                        const tiP = window.QDVToPartition(tiQ);
-                        document.getElementById('ti-qdv').textContent = `[${tiQ.join(', ')}]`;
-                        document.getElementById('ti-part').textContent = `⟨${tiP.join(', ')}⟩`;
-                        document.getElementById('ti2-qdv').textContent = '—';
-                        document.getElementById('ti-steps').textContent = '—';
-                    } catch(e){ alert(e.message); }
-                });
+               
                 document.getElementById('btn-ti2').addEventListener('click', function(){
                     try {
                         const mu = parseCSVNumbers(document.getElementById('ti-mu').value);
@@ -257,7 +241,25 @@
                         const res = window.computeTI2(mu);
                         const finalQ = res.finalQDV || [];
                         const steps = res.steps || [];
-                        document.getElementById('ti2-qdv').textContent = finalQ.length ? `[${finalQ.join(', ')}]` : '—';
+                        
+                        // Show final TI₂ result
+                        document.getElementById('ti2-qdv').textContent = `[${finalQ.join(', ')}]`;
+                        document.getElementById('ti2-qdv').style.fontSize = '';
+                        document.getElementById('ti2-qdv').style.color = '';
+                        
+                        // Check type classification
+                        if (finalQ.length && window.getTI2Type && window.isFlagpoleTI2) {
+                            const typeStr = window.getTI2Type(finalQ);
+                            const isFlagpole = window.isFlagpoleTI2(finalQ);
+                            document.getElementById('ti2-type').textContent = typeStr;
+                            document.getElementById('ti2-flagpole').textContent = isFlagpole ? '✓ Yes' : '✗ No';
+                            document.getElementById('ti2-flagpole').style.color = isFlagpole ? '#2e7d32' : '#c62828';
+                            document.getElementById('ti2-flagpole').style.fontWeight = 'bold';
+                        } else {
+                            document.getElementById('ti2-type').textContent = '—';
+                            document.getElementById('ti2-flagpole').textContent = '—';
+                        }
+                        
                         const lines = steps.map(s => `${s.used}: [${s.qdv.join(', ')}]`);
                         document.getElementById('ti-steps').textContent = lines.length ? lines.join('\n') : '—';
                         // Also show TI if we have it

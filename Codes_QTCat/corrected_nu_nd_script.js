@@ -1,21 +1,9 @@
-// Corrected Implementation of NU and ND Maps
-// Based on the comprehensive guide for partition chain maps
-
-// ============================================================================
-// STEP 1: CORE DATA STRUCTURES AND HELPERS
-// ============================================================================
-
-/**
- * Convert a partition to its Quasi-Dyck Vector (QDV) representation
- * @param {number[]} partition - Array representing the partition
- * @param {number} n - Length of the desired QDV
- * @returns {number[]} QDV representation
- */
+// Convert partition to QDV of length n
 function partitionToQDV(partition, n) {
     const qdv = new Array(n);
     
     for (let i = 1; i <= n; i++) {
-        const lambdaIndex = n - i + 1 - 1; // Convert to 0-based indexing
+        const lambdaIndex = n - i + 1 - 1;
         const lambdaValue = (lambdaIndex >= 0 && lambdaIndex < partition.length) 
             ? partition[lambdaIndex] 
             : 0;
@@ -25,11 +13,7 @@ function partitionToQDV(partition, n) {
     return qdv;
 }
 
-/**
- * Convert a QDV back to its partition representation
- * @param {number[]} qdv - Quasi-Dyck Vector
- * @returns {number[]} Partition representation
- */
+// Convert QDV back to partition
 function QDVToPartition(qdv) {
     const n = qdv.length;
     const partition = [];
@@ -44,22 +28,15 @@ function QDVToPartition(qdv) {
     return partition.sort((a, b) => b - a);
 }
 
-/**
- * Reduce a QDV to its reduced Dyck vector representative of the Dyck class.
- * - If there are negatives, lift via v -> [0, v^+] until non-negative.
- * - Then repeatedly apply inverse equivalence (drop leading 0, decrement rest)
- *   while staying non-negative, to minimize length.
- * @param {number[]} qdv
- * @returns {number[]} reduced Dyck vector (non-negative, minimal length)
- */
+// Reduce QDV to minimal Dyck vector
 function reduceQDVToReducedDyck(qdv) {
     if (!qdv || qdv.length === 0) return [0];
     let v = qdv.slice();
-    // Lift to Dyck (remove negatives) by adding 0 and +1 to all
+    
     while (v.some(x => x < 0)) {
         v = [0, ...v.map(x => x + 1)];
     }
-    // Reduce length while possible without introducing negatives
+    
     while (v.length > 1 && v[0] === 0) {
         const candidate = v.slice(1).map(x => x - 1);
         if (candidate.every(x => x >= 0)) {
@@ -71,12 +48,6 @@ function reduceQDVToReducedDyck(qdv) {
     return v;
 }
 
-/**
- * Compute the reduced Dyck vector from a partition by choosing
- * n = max_j (lambda_j + j), then building QDV_n(λ).
- * @param {number[]} partition - Partition (descending order recommended)
- * @returns {number[]} reduced Dyck vector
- */
 function reducedDyckFromPartition(partition) {
     if (!partition || partition.length === 0) return [0];
     const parts = partition.slice().sort((a, b) => b - a);
@@ -86,34 +57,19 @@ function reducedDyckFromPartition(partition) {
     }
     if (n <= 0) n = 1;
     const qdv = partitionToQDV(parts, n);
-    return qdv; // already non-negative and minimal by construction
+    return qdv;
 }
 
-/**
- * Check if a partition is NU₁-initial (where ND₁ is undefined)
- * @param {number[]} partition - Partition to check
- * @returns {boolean} True if γ₁ < ℓ(γ)
- */
 function is_NU1_initial(partition) {
     if (partition.length === 0) return false;
     return partition[0] < partition.length;
 }
 
-/**
- * Check if a partition is NU₁-final (where NU₁ is undefined)
- * @param {number[]} partition - Partition to check
- * @returns {boolean} True if γ₁ > ℓ(γ) + 2
- */
 function is_NU1_final(partition) {
     if (partition.length === 0) return false;
     return partition[0] > partition.length + 2;
 }
 
-/**
- * Calculate dinv for a partition
- * @param {number[]} partition - Partition to calculate dinv for
- * @returns {number} dinv value
- */
 function calculateDinv(partition) {
     if (partition.length === 0) return 0;
     
@@ -139,95 +95,51 @@ function calculateDinv(partition) {
     return dinvCount;
 }
 
-/**
- * Calculate deficit for a partition
- * @param {number[]} partition - Partition to calculate deficit for
- * @returns {number} deficit value
- */
 function calculateDeficit(partition) {
     if (partition.length === 0) return 0;
-    
     const totalBoxes = partition.reduce((sum, part) => sum + part, 0);
-    const dinvCount = calculateDinv(partition);
-    return totalBoxes - dinvCount;
+    return totalBoxes - calculateDinv(partition);
 }
 
-// ============================================================================
-// STEP 2: STANDARD MAPS (NU₁ and ND₁)
-// ============================================================================
-
-/**
- * NU₁ (NEXT-UP) Map
- * @param {number[]} partition - Input partition
- * @returns {number[]|null} Resulting partition or null if undefined
- */
+// NU₁ map
 function NU1(partition) {
     if (partition.length === 0) return null;
     
-    const g1 = partition[0]; // γ₁
-    const l = partition.length; // ℓ(γ)
+    const g1 = partition[0];
+    const l = partition.length;
     
-    // Domain check: NOT NU₁-final (γ₁ ≤ ℓ(γ) + 2)
-    if (is_NU1_final(partition)) {
-        return null;
-    }
+    if (is_NU1_final(partition)) return null;
     
-    // Apply NU₁ formula: ⟨ℓ+1, γ₁-1, γ₂-1, ..., γₗ-1⟩
     const newPartition = [l + 1, ...partition.map(p => p - 1)];
-    
-    // Drop any zero parts and sort in descending order
     return newPartition.filter(p => p > 0).sort((a, b) => b - a);
 }
 
-/**
- * ND₁ (NEXT-DOWN) Map - Inverse of NU₁
- * @param {number[]} partition - Input partition
- * @returns {number[]|null} Resulting partition or null if undefined
- */
+// ND₁ map - inverse of NU₁
 function ND1(partition) {
     if (partition.length === 0) return null;
     
-    const g1 = partition[0]; // γ₁
-    const l = partition.length; // ℓ(γ)
+    const g1 = partition[0];
+    const l = partition.length;
     
-    // Domain check: NOT NU₁-initial (γ₁ ≥ ℓ(γ))
-    if (is_NU1_initial(partition)) {
-        return null;
-    }
+    if (is_NU1_initial(partition)) return null;
     
-    // Apply ND₁ formula: ⟨γ₂+1, γ₃+1, ..., γₗ+1, 1^(γ₁-ℓ)⟩
     const newParts = partition.slice(1).map(p => p + 1);
     const onesToAdd = new Array(g1 - l).fill(1);
-    const newPartition = [...newParts, ...onesToAdd];
-    
-    return newPartition.sort((a, b) => b - a);
+    return [...newParts, ...onesToAdd].sort((a, b) => b - a);
 }
 
-// ============================================================================
-// STEP 3: EXTENDED MAPS (NU₂ and ND₂)
-// ============================================================================
-
-/**
- * Check if QDV matches NU₂ Rule (a) pattern: [012^h A (-1)^{h-1}]
- * @param {number[]} qdv - QDV to check
- * @returns {Object|null} Object with h and A if matches, null otherwise
- */
+// NU₂ Rule (a) pattern check
 function matchesNU2RuleA(qdv) {
     if (qdv.length < 3) return null;
-    
-    // Check for initial 012 pattern
     if (qdv[0] !== 0 || qdv[1] !== 1 || qdv[2] !== 2) return null;
     
-    // Count consecutive trailing -1s from the end
     let trailingNeg1s = 0;
     for (let j = qdv.length - 1; j >= 0 && qdv[j] === -1; j--) {
         trailingNeg1s++;
     }
     
-    // For Rule (a): we need h-1 trailing -1s, so h = trailingNeg1s + 1
     const h = trailingNeg1s + 1;
     
-    // Check if we have at least h consecutive 2s starting from position 2
     let consecutive2s = 0;
     let i = 2;
     while (i < qdv.length && qdv[i] === 2) {
@@ -235,25 +147,17 @@ function matchesNU2RuleA(qdv) {
         i++;
     }
     
-    // We need at least h consecutive 2s
     if (consecutive2s < h) return null;
     
-    // Extract middle section A (everything between 012^h and the last h-1 -1s)
-    const startA = 2 + h;  // After the 012^h part
-    const endA = qdv.length - (h - 1);  // Before the last h-1 -1s
-    const A = qdv.slice(startA, endA);  // Between 012^h and last h-1 -1s
+    const startA = 2 + h;
+    const endA = qdv.length - (h - 1);
+    const A = qdv.slice(startA, endA);
     
-    // Check conditions for A: A_s >= 0, A_i <= 2, A_{i+1} <= A_i + 1
     if (A.length > 0) {
-        // A_s >= 0 (last element is non-negative)
         if (A[A.length - 1] < 0) return null;
-        
-        // A_i <= 2 for all i
         for (let k = 0; k < A.length; k++) {
             if (A[k] > 2) return null;
         }
-        
-        // A_{i+1} <= A_i + 1 for all i < s
         for (let k = 0; k < A.length - 1; k++) {
             if (A[k + 1] > A[k] + 1) return null;
         }
@@ -262,56 +166,36 @@ function matchesNU2RuleA(qdv) {
     return { h, A };
 }
 
-/**
- * Check if QDV matches NU₂ Rule (b) pattern: [012^k B (-1)^k]
- * @param {number[]} qdv - QDV to check
- * @returns {Object|null} Object with k and B if matches, null otherwise
- */
+// NU₂ Rule (b) pattern check
 function matchesNU2RuleB(qdv) {
     if (qdv.length < 3) return null;
-    
-    // Check for initial 012 pattern
     if (qdv[0] !== 0 || qdv[1] !== 1 || qdv[2] !== 2) return null;
     
-    // Count consecutive 2s starting from position 2
     let consecutive2s = 0;
     let i = 2;
     while (i < qdv.length && qdv[i] === 2) {
         consecutive2s++;
         i++;
     }
-    
-    // For Rule (b): k is determined by the number of consecutive 2s
     const k = consecutive2s;
     
-    // Count consecutive trailing -1s from the end
     let trailingNeg1s = 0;
     for (let j = qdv.length - 1; j >= 0 && qdv[j] === -1; j--) {
         trailingNeg1s++;
     }
     
-    // We need at least k trailing -1s to match the pattern (B may end with -1)
     if (trailingNeg1s < k) return null;
     
-    // Extract middle section B (everything between 012^k and the last k -1s)
-    const startB = 2 + k;  // After the 012^k part
-    const endB = qdv.length - k;  // Before the last k -1s
-    const B = qdv.slice(startB, endB);  // Between 012^k and last k -1s
+    const startB = 2 + k;
+    const endB = qdv.length - k;
+    const B = qdv.slice(startB, endB);
     
-    // Check conditions for B: B_1 <= 1, B_s >= -1, B_i <= 2, B_{i+1} <= B_i + 1
     if (B.length > 0) {
-        // B_1 <= 1 (first element is at most 1)
         if (B[0] > 1) return null;
-        
-        // B_s >= -1 (last element is at least -1)
         if (B[B.length - 1] < -1) return null;
-        
-        // B_i <= 2 for all i
         for (let m = 0; m < B.length; m++) {
             if (B[m] > 2) return null;
         }
-        
-        // B_{i+1} <= B_i + 1 for all i < s
         for (let m = 0; m < B.length - 1; m++) {
             if (B[m + 1] > B[m] + 1) return null;
         }
@@ -320,107 +204,28 @@ function matchesNU2RuleB(qdv) {
     return { k, B };
 }
 
-/**
- * Apply NU₂ Rule (a) transformation
- * @param {number[]} qdv - Input QDV
- * @param {number} h - Number of 2s
- * @param {number[]} A - Middle section
- * @returns {number[]} Transformed QDV
- */
 function applyNU2RuleA(qdv, h, A) {
-    // Rule (a): [012^h A (-1)^{h-1}] → [00^{h-1} 1 A 1^h]
-    return [
-        0, // leading 0 in 00^{h-1}
-        ...new Array(h - 1).fill(0), // the 0^{h-1} part
-        1, // 1
-        ...A, // A
-        ...new Array(h).fill(1) // 1^h
-    ];
+    return [0, ...new Array(h - 1).fill(0), 1, ...A, ...new Array(h).fill(1)];
 }
 
-/**
- * Apply NU₂ Rule (b) transformation
- * @param {number[]} qdv - Input QDV
- * @param {number} k - Number of 2s
- * @param {number[]} B - Middle section
- * @returns {number[]} Transformed QDV
- */
 function applyNU2RuleB(qdv, k, B) {
-    // Rule (b): [012^k B (-1)^k] → [00^k B 0 1^k]
-    return [
-        0, // Initial 0
-        ...new Array(k).fill(0), // 0^k (k more zeros)
-        ...B, // B
-        0, // 0
-        ...new Array(k).fill(1) // 1^k
-    ];
+    return [0, ...new Array(k).fill(0), ...B, 0, ...new Array(k).fill(1)];
 }
 
-/**
- * NU₂ (Chain Bridge) Map
- * @param {number[]} qdv - Input QDV (should be NU₁-final object)
- * @returns {number[]|null} Resulting QDV or null if undefined
- */
 function NU2(qdv, suppressAlerts = false) {
-    // Check Rule (b) first (takes priority when both match)
     const ruleB = matchesNU2RuleB(qdv);
-    if (ruleB) {
-        return applyNU2RuleB(qdv, ruleB.k, ruleB.B);
-    }
+    if (ruleB) return applyNU2RuleB(qdv, ruleB.k, ruleB.B);
     
-    // Check Rule (a)
     const ruleA = matchesNU2RuleA(qdv);
-    if (ruleA) {
-        return applyNU2RuleA(qdv, ruleA.h, ruleA.A);
-    }
+    if (ruleA) return applyNU2RuleA(qdv, ruleA.h, ruleA.A);
     
-    // No matching pattern: construct detailed diagnostics
-    const diagnostics = [];
-    // Run Rule (b) checks piecemeal for messages
-    if (!(qdv[0] === 0 && qdv[1] === 1 && qdv[2] === 2)) {
-        diagnostics.push('Rule (b) fails: prefix must be 012.');
-    } else {
-        let i = 2, c2 = 0; while (i < qdv.length && qdv[i] === 2) { c2++; i++; }
-        const k = c2;
-        let trailing = 0; for (let j = qdv.length - 1; j >= 0 && qdv[j] === -1; j--) trailing++;
-        if (trailing < k) diagnostics.push(`Rule (b) fails: need at least k=${k} trailing -1s, found ${trailing}.`);
-        const startB = 2 + k, endB = qdv.length - k; const B = qdv.slice(startB, endB);
-        if (B.length > 0) {
-            if (B[0] > 1) diagnostics.push(`Rule (b) fails: B_1=${B[0]} must be ≤ 1.`);
-            if (B[B.length - 1] < -1) diagnostics.push(`Rule (b) fails: B_s=${B[B.length - 1]} must be ≥ -1.`);
-            for (let t = 0; t < B.length; t++) if (B[t] > 2) { diagnostics.push(`Rule (b) fails: B_i=${B[t]} must be ≤ 2.`); break; }
-            for (let t = 0; t < B.length - 1; t++) if (B[t + 1] > B[t] + 1) { diagnostics.push(`Rule (b) fails: B_{i+1} ≤ B_i + 1 violated at ${B[t]}→${B[t+1]}.`); break; }
-        }
-    }
-    // Rule (a) checks
-    if (!(qdv[0] === 0 && qdv[1] === 1 && qdv[2] === 2)) {
-        diagnostics.push('Rule (a) fails: prefix must be 012.');
-    } else {
-        let trailing = 0; for (let j = qdv.length - 1; j >= 0 && qdv[j] === -1; j--) trailing++;
-        const h = trailing + 1;
-        let i = 2, c2 = 0; while (i < qdv.length && qdv[i] === 2) { c2++; i++; }
-        if (c2 < h) diagnostics.push(`Rule (a) fails: need at least h=${h} consecutive 2s after 01, found ${c2}.`);
-        const startA = 2 + h, endA = qdv.length - (h - 1); const A = qdv.slice(startA, endA);
-        if (A.length > 0) {
-            if (A[A.length - 1] < 0) diagnostics.push(`Rule (a) fails: A_s=${A[A.length - 1]} must be ≥ 0.`);
-            for (let t = 0; t < A.length; t++) if (A[t] > 2) { diagnostics.push(`Rule (a) fails: A_i=${A[t]} must be ≤ 2.`); break; }
-            for (let t = 0; t < A.length - 1; t++) if (A[t + 1] > A[t] + 1) { diagnostics.push(`Rule (a) fails: A_{i+1} ≤ A_i + 1 violated at ${A[t]}→${A[t+1]}.`); break; }
-        }
-    }
     if (!suppressAlerts && typeof window !== 'undefined') {
-        alert(['NU₂ is undefined for this input.','Details:'].concat(diagnostics).join('\n'));
+        alert('NU₂ is undefined for this input');
     }
-    return null; // No matching pattern
+    return null;
 }
 
-/**
- * Check if QDV matches ND₂ input pattern for Rule (a)
- * @param {number[]} qdv - QDV to check
- * @returns {Object|null} Object with h and A if matches, null otherwise
- */
 function matchesND2RuleA(qdv) {
-    // Pattern: [0^h 1 A 1^h]
-    // Count initial 0s
     let initial0s = 0;
     let i = 0;
     while (i < qdv.length && qdv[i] === 0) {
@@ -428,33 +233,22 @@ function matchesND2RuleA(qdv) {
         i++;
     }
     
-    if (initial0s < 2) return null; // Need at least 2 zeros
-    
-    // Check for the 1 after initial 0s
+    if (initial0s < 2) return null;
     if (i >= qdv.length || qdv[i] !== 1) return null;
     i++;
     
-    // Count trailing 1s (to ensure there are at least h of them)
     let trailingOnes = 0;
     for (let t = qdv.length - 1; t >= 0 && qdv[t] === 1; t--) trailingOnes++;
     if (trailingOnes < initial0s) return null;
     
-    // Extract middle section A between the 1 after 0^h and the last h trailing 1s
-    const startA = i; // immediately after the single 1
-    const endA = qdv.length - initial0s; // exclude exactly the last h ones
+    const startA = i;
+    const endA = qdv.length - initial0s;
     const A = qdv.slice(startA, endA);
     
     return { h: initial0s, A };
 }
 
-/**
- * Check if QDV matches ND₂ input pattern for Rule (b)
- * @param {number[]} qdv - QDV to check
- * @returns {Object|null} Object with k and B if matches, null otherwise
- */
 function matchesND2RuleB(qdv) {
-    // Pattern: [00^k B 0 1^k]
-    // Count initial 0s
     let initial0s = 0;
     let i = 0;
     while (i < qdv.length && qdv[i] === 0) {
@@ -462,9 +256,8 @@ function matchesND2RuleB(qdv) {
         i++;
     }
     
-    if (initial0s < 2) return null; // Need at least 2 zeros (0 + 0^k for k >= 1)
+    if (initial0s < 2) return null;
     
-    // Count final 1s
     let final1s = 0;
     let j = qdv.length - 1;
     while (j >= 0 && qdv[j] === 1) {
@@ -472,63 +265,26 @@ function matchesND2RuleB(qdv) {
         j--;
     }
     
-    // For Rule (b): final_1s must equal k = initial_0s - 1 and k >= 1
-    const k = initial0s - 1;
-    if (final1s !== k || k < 1) return null;
-    
-    // Check for the 0 before final 1s
+    const k = final1s;
+    if (k < 1 || initial0s < k + 1) return null;
     if (j < 0 || qdv[j] !== 0) return null;
-    j--;
     
-    // Extract middle section B
-    const startB = i;
-    const endB = j + 1;
+    const startB = k + 1;
+    const endB = j;
     const B = qdv.slice(startB, endB);
     
-    return { k, B }; // k = initial0s - 1 (since we have 0 + 0^k)
+    return { k, B };
 }
 
-/**
- * Apply ND₂ Rule (a) inverse transformation
- * @param {number[]} qdv - Input QDV
- * @param {number} h - Number from pattern
- * @param {number[]} A - Middle section
- * @returns {number[]} Transformed QDV
- */
 function applyND2RuleA(qdv, h, A) {
-    // Inverse of Rule (a): [0^h 1 A 1^h] → [012^h A (-1)^{h-1}]
-    return [
-        0, 1, 2, // 012
-        ...new Array(h - 1).fill(2), // 2^{h-1}
-        ...A, // A
-        ...new Array(h - 1).fill(-1) // (-1)^{h-1}
-    ];
+    return [0, 1, 2, ...new Array(h - 1).fill(2), ...A, ...new Array(h - 1).fill(-1)];
 }
 
-/**
- * Apply ND₂ Rule (b) inverse transformation
- * @param {number[]} qdv - Input QDV
- * @param {number} k - Number from pattern
- * @param {number[]} B - Middle section
- * @returns {number[]} Transformed QDV
- */
 function applyND2RuleB(qdv, k, B) {
-    // Inverse of Rule (b): [00^k B 0 1^k] → [012^k B (-1)^k]
-    return [
-        0, 1, 2, // 012
-        ...new Array(k - 1).fill(2), // 2^{k-1}
-        ...B, // B
-        ...new Array(k).fill(-1) // (-1)^k
-    ];
+    return [0, 1, ...new Array(k).fill(2), ...B, ...new Array(k).fill(-1)];
 }
 
-/**
- * ND₂ (Chain Bridge Inverse) Map
- * @param {number[]} qdv - Input QDV (should be NU₁-initial object)
- * @returns {number[]|null} Resulting QDV or null if undefined
- */
 function ND2(qdv, suppressAlerts = false) {
-    // Count initial 0s and final 1s for rule selection
     let initial0s = 0;
     let i = 0;
     while (i < qdv.length && qdv[i] === 0) {
@@ -543,82 +299,21 @@ function ND2(qdv, suppressAlerts = false) {
         j--;
     }
     
-    // Rule selection logic
     if (final1s >= initial0s) {
-        // Apply Rule (a)
         const ruleA = matchesND2RuleA(qdv);
-        if (ruleA) {
-            return applyND2RuleA(qdv, ruleA.h, ruleA.A);
-        }
+        if (ruleA) return applyND2RuleA(qdv, ruleA.h, ruleA.A);
     } else {
-        // Apply Rule (b)
         const ruleB = matchesND2RuleB(qdv);
-        if (ruleB) {
-            return applyND2RuleB(qdv, ruleB.k, ruleB.B);
-        }
+        if (ruleB) return applyND2RuleB(qdv, ruleB.k, ruleB.B);
     }
     
-    // No matching pattern: construct detailed diagnostics for ND₂
-    const diagnostics = [];
-    // Common measurements
-    let init0 = 0, p = 0; while (p < qdv.length && qdv[p] === 0) { init0++; p++; }
-    let end1 = 0, q = qdv.length - 1; while (q >= 0 && qdv[q] === 1) { end1++; q--; }
-    
-    // Rule (a) expected: [0^h 1 A 1^h], with h>=2, trailing 1s >= leading 0s
-    if (init0 < 2) diagnostics.push(`Rule (a) fails: need at least 2 leading 0s (have ${init0}).`);
-    else {
-        if (qdv[p] !== 1) diagnostics.push('Rule (a) fails: the symbol after leading 0s must be 1.');
-        if (end1 < init0) diagnostics.push(`Rule (a) fails: trailing 1s (=${end1}) must be ≥ leading 0s (=${init0}).`);
-        // Extract A if structurally plausible
-        if (qdv[p] === 1 && end1 >= init0) {
-            const h = init0;
-            const startA = p + 1;
-            const endA = qdv.length - h;
-            const A = qdv.slice(startA, endA);
-            if (A.length > 0) {
-                if (A[A.length - 1] < 0) diagnostics.push(`Rule (a) fails: A_s=${A[A.length - 1]} must be ≥ 0.`);
-                for (let t = 0; t < A.length; t++) if (A[t] > 2) { diagnostics.push(`Rule (a) fails: A_i=${A[t]} must be ≤ 2.`); break; }
-                for (let t = 0; t < A.length - 1; t++) if (A[t + 1] > A[t] + 1) { diagnostics.push(`Rule (a) fails: A_{i+1} ≤ A_i + 1 violated at ${A[t]}→${A[t+1]}.`); break; }
-            }
-        }
-    }
-    
-    // Rule (b) expected: [0^(k+1) B 0 1^k], with leading 0s > trailing 1s (strict), separator 0 before 1^k
-    if (init0 < 2) diagnostics.push(`Rule (b) fails: need at least 2 leading 0s (have ${init0}).`);
-    else {
-        if (init0 <= end1) diagnostics.push(`Rule (b) fails: leading 0s (=${init0}) must be > trailing 1s (=${end1}).`);
-        // Check separator 0 before 1^k
-        if (q < 0 || qdv[q] !== 0) diagnostics.push('Rule (b) fails: missing required 0 immediately before the trailing 1^k block.');
-        // Extract B if structurally plausible
-        if (init0 > end1 && q >= 0 && qdv[q] === 0) {
-            const startB = init0;
-            const endB = q; // exclusive of the separator 0 position
-            const B = qdv.slice(startB, endB);
-            if (B.length > 0) {
-                if (B[0] > 1) diagnostics.push(`Rule (b) fails: B_1=${B[0]} must be ≤ 1.`);
-                if (B[B.length - 1] < -1) diagnostics.push(`Rule (b) fails: B_s=${B[B.length - 1]} must be ≥ -1.`);
-                for (let t = 0; t < B.length; t++) if (B[t] > 2) { diagnostics.push(`Rule (b) fails: B_i=${B[t]} must be ≤ 2.`); break; }
-                for (let t = 0; t < B.length - 1; t++) if (B[t + 1] > B[t] + 1) { diagnostics.push(`Rule (b) fails: B_{i+1} ≤ B_i + 1 violated at ${B[t]}→${B[t+1]}.`); break; }
-            }
-        }
-    }
     if (!suppressAlerts && typeof window !== 'undefined') {
-        alert(['ND₂ is undefined for this input.','Details:'].concat(diagnostics).join('\n'));
+        alert('ND₂ is undefined for this input');
     }
-    return null; // No matching pattern
+    return null;
 }
 
-// ============================================================================
-// STEP 4: UNIFIED MAPS (NU and ND)
-// ============================================================================
-
-/**
- * Build TI(μ) (first-order tail initiator) as a QDV from a partition μ.
- * B_μ = 01^{n1}01^{n2}...01^{nr}, where n_i is the count of parts equal to i.
- * TI(μ) = [0, ...B_μ].
- * @param {number[]} muPartition - Partition μ in descending order
- * @returns {number[]} QDV vector for TI(μ)
- */
+// TI(μ) - first-order tail initiator
 function TIFromPartition(muPartition) {
     if (!muPartition || muPartition.length === 0) return [0];
     const r = Math.max(...muPartition);
@@ -632,50 +327,35 @@ function TIFromPartition(muPartition) {
     return [0, ...B];
 }
 
-/**
- * ND₁ on QDV (vector rule from Proposition 2.10(b))
- * Delete last symbol v_n; insert v_n+1 immediately after the first
- * occurrence of v_n. Special case v_n = -1: insert 0 at the front.
- * Defined only if leader d >= v_n, where leader d is the highest value
- * in the initial 0,1,2,... prefix.
- * @param {number[]} qdv
- * @returns {number[]|null}
- */
+// ND₁ on QDV vectors
 function ND1_QDV(qdv) {
     if (!qdv || qdv.length === 0) return null;
     const vn = qdv[qdv.length - 1];
-    // compute leader d
+    
     let expected = 0, i = 0;
     while (i < qdv.length && qdv[i] === expected) { expected++; i++; }
     const d = expected - 1;
+    
     if (d < vn) return null;
     const arr = qdv.slice(0, qdv.length - 1);
-    if (vn === -1) {
-        return [0, ...arr];
-    }
+    
+    if (vn === -1) return [0, ...arr];
+    
     const firstIdx = arr.indexOf(vn);
-    if (firstIdx === -1) {
-        // Invalid state under d >= v_n; refuse to apply ND₁
-        return null;
-    }
-    const out = arr.slice(0, firstIdx + 1).concat([vn + 1], arr.slice(firstIdx + 1));
-    return out;
+    if (firstIdx === -1) return null;
+    
+    return arr.slice(0, firstIdx + 1).concat([vn + 1], arr.slice(firstIdx + 1));
 }
 
-/**
- * Compute TI₂(μ) by starting at TI(μ) and applying the extended ND
- * (ND₁ when defined on the partition; otherwise ND₂ on the QDV)
- * until neither applies.
- * @param {number[]} muPartition - Partition μ (descending)
- * @returns {{finalQDV:number[], steps:Array<{qdv:number[], used:string}>}} final QDV and steps
- */
+// TI₂ computation
 function computeTI2(muPartition) {
     let currentQDV = TIFromPartition(muPartition);
     const steps = [{ qdv: [...currentQDV], used: 'start:TI(μ)' }];
     const defc0 = calculateDeficit(QDVToPartition(currentQDV));
+    
     while (true) {
         let progressed = false;
-        // ND phase: apply extended ND on QDV until blocked (preserving deficit)
+        
         while (true) {
             const nd1Q = ND1_QDV(currentQDV);
             if (nd1Q) {
@@ -687,6 +367,7 @@ function computeTI2(muPartition) {
                     continue;
                 }
             }
+            
             const nd2Q = ND2(currentQDV, true);
             if (nd2Q) {
                 const defcNext = calculateDeficit(QDVToPartition(nd2Q));
@@ -699,67 +380,155 @@ function computeTI2(muPartition) {
             }
             break;
         }
-        // Reduction phase: reduce to ternary representative; if changed, loop again
+        
         const reduced = reduceQDVToReducedDyck(currentQDV);
         if (JSON.stringify(reduced) !== JSON.stringify(currentQDV)) {
             currentQDV = reduced;
             steps.push({ qdv: [...currentQDV], used: 'reduce' });
             progressed = true;
         }
+        
         if (!progressed) break;
     }
     return { finalQDV: currentQDV, steps };
 }
 
-/**
- * Find the appropriate QDV representation for NU₁-final object
- * @param {number[]} partition - NU₁-final partition
- * @returns {number[]} QDV representation ending in -1
- */
-function findNU1FinalQDV(partition) {
-    // This is a complex function that needs to find the specific QDV
-    // representation that matches the NU₂ input patterns
-    // For now, return a placeholder
+function isTernary(v) {
+    return v.every(x => x === 0 || x === 1 || x === 2);
+}
+
+function isType1(v) {
+    if (!v || v.length === 0 || !isTernary(v)) return false;
+    if (v[0] !== 0) return false;
+    
+    let i = 1;
+    let m = 0;
+    while (i < v.length && v[i] === 1) {
+        m++;
+        i++;
+    }
+    
+    if (i >= v.length || v[i] !== 0) return false;
+    i++;
+    
+    let n = 0;
+    let j = v.length - 1;
+    while (j >= i && v[j] === 2) {
+        n++;
+        j--;
+    }
+    
+    if (n < 1) return false;
+    
+    const X_end = v.length - n;
+    if (X_end < i) return m <= n;
+    
+    const X = v.slice(i, X_end);
+    if (X.length > 0 && X[X.length - 1] === 2) return false;
+    
+    return m <= n;
+}
+
+function isType2(v) {
+    if (!v || v.length === 0 || !isTernary(v)) return false;
+    
+    let i = 0;
+    let n = 0;
+    while (i < v.length && v[i] === 0) {
+        n++;
+        i++;
+    }
+    
+    if (n < 2) return false;
+    
+    let j = v.length - 1;
+    let m = 0;
+    while (j >= 0 && v[j] === 1) {
+        m++;
+        j--;
+    }
+    
+    if (!(0 < m && m < n)) return false;
+    if (j < 0 || v[j] !== 2) return false;
+    
+    if (i <= j - 1) {
+        const Y = v.slice(i, j);
+        if (Y.length > 0 && Y[0] === 0) return false;
+    }
+    
+    return true;
+}
+
+function isType3(v) {
+    if (v.length === 1 && v[0] === 0) return true;
+    if (!v || v.length === 0 || !isTernary(v)) return false;
+    
+    let i = 0;
+    let n = 0;
+    while (i < v.length && v[i] === 0) {
+        n++;
+        i++;
+    }
+    
+    if (n < 2) return false;
+    
+    const remainder = v.slice(i);
+    if (remainder.some(x => x !== 1)) return false;
+    
+    const m = remainder.length;
+    return (m === n) || (m === n - 1);
+}
+
+function isFlagpoleTI2(v) {
+    return isType1(v) || isType2(v) || isType3(v);
+}
+
+function getTI2Type(v) {
+    if (isType1(v)) return 'Type 1';
+    if (isType2(v)) return 'Type 2';
+    if (isType3(v)) return 'Type 3';
+    return 'Non-flagpole';
+}
+
+function finalTI2(muPartition) {
+    const res = computeTI2(muPartition);
+    const v = res.finalQDV || [];
+    
+    if (isFlagpoleTI2(v)) {
+        return { ...res, type: getTI2Type(v), isFlagpole: true };
+    }
+    
     return null;
 }
 
-/**
- * Unified NU (Extended NEXT-UP) Map
- * @param {number[]} partition - Input partition
- * @returns {number[]|null} Resulting partition or null if undefined
- */
+function findNU1FinalQDV(partition) {
+    return reducedDyckFromPartition(partition);
+}
+
 function NU(partition) {
     if (is_NU1_final(partition)) {
-        // Convert to QDV, apply NU₂, convert back
         const qdv = findNU1FinalQDV(partition);
         if (!qdv) return null;
-        
         const resultQDV = NU2(qdv);
         if (!resultQDV) return null;
-        
         return QDVToPartition(resultQDV);
     } else {
-        // Apply standard NU₁
         return NU1(partition);
     }
 }
 
-/**
- * Unified ND (Extended NEXT-DOWN) Map
- * @param {number[]} partition - Input partition
- * @returns {number[]|null} Resulting partition or null if undefined
- */
 function ND(partition) {
     if (is_NU1_initial(partition)) {
-        // Convert to QDV, try ND₁ on QDV form first, else ND₂; convert back
-        const n = partition[0] + partition.length; // Estimate QDV length
+        const n = partition[0] + partition.length;
         const qdv = partitionToQDV(partition, n);
         const defc0 = calculateDeficit(partition);
+        
         const nd1Q = ND1_QDV(qdv);
         if (nd1Q) {
             const pNext = QDVToPartition(nd1Q);
             if (calculateDeficit(pNext) === defc0) return pNext;
         }
+        
         const resultQDV = ND2(qdv);
         if (resultQDV) {
             const pNext = QDVToPartition(resultQDV);
@@ -767,22 +536,10 @@ function ND(partition) {
         }
         return null;
     } else {
-        // Apply standard ND₁
         return ND1(partition);
     }
 }
 
-// ============================================================================
-// SEQUENCE GENERATION AND ANALYSIS
-// ============================================================================
-
-/**
- * Generate a sequence using the specified map
- * @param {number[]} initialPartition - Starting partition
- * @param {string} mapType - Type of map to use ('NU1', 'ND1', 'NU2', 'ND2', 'NU', 'ND')
- * @param {number} maxIterations - Maximum number of iterations
- * @returns {Object} Sequence data
- */
 function generateSequence(initialPartition, mapType, maxIterations = 50) {
     const sequence = [initialPartition];
     const deficits = [calculateDeficit(initialPartition)];
@@ -857,105 +614,48 @@ function generateSequence(initialPartition, mapType, maxIterations = 50) {
     };
 }
 
-/**
- * Get partition type description
- * @param {number[]} partition - Partition to classify
- * @returns {string} Type description
- */
 function getPartitionType(partition) {
-    if (is_NU1_final(partition)) {
-        return 'NU₁-final';
-    } else if (is_NU1_initial(partition)) {
-        return 'NU₁-initial';
-    } else {
-        return 'Regular';
-    }
+    if (is_NU1_final(partition)) return 'NU₁-final';
+    if (is_NU1_initial(partition)) return 'NU₁-initial';
+    return 'Regular';
 }
 
-/**
- * Get termination reason for sequence
- * @param {string} mapType - Type of map used
- * @param {string} finalType - Type of final partition
- * @param {number} iterations - Number of iterations completed
- * @param {number} maxIterations - Maximum allowed iterations
- * @returns {string} Termination reason
- */
 function getTerminationReason(mapType, finalType, iterations, maxIterations) {
-    if (iterations >= maxIterations) {
-        return 'Maximum iterations reached';
-    } else if (finalType === 'NU₁-final' && (mapType === 'NU1' || mapType === 'NU')) {
-        return 'Reached NU₁-final object';
-    } else if (finalType === 'NU₁-initial' && (mapType === 'ND1' || mapType === 'ND')) {
-        return 'Reached NU₁-initial object';
-    } else {
-        return 'Sequence completed';
-    }
+    if (iterations >= maxIterations) return 'Maximum iterations reached';
+    if (finalType === 'NU₁-final' && (mapType === 'NU1' || mapType === 'NU')) return 'Reached NU₁-final object';
+    if (finalType === 'NU₁-initial' && (mapType === 'ND1' || mapType === 'ND')) return 'Reached NU₁-initial object';
+    return 'Sequence completed';
 }
 
-// ============================================================================
-// WEBAPP INTEGRATION
-// ============================================================================
-
-/**
- * Parse input partition from string
- * @param {string} input - Comma-separated partition string
- * @returns {number[]} Partition array
- */
 function parsePartitionInput(input) {
     try {
         const cleaned = input.replace(/[()]/g, '');
         const parts = cleaned.split(',');
         const values = parts.map(x => parseInt(x.trim())).filter(x => !isNaN(x));
-        
-        if (values.length === 0) {
-            throw new Error('Empty partition');
-        }
-        
-        // Sort in descending order (canonical form)
+        if (values.length === 0) throw new Error('Empty partition');
         return values.sort((a, b) => b - a);
     } catch (error) {
         throw new Error('Invalid partition format. Please use comma-separated positive integers.');
     }
 }
 
-/**
- * Parse input QDV from string
- * @param {string} input - Comma-separated QDV string
- * @returns {number[]} QDV array
- */
 function parseQDVInput(input) {
     try {
         const cleaned = input.replace(/[()]/g, '');
         const parts = cleaned.split(',');
         const values = parts.map(x => parseInt(x.trim())).filter(x => !isNaN(x));
-        
-        if (values.length === 0) {
-            throw new Error('Empty QDV');
-        }
-        
-        // QDV must start with 0
-        if (values[0] !== 0) {
-            throw new Error('QDV must start with 0');
-        }
-        
+        if (values.length === 0) throw new Error('Empty QDV');
+        if (values[0] !== 0) throw new Error('QDV must start with 0');
         return values;
     } catch (error) {
         throw new Error('Invalid QDV format. Please use comma-separated integers starting with 0.');
     }
 }
 
-/**
- * Check if QDV matches NU₂ Rule (a) pattern: [012^h A (-1)^{h-1}]
- * @param {number[]} qdv - QDV to check
- * @returns {boolean} True if matches pattern
- */
 function isNU2RuleAPattern(qdv) {
     if (qdv.length < 3) return false;
-    
-    // Check for initial 012 pattern
     if (qdv[0] !== 0 || qdv[1] !== 1 || qdv[2] !== 2) return false;
     
-    // Count consecutive 2s
     let h = 1;
     let i = 3;
     while (i < qdv.length && qdv[i] === 2) {
@@ -963,7 +663,6 @@ function isNU2RuleAPattern(qdv) {
         i++;
     }
     
-    // Count trailing -1s
     let trailingNeg1s = 0;
     let j = qdv.length - 1;
     while (j >= 0 && qdv[j] === -1) {
@@ -971,13 +670,9 @@ function isNU2RuleAPattern(qdv) {
         j--;
     }
     
-    // Check if pattern matches: trailing -1s should equal h-1
     return trailingNeg1s === h - 1;
 }
 
-/**
- * Generate sequence for webapp
- */
 function generateNuSequence() {
     const input = document.getElementById('input-vector').value;
     const method = document.querySelector('input[name="method"]:checked').value;
@@ -1076,7 +771,7 @@ function generateNuSequence() {
                 window.lastQDVSequence = qList;
             } else if (method === 'NU') {
                 // Unified NU: try NU₂ on QDV first; if not applicable, fall back to NU₁ on partition
-                const resultQDV = NU2(qdv);
+                const resultQDV = NU2(qdv, true);
                 if (resultQDV) {
                     const resultPartition = QDVToPartition(resultQDV);
                     sequence = [partition, resultPartition];
@@ -1119,7 +814,7 @@ function generateNuSequence() {
                     terminationReason = 'Unified ND: ND₁ applied (vector rule)';
                     window.lastQDVSequence = [qdv, nd1Q];
                 } else {
-                    const resultQDV = ND2(qdv);
+                    const resultQDV = ND2(qdv, true);
                     if (resultQDV) {
                         const resultPartition = QDVToPartition(resultQDV);
                         sequence = [partition, resultPartition];
@@ -1179,9 +874,6 @@ function generateNuSequence() {
     }
 }
 
-/**
- * Display results in the webapp
- */
 function displayNuResults(sequence, deficits, dinvs, types, method, iterations, originalPartition, terminationReason, inputType = 'partition') {
     const resultsSection = document.getElementById('results-section');
     resultsSection.style.display = 'block';
@@ -1217,9 +909,6 @@ function displayNuResults(sequence, deficits, dinvs, types, method, iterations, 
     createNuVisualization(sequence, deficits, dinvs, types, inputType);
 }
 
-/**
- * Get method display name
- */
 function getMethodName(method) {
     switch (method) {
         case 'NU1': return 'NU₁ (NEXT-UP)';
@@ -1232,13 +921,8 @@ function getMethodName(method) {
     }
 }
 
-/**
- * Create sequence table
- */
 function createNuSequenceTable(sequence, deficits, dinvs, types, inputType = 'partition') {
     const tableContainer = document.getElementById('sequence-table');
-    
-    // Determine if we should show QDV column
     const showQDV = inputType === 'qdv';
     
     let tableHTML = `
@@ -1312,9 +996,6 @@ function createNuSequenceTable(sequence, deficits, dinvs, types, inputType = 'pa
     tableContainer.innerHTML = tableHTML;
 }
 
-/**
- * Create sequence visualization
- */
 function createNuVisualization(sequence, deficits, dinvs, types, inputType = 'partition') {
     const chartContainer = document.getElementById('sequence-chart');
     
@@ -1366,9 +1047,6 @@ function createNuVisualization(sequence, deficits, dinvs, types, inputType = 'pa
     chartContainer.innerHTML = chartHTML;
 }
 
-/**
- * Show error message
- */
 function showError(message) {
     const errorDiv = document.createElement('div');
     errorDiv.className = 'error';
@@ -1394,10 +1072,7 @@ function showError(message) {
     }, 5000);
 }
 
-/**
- * Generate all partitions of a given length
- */
-function generateAllPartitions(length) {
+function generateAllPartitions(n) {
     const partitions = [];
     
     function generateRecursive(current, remaining, maxPart) {
@@ -1414,103 +1089,144 @@ function generateAllPartitions(length) {
         }
     }
     
-    generateRecursive([], length, length);
+    generateRecursive([], n, n);
     return partitions;
 }
 
-/**
- * List available deficit values
- */
-function listAvailableDeficitValues(length) {
-    try {
-        const allPartitions = generateAllPartitions(length);
-        const deficitValues = new Set();
-        const deficitCounts = {};
-        
-        allPartitions.forEach(partition => {
-            const deficit = calculateDeficit(partition);
-            deficitValues.add(deficit);
-            deficitCounts[deficit] = (deficitCounts[deficit] || 0) + 1;
-        });
-        
-        const sortedDeficitValues = Array.from(deficitValues).sort((a, b) => a - b);
-        
-        const display = document.getElementById('deficit-values-display');
-        let html = `<p><strong>Available deficit values for length ${length}:</strong> [${sortedDeficitValues.join(', ')}]</p>`;
-        html += '<div class="deficit-values-display">';
-        
-        sortedDeficitValues.forEach(deficitVal => {
-            html += `
-                <div class="deficit-value-item">
-                    <h4>Deficit = ${deficitVal}</h4>
-                    <p><strong>${deficitCounts[deficitVal]} partitions</strong></p>
-                </div>
-            `;
-        });
-        
-        html += '</div>';
-        display.innerHTML = html;
-        
-        const infoDiv = document.getElementById('available-deficit-info');
-        infoDiv.style.display = 'block';
-        
-    } catch (error) {
-        showError(error.message);
-    }
+function countPartitions(n) {
+    return generateAllPartitions(n).length;
 }
 
-/**
- * Analyze partitions with specific deficit
- */
-function analyzeDeficitPartitions() {
-    const length = parseInt(document.getElementById('partition-length').value);
-    const targetDeficit = parseInt(document.getElementById('target-deficit').value);
+function verifySMALLCondition() {
+    const k = parseInt(document.getElementById('small-k').value);
+    const r = parseInt(document.getElementById('small-r').value);
     
     try {
-        const allPartitions = generateAllPartitions(length);
-        const targetPartitions = allPartitions.filter(p => calculateDeficit(p) === targetDeficit);
+        const targetLength = k + 2 - r;
+        const allPartitions = generateAllPartitions(k);
         
-        const results = document.getElementById('deficit-analysis-results');
+        const flagpoles = [];
+        const nonFlagpoles = [];
+        
+        allPartitions.forEach(mu => {
+            const ti2Result = computeTI2(mu);
+            const finalQDV = ti2Result.finalQDV || [];
+            const rho = finalQDV.length;
+            
+            if (rho === targetLength) {
+                const isFlagpole = isFlagpoleTI2(finalQDV);
+                const type = getTI2Type(finalQDV);
+                
+                if (isFlagpole) {
+                    flagpoles.push({ mu, rho, type, finalQDV });
+                } else {
+                    nonFlagpoles.push({ mu, rho, type, finalQDV });
+                }
+            }
+        });
+        
+        const pR = countPartitions(r);
+        const expected = 2 * pR;
+        const actual = flagpoles.length;
+        const smallSatisfied = (actual === expected);
+        
+        const results = document.getElementById('small-results');
         results.style.display = 'block';
         
         let summaryHTML = `
-            <h4>Summary</h4>
-            <p><strong>Found ${targetPartitions.length} partitions with deficit=${targetDeficit} and length ${length}</p>
+            <h4>SMALL(${r}, ${k}) Verification</h4>
+            <p><strong>Target ρ(μ):</strong> k+2-r = ${k}+2-${r} = ${targetLength}</p>
+            <p><strong>Expected count:</strong> 2·p(${r}) = 2·${pR} = ${expected}</p>
+            <p><strong>Flagpole count (Type 1/2/3):</strong> ${actual}</p>
+            ${nonFlagpoles.length > 0 ? `<p><strong>Other partitions with length ${targetLength} (not flagpoles):</strong> ${nonFlagpoles.length} <em>(not counted)</em></p>` : ''}
+            <p style="font-size: 1.2em; margin-top: 12px;"><strong>SMALL condition:</strong> 
+                <span style="color: ${smallSatisfied ? '#2e7d32' : '#c62828'}; font-weight: bold;">
+                    ${smallSatisfied ? '✓ SATISFIED' : '✗ NOT SATISFIED'}
+                </span>
+            </p>
         `;
         
-        if (targetPartitions.length === 0) {
-            summaryHTML += '<p><em>No partitions found with this deficit value. Try checking available deficit values.</em></p>';
-        }
+        let detailsHTML = '<h4>Flagpole Partitions (Type 1/2/3)</h4>';
         
-        let detailsHTML = '<h4>Detailed Results</h4>';
-        
-        targetPartitions.forEach((partition, index) => {
-            const type = getPartitionType(partition);
-            const dinv = calculateDinv(partition);
+        if (flagpoles.length === 0) {
+            detailsHTML += '<p><em>No flagpole partitions found.</em></p>';
+        } else {
+            detailsHTML += `
+                <table style="width: 100%; border-collapse: collapse; margin-top: 12px;">
+                    <thead>
+                        <tr style="background: #f5f5f5; border-bottom: 2px solid #ddd;">
+                            <th style="padding: 10px; text-align: left;">#</th>
+                            <th style="padding: 10px; text-align: left;">Partition μ</th>
+                            <th style="padding: 10px; text-align: center;">Type</th>
+                            <th style="padding: 10px; text-align: left;">TI₂(μ)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+            `;
             
-            summaryHTML += `<p><strong>Partition ${index + 1}:</strong> ⟨${partition.join(', ')}⟩ [${type}]</p>`;
+            flagpoles.forEach(({mu, rho, type, finalQDV}, index) => {
+                const typeColor = type === 'Type 1' ? '#1976d2' : type === 'Type 2' ? '#388e3c' : '#7b1fa2';
+                detailsHTML += `
+                    <tr style="border-bottom: 1px solid #eee;">
+                        <td style="padding: 8px;">${index + 1}</td>
+                        <td style="padding: 8px;">⟨${mu.join(', ')}⟩</td>
+                        <td style="padding: 8px; text-align: center;">
+                            <span style="background: ${typeColor}; color: white; padding: 3px 8px; border-radius: 4px; font-size: 0.9em;">
+                                ${type}
+                            </span>
+                        </td>
+                        <td style="padding: 8px; font-family: monospace; font-size: 0.9em;">[${finalQDV.join(', ')}]</td>
+                    </tr>
+                `;
+            });
             
             detailsHTML += `
-                <div class="deficit-analysis-item">
-                    <h5>Partition ${index + 1}: ⟨${partition.join(', ')}⟩</h5>
-                    <p><strong>Type:</strong> ${type}</p>
-                    <p><strong>Deficit:</strong> ${targetDeficit}</p>
-                    <p><strong>Dinv:</strong> ${dinv}</p>
-                </div>
+                    </tbody>
+                </table>
             `;
-        });
+        }
         
-        document.getElementById('deficit-analysis-summary').innerHTML = summaryHTML;
-        document.getElementById('deficit-analysis-details').innerHTML = detailsHTML;
+        if (nonFlagpoles.length > 0) {
+            detailsHTML += `
+                <h4 style="color: #888; margin-top: 24px;">Other Partitions (Not Type 1/2/3)</h4>
+                <p style="color: #666; font-size: 0.9em; margin-bottom: 12px;">
+                    <em>These have TI₂ length = ${targetLength} but are NOT flagpoles. They are NOT counted in ρ⁻¹(DV<sub>${targetLength}</sub>).</em>
+                </p>
+                <table style="width: 100%; border-collapse: collapse; opacity: 0.7;">
+                    <thead>
+                        <tr style="background: #f5f5f5; border-bottom: 2px solid #ddd;">
+                            <th style="padding: 10px; text-align: left;">#</th>
+                            <th style="padding: 10px; text-align: left;">Partition μ</th>
+                            <th style="padding: 10px; text-align: left;">TI₂(μ)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+            `;
+            
+            nonFlagpoles.forEach(({mu, rho, type, finalQDV}, index) => {
+                detailsHTML += `
+                    <tr style="border-bottom: 1px solid #eee;">
+                        <td style="padding: 8px;">${index + 1}</td>
+                        <td style="padding: 8px;">⟨${mu.join(', ')}⟩</td>
+                        <td style="padding: 8px; font-family: monospace; font-size: 0.9em;">[${finalQDV.join(', ')}]</td>
+                    </tr>
+                `;
+            });
+            
+            detailsHTML += `
+                    </tbody>
+                </table>
+            `;
+        }
+        
+        document.getElementById('small-summary').innerHTML = summaryHTML;
+        document.getElementById('small-details').innerHTML = detailsHTML;
         
     } catch (error) {
         showError(error.message);
     }
 }
 
-/**
- * Update input label and placeholder based on input type
- */
 function updateInputLabel() {
     const inputType = document.getElementById('input-type').value;
     const label = document.getElementById('input-label');
@@ -1519,7 +1235,7 @@ function updateInputLabel() {
     if (inputType === 'qdv') {
         label.textContent = 'Quasi-Dyck Vector (comma-separated, can include negatives):';
         input.placeholder = '0,1,2,2,A,-1,-1';
-        input.value = '0,1,2,2,2,-1,-1'; // Example NU₂ Rule (a) pattern
+        input.value = '0,1,2,2,2,-1,-1';
     } else {
         label.textContent = 'Partition (comma-separated integers):';
         input.placeholder = '5,4,4,1';
@@ -1527,15 +1243,9 @@ function updateInputLabel() {
     }
 }
 
-// Event listeners
 document.addEventListener('DOMContentLoaded', function() {
     document.getElementById('generate-sequence').addEventListener('click', generateNuSequence);
-    document.getElementById('analyze-deficit').addEventListener('click', analyzeDeficitPartitions);
-    document.getElementById('show-available-deficits').addEventListener('click', function() {
-        const length = parseInt(document.getElementById('partition-length').value);
-        listAvailableDeficitValues(length);
-    });
-    
+    document.getElementById('verify-small').addEventListener('click', verifySMALLCondition);
     document.getElementById('input-type').addEventListener('change', updateInputLabel);
     
     document.getElementById('input-vector').addEventListener('keypress', function(e) {
@@ -1544,44 +1254,32 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
     
-    // Initialize with default sequence
     updateInputLabel();
     generateNuSequence();
 });
 
-/**
- * Test function for NU₂ with the example vector
- */
 function testNU2Example() {
     const testQDV = [0, 1, 2, 2, 2, 2, -1, 0, 0, 1, -1, -1];
     console.log('Testing NU₂ with vector:', testQDV);
     
-    // Test Rule (a)
     const ruleA = matchesNU2RuleA(testQDV);
     console.log('Rule (a) match:', ruleA);
-    
     if (ruleA) {
         const resultA = applyNU2RuleA(testQDV, ruleA.h, ruleA.A);
         console.log('Rule (a) result:', resultA);
     }
     
-    // Test Rule (b)
     const ruleB = matchesNU2RuleB(testQDV);
     console.log('Rule (b) match:', ruleB);
-    
     if (ruleB) {
         const resultB = applyNU2RuleB(testQDV, ruleB.k, ruleB.B);
         console.log('Rule (b) result:', resultB);
     }
     
-    // Test overall NU₂
     const result = NU2(testQDV);
     console.log('NU₂ result:', result);
-    
     return result;
 }
-
-// Export functions for use in webapp
 if (typeof module !== 'undefined' && module.exports) {
     module.exports = {
         partitionToQDV,
@@ -1600,6 +1298,12 @@ if (typeof module !== 'undefined' && module.exports) {
         ND,
         TIFromPartition,
         computeTI2,
+        finalTI2,
+        isType1,
+        isType2,
+        isType3,
+        isFlagpoleTI2,
+        getTI2Type,
         generateSequence,
         getPartitionType,
         getTerminationReason,
@@ -1612,8 +1316,14 @@ if (typeof window !== 'undefined') {
     try {
         window.TIFromPartition = TIFromPartition;
         window.computeTI2 = computeTI2;
+        window.finalTI2 = finalTI2;
         window.QDVToPartition = QDVToPartition;
         window.reduceQDVToReducedDyck = reduceQDVToReducedDyck;
         window.reducedDyckFromPartition = reducedDyckFromPartition;
+        window.isType1 = isType1;
+        window.isType2 = isType2;
+        window.isType3 = isType3;
+        window.isFlagpoleTI2 = isFlagpoleTI2;
+        window.getTI2Type = getTI2Type;
     } catch (e) { /* no-op if not defined */ }
 }
