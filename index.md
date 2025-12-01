@@ -15,7 +15,7 @@ title: Home
     <div class="col-md-12">
         <h2>About Me</h2>
         <p>
-            The University of Alabama. Accelerated Master's Program(AMP) student in Mathematics with minors in computer science and digital, public and professional writing.
+            Hello, I am a student at the University of Alabama in the Accelerated Master's Program(AMP) hoping to get my BS and MA by May 2027. I am also getting minors in Computer Science and Digital, Public and Professional Writing. Currently I am still exploriong different fields of Math with my interest slightly peaking in Algebra, Differential Geometry and Mathematical Modelling. I also enjoy Astronomy and playing Soccer whenever I can.
         </p>
     </div>
 </div>
