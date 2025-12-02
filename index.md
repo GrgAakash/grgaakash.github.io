@@ -15,7 +15,7 @@ title: Home
     <div class="col-md-12">
         <h2>About Me</h2>
         <p>
-         Hello, I am a student at the University of Alabama in the Accelerated Master's Program(AMP) hoping to get my BS and MA by May 2027. I am also getting minors in Computer Science and Digital, Public and Professional Writing. Currently I am still exploring different fields of Math with my interest slightly peaking in Algebra, Differential Geometry and Mathematical Modelling.Currently I am working under the guidance of Professor Kyungyong Lee related to Q,T Catalan Numbers and Professor Chuntian Wang related to epidemic modeling.
+         Hello, I am a student at the University of Alabama in the Accelerated Master’s Program (AMP), working toward completing my B.S. and M.A. in Mathematics by May 2027. I am also pursuing minors in Computer Science and Digital, Public, and Professional Writing. I am still exploring various areas of mathematics, with growing interests in Algebra, Differential Geometry, and Mathematical Modeling. Currently, I am working under the guidance of Professor Kyungyong Lee on topics related to q,t-Catalan numbers, and with Professor Chuntian Wang on research in epidemic modeling.
         </p>
         <p>
         I also enjoy Astronomy and playing Soccer whenever I can. 
