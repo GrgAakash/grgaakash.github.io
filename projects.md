@@ -10,7 +10,7 @@ title: Projects
         <div class="col-md-12">
             <div class="card mb-4">
                 <div class="card-header">
-                    <h3>Research Codes</h3>
+                    <h3> Class and Research Projects</h3>
                 </div>
                 <div class="card-body">
                     <div class="project-item mb-4">
@@ -114,7 +114,7 @@ title: Projects
                     <div class="project-item mb-4">
                         <h4>
                             <a href="#" class="blog-toggle" data-bs-toggle="collapse" data-bs-target="#blogDetails">
-                                EN381 blog
+                                EN381
                                 <i class="fas fa-chevron-down ms-2"></i>
                             </a>
                         </h4>
