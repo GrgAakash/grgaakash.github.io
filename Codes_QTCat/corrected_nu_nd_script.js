@@ -305,7 +305,7 @@ function ND2(qdv, suppressAlerts = false) {
     } else {
         const ruleB = matchesND2RuleB(qdv);
         if (ruleB) return applyND2RuleB(qdv, ruleB.k, ruleB.B);
-    }
+        }
     
     if (!suppressAlerts && typeof window !== 'undefined') {
         alert('ND₂ is undefined for this input');
@@ -617,15 +617,15 @@ function generateSequence(initialPartition, mapType, maxIterations = 50) {
 function getPartitionType(partition) {
     if (is_NU1_final(partition)) return 'NU₁-final';
     if (is_NU1_initial(partition)) return 'NU₁-initial';
-    return 'Regular';
-}
+        return 'Regular';
+    }
 
 function getTerminationReason(mapType, finalType, iterations, maxIterations) {
     if (iterations >= maxIterations) return 'Maximum iterations reached';
     if (finalType === 'NU₁-final' && (mapType === 'NU1' || mapType === 'NU')) return 'Reached NU₁-final object';
     if (finalType === 'NU₁-initial' && (mapType === 'ND1' || mapType === 'ND')) return 'Reached NU₁-initial object';
-    return 'Sequence completed';
-}
+        return 'Sequence completed';
+    }
 
 function parsePartitionInput(input) {
     try {
@@ -1210,9 +1210,9 @@ function verifySMALLCondition() {
                         <td style="padding: 8px;">⟨${mu.join(', ')}⟩</td>
                         <td style="padding: 8px; font-family: monospace; font-size: 0.9em;">[${finalQDV.join(', ')}]</td>
                     </tr>
-                `;
-            });
-            
+            `;
+        });
+        
             detailsHTML += `
                     </tbody>
                 </table>

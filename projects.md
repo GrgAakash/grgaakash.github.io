@@ -50,7 +50,7 @@ title: Projects
                                     <li>\(\sigma = \frac{p_{SI}\beta s_0}{\gamma(1-p_{II})}\): Basic reproduction number</li>
                                     <li>\(\tilde{\sigma} = \frac{\gamma p_{IH} i_0}{\alpha p_{HR} h_0}\): Initial condition ratio</li>
                                     <li>\(\tilde{\tilde{\sigma}} = \frac{\gamma p_{IH} i_{peak}}{\alpha p_{HR} h(t_{pi})}\): Peak condition ratio</li>
-                                </ul>
+                            </ul>
                             </div>
                             <p><a href="SIHR Stochastic vs ODE/index_sihr.html" target="_blank" class="btn btn-primary">View Demo</a></p>
                         </div>
