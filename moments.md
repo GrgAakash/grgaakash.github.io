@@ -5,7 +5,7 @@ title: Moments Captured
 
 <div class="container mt-5">
     <h1 class="mb-5">Moments Captured</h1>
-    <p class="lead mb-4">A collection of astronomy photos and videos captured during my observations.</p>
+    <p class="lead mb-4">A collection of random photos and videos captured by me.</p>
 
     <div class="row g-4" id="gallery">
         <!-- Photos -->
@@ -22,7 +22,7 @@ title: Moments Captured
             <div class="card h-100 shadow-sm">
                 <img src="/assets/Photos/HouseinMoN.jpg" class="card-img-top gallery-img" alt="House in Moon" data-bs-toggle="modal" data-bs-target="#imageModal" data-image="/assets/Photos/HouseinMoN.jpg" data-title="House in Moon">
                 <div class="card-body">
-                    <h5 class="card-title">House in Moon</h5>
+                    <h5 class="card-title">Middle of Nowhere</h5>
                 </div>
             </div>
         </div>
@@ -74,7 +74,7 @@ title: Moments Captured
 
         <div class="col-md-6 col-lg-4">
             <div class="card h-100 shadow-sm">
-                <img src="/assets/Photos/Sunspots.jpg" class="card-img-top gallery-img" alt="Sunspots" data-bs-toggle="modal" data-bs-target="#imageModal" data-image="/assets/Photos/Sunspots.jpg" data-title="Sunspots">
+                <img src="/assets/Photos/Sunspots.jpg" class="card-img-top gallery-img" alt="Sunspots" data-bs-toggle="modal" data-bs-target="#imageModal" data-image="/assets/Photos/Sunspots.jpg" data-title="Sun spots">
                 <div class="card-body">
                     <h5 class="card-title">Sunspots</h5>
                 </div>
@@ -110,7 +110,7 @@ title: Moments Captured
 
         <div class="col-md-6 col-lg-4">
             <div class="card h-100 shadow-sm">
-                <img src="/assets/Photos/moon2.JPG" class="card-img-top gallery-img" alt="Moon 2" data-bs-toggle="modal" data-bs-target="#imageModal" data-image="/assets/Photos/moon2.JPG" data-title="Moon 2">
+                <img src="/assets/Photos/moon2.JPG" class="card-img-top gallery-img" alt="Moon 2" data-bs-toggle="modal" data-bs-target="#imageModal" data-image="/assets/Photos/moon2.JPG" data-title="Moon">
                 <div class="card-body">
                     <h5 class="card-title">Moon 2</h5>
                 </div>
@@ -141,7 +141,7 @@ title: Moments Captured
                     </video>
                 </div>
                 <div class="card-body">
-                    <h5 class="card-title">Moon (No Zoom)</h5>
+                    <h5 class="card-title">Moon</h5>
                 </div>
             </div>
         </div>
