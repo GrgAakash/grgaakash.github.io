@@ -133,10 +133,18 @@ title: Projects
                 </div>
                 <div class="card-body">
                     <div class="project-item mb-4">
-                        <p><a href="/moments">Moments Captured</a></p>
+                        <h4>
+                            <a href="/moments" class="others-link">
+                                Moments Captured
+                            </a>
+                        </h4>
                     </div>
                     <div class="project-item mb-4">
-                        <p><a href="https://github.com/GrgAakash/InterestingProblems" target="_blank">Interesting Math Problems</a></p>
+                        <h4>
+                            <a href="https://github.com/GrgAakash/InterestingProblems" target="_blank" class="others-link">
+                                Interesting Math Problems
+                            </a>
+                        </h4>
                     </div>
                 </div>
             </div>
@@ -174,6 +182,15 @@ title: Projects
 }
 
 .sihr-toggle:hover, .sihrs-toggle:hover, .qtcat-toggle:hover, .blog-toggle:hover {
+    color: #0056b3;
+}
+
+.others-link {
+    color: #007bff;
+    text-decoration: none;
+}
+
+.others-link:hover {
     color: #0056b3;
 }
 
