@@ -29,15 +29,6 @@ title: Moments Captured
 
         <div class="col-md-6 col-lg-4">
             <div class="card h-100 shadow-sm">
-                <img src="/assets/Photos/Jupiter.jpg" class="card-img-top gallery-img" alt="Jupiter" data-bs-toggle="modal" data-bs-target="#imageModal" data-image="/assets/Photos/Jupiter.jpg" data-title="Jupiter">
-                <div class="card-body">
-                    <h5 class="card-title">Jupiter</h5>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-md-6 col-lg-4">
-            <div class="card h-100 shadow-sm">
                 <img src="/assets/Photos/Moon.JPG" class="card-img-top gallery-img" alt="Moon" data-bs-toggle="modal" data-bs-target="#imageModal" data-image="/assets/Photos/Moon.JPG" data-title="Moon">
                 <div class="card-body">
                     <h5 class="card-title">Moon</h5>
@@ -117,6 +108,24 @@ title: Moments Captured
             </div>
         </div>
 
+        <div class="col-md-6 col-lg-4">
+            <div class="card h-100 shadow-sm">
+                <img src="/assets/Photos/On_the_way_Icelake.jpg" class="card-img-top gallery-img" alt="On the way to Ice Lake" data-bs-toggle="modal" data-bs-target="#imageModal" data-image="/assets/Photos/On_the_way_Icelake.jpg" data-title="On the way to Ice Lake">
+                <div class="card-body">
+                    <h5 class="card-title">On the way to Ice Lake</h5>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6 col-lg-4">
+            <div class="card h-100 shadow-sm">
+                <img src="/assets/Photos/M42.jpg" class="card-img-top gallery-img" alt="M42" data-bs-toggle="modal" data-bs-target="#imageModal" data-image="/assets/Photos/M42.jpg" data-title="M42">
+                <div class="card-body">
+                    <h5 class="card-title">M42</h5>
+                </div>
+            </div>
+        </div>
+
         <!-- Videos -->
         <div class="col-md-6 col-lg-4">
             <div class="card h-100 shadow-sm">
@@ -142,6 +151,34 @@ title: Moments Captured
                 </div>
                 <div class="card-body">
                     <h5 class="card-title">Moon</h5>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6 col-lg-4">
+            <div class="card h-100 shadow-sm">
+                <div class="card-img-top video-container">
+                    <video class="gallery-video" controls preload="metadata" playsinline>
+                        <source src="/assets/Photos/Saturn.mp4" type="video/mp4">
+                        <p>Your browser doesn't support HTML5 video. <a href="/assets/Photos/Saturn.mp4" download>Download the video</a> instead.</p>
+                    </video>
+                </div>
+                <div class="card-body">
+                    <h5 class="card-title">Saturn</h5>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6 col-lg-4">
+            <div class="card h-100 shadow-sm">
+                <div class="card-img-top video-container">
+                    <video class="gallery-video" controls preload="metadata" playsinline>
+                        <source src="/assets/Photos/Jupiter_highmag.mp4" type="video/mp4">
+                        <p>Your browser doesn't support HTML5 video. <a href="/assets/Photos/Jupiter_highmag.mp4" download>Download the video</a> instead.</p>
+                    </video>
+                </div>
+                <div class="card-body">
+                    <h5 class="card-title">Jupiter (High Magnification)</h5>
                 </div>
             </div>
         </div>
@@ -196,6 +233,9 @@ title: Moments Captured
 .col-md-6:nth-child(12) { animation-delay: 0.6s; }
 .col-md-6:nth-child(13) { animation-delay: 0.65s; }
 .col-md-6:nth-child(14) { animation-delay: 0.7s; }
+.col-md-6:nth-child(15) { animation-delay: 0.75s; }
+.col-md-6:nth-child(16) { animation-delay: 0.8s; }
+.col-md-6:nth-child(17) { animation-delay: 0.85s; }
 
 /* Gallery images with enhanced hover effects */
 .gallery-img {
