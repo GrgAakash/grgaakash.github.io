@@ -1,0 +1,1037 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Math 495 Blog: Post 1</title>
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['\\(', '\\)']],
+                displayMath: [['\\[', '\\]']]
+            },
+            startup: {
+                pageReady: () => {
+                    return MathJax.startup.defaultPageReady().then(() => {
+                        // Re-typeset popovers and previews after initial render
+                        const popovers = document.querySelectorAll('.footnote-popover, .eq-preview');
+                        if (popovers.length > 0 && MathJax.typesetPromise) {
+                            MathJax.typesetPromise(Array.from(popovers));
+                        }
+                    });
+                }
+            }
+        };
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" async></script>
+
+    <style>
+        :root {
+            --primary: #4a6fa5;
+            --secondary: #166088;
+            --accent: #2a9d8f;
+            --light: #f8f9fa;
+            --dark: #212529;
+            --text-primary: #1a1a1a;
+            --text-secondary: #555;
+            --border-color: #0d0d0d;
+            --bg-light: #fafafa;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, #fafafa 0%, #f5f5f5 100%);
+            background-attachment: fixed;
+            color: var(--text-primary);
+            line-height: 1.8;
+            font-size: 18px;
+        }
+
+        header {
+            background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+            color: var(--text-primary);
+            border-bottom: 3px solid var(--border-color);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            padding: 2.5rem 1rem;
+            text-align: center;
+            margin-bottom: 3rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            backdrop-filter: blur(10px);
+        }
+
+        header h1 {
+            margin: 0;
+            padding: 0;
+            font-size: 2.5rem;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            color: var(--text-primary);
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 0 20px 40px;
+            animation: fadeIn 0.6s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .article-card {
+            background: #ffffff;
+            border: 2px solid var(--border-color);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            padding: 3.5rem;
+            margin-bottom: 2rem;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .article-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, var(--secondary), var(--accent));
+        }
+
+        .article-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+        }
+
+        article p {
+            margin: 1.5rem 0;
+            font-weight: 400;
+            font-size: 1.1rem;
+            line-height: 1.9;
+            color: var(--text-primary);
+        }
+
+        /* Drop cap styling for first paragraph */
+        article p:first-of-type::first-letter {
+            font-size: 4rem;
+            line-height: 0.8;
+            float: left;
+            padding-right: 10px;
+            padding-top: 6px;
+            color: var(--text-primary);
+            font-weight: 700;
+            font-family: Georgia, serif;
+        }
+
+        a {
+            color: var(--secondary);
+            text-decoration: none;
+            border-bottom: 2px solid rgba(22, 96, 136, 0.2);
+            padding-bottom: 2px;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+
+        a:hover {
+            color: var(--accent);
+            border-bottom-color: var(--accent);
+            transform: translateY(-1px);
+        }
+
+        figure {
+            margin: 2.5rem 0;
+            text-align: center;
+            transition: transform 0.3s ease;
+        }
+
+        figure:hover {
+            transform: scale(1.01);
+        }
+
+        figure img {
+            max-width: 100%;
+            height: auto;
+            border: 2px solid var(--border-color);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.12);
+            border-radius: 8px;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            background: #ffffff;
+        }
+
+        figure img:hover {
+            transform: translateY(-4px) scale(1.02);
+            box-shadow: 0 12px 28px rgba(0, 0, 0, 0.18);
+            border-color: var(--accent);
+        }
+
+        figure figcaption {
+            font-size: 0.95rem;
+            color: var(--text-secondary);
+            font-weight: 500;
+            margin-top: 14px;
+            font-style: italic;
+            letter-spacing: 0.3px;
+        }
+
+        /* Side-by-side container for figures */
+        .figures-side-by-side {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin: 3rem 0;
+            flex-wrap: wrap;
+        }
+
+        .figures-side-by-side figure {
+            margin: 0;
+            width: 300px;
+            flex-shrink: 0;
+        }
+
+        .figures-side-by-side figure img {
+            width: 100%;
+            height: auto;
+        }
+
+        .footer {
+            background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+            color: var(--text-secondary);
+            border-top: 3px solid var(--border-color);
+            text-align: center;
+            padding: 2.5rem 0;
+            margin-top: 5rem;
+            font-size: 0.9rem;
+            box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.05);
+        }
+
+        /* PDF Download Button */
+        .pdf-button {
+            position: fixed;
+            bottom: 100px;
+            right: 30px;
+            background: #dc3545;
+            color: white;
+            border: 2px solid var(--border-color);
+            border-radius: 50px;
+            padding: 1rem 1.5rem;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-family: inherit;
+            text-decoration: none;
+        }
+
+        .pdf-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.3);
+            background: #c82333;
+            color: white;
+            border-bottom: none;
+        }
+
+        .pdf-button:active {
+            transform: translateY(0);
+        }
+
+        .pdf-button svg {
+            width: 20px;
+            height: 20px;
+            fill: currentColor;
+        }
+
+        /* Text-to-Speech Button */
+        .listen-button {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: var(--text-primary);
+            color: white;
+            border: 2px solid var(--border-color);
+            border-radius: 50px;
+            padding: 1rem 1.5rem;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-family: inherit;
+        }
+
+        .listen-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.3);
+            background: #333;
+        }
+
+        .listen-button:active {
+            transform: translateY(0);
+        }
+
+        .listen-button.playing {
+            background: var(--text-primary);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            }
+            50% {
+                box-shadow: 0 4px 20px rgba(231, 76, 60, 0.5);
+            }
+        }
+
+        .listen-button svg {
+            width: 20px;
+            height: 20px;
+            fill: currentColor;
+        }
+
+        @media (max-width: 768px) {
+            .pdf-button {
+                bottom: 90px;
+                right: 20px;
+                padding: 0.8rem 1.2rem;
+                font-size: 0.9rem;
+            }
+
+            .listen-button {
+                bottom: 20px;
+                right: 20px;
+                padding: 0.8rem 1.2rem;
+                font-size: 0.9rem;
+            }
+        }
+
+        /* Math rendering improvements */
+        .MathJax {
+            font-size: 1.1em !important;
+        }
+
+        /* Footnote popover styles */
+        .footnote-ref {
+            cursor: pointer;
+            color: var(--secondary);
+            font-weight: 600;
+            transition: color 0.2s ease;
+            position: relative;
+        }
+
+        .footnote-ref:hover {
+            color: var(--accent);
+        }
+
+        .footnote-popover {
+            position: absolute;
+            bottom: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #ffffff;
+            border: 2px solid var(--border-color);
+            border-radius: 8px;
+            padding: 12px 16px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+            font-size: 0.9rem;
+            line-height: 1.6;
+            color: var(--text-primary);
+            width: max-content;
+            max-width: 350px;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.2s ease, visibility 0.2s ease, transform 0.2s ease;
+            transform: translateX(-50%) translateY(8px);
+            margin-bottom: 8px;
+        }
+
+        .footnote-popover::after {
+            content: '';
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            border: 8px solid transparent;
+            border-top-color: var(--border-color);
+        }
+
+        .footnote-popover::before {
+            content: '';
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            border: 6px solid transparent;
+            border-top-color: #ffffff;
+            margin-top: -2px;
+            z-index: 1;
+        }
+
+        .footnote-ref:hover .footnote-popover,
+        .footnote-popover.show {
+            opacity: 1;
+            visibility: visible;
+            transform: translateX(-50%) translateY(0);
+        }
+
+        /* Popover that appears below (for footnotes after centered equations) */
+        .footnote-ref--below .footnote-popover {
+            bottom: auto;
+            top: 100%;
+            left: auto;
+            right: -10px;
+            transform: translateY(-8px);
+            margin-bottom: 0;
+            margin-top: 8px;
+        }
+
+        .footnote-ref--below .footnote-popover::after {
+            top: auto;
+            bottom: 100%;
+            left: auto;
+            right: 15px;
+            transform: none;
+            border-top-color: transparent;
+            border-bottom-color: var(--border-color);
+        }
+
+        .footnote-ref--below .footnote-popover::before {
+            top: auto;
+            bottom: 100%;
+            left: auto;
+            right: 17px;
+            transform: none;
+            margin-top: 0;
+            margin-bottom: -2px;
+            border-top-color: transparent;
+            border-bottom-color: #ffffff;
+        }
+
+        .footnote-ref--below:hover .footnote-popover {
+            transform: translateY(0);
+        }
+
+        /* Equation reference preview styles */
+        .eq-ref {
+            cursor: pointer;
+            color: var(--secondary);
+            font-weight: 500;
+            border-bottom: 1px dashed var(--secondary);
+            transition: all 0.2s ease;
+            position: relative;
+            display: inline;
+        }
+
+        .eq-ref:hover {
+            color: var(--accent);
+            border-bottom-color: var(--accent);
+        }
+
+        .eq-preview {
+            position: absolute;
+            bottom: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #ffffff;
+            border: 2px solid var(--border-color);
+            border-radius: 8px;
+            padding: 16px 20px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.2s ease, visibility 0.2s ease, transform 0.2s ease;
+            transform: translateX(-50%) translateY(8px);
+            margin-bottom: 10px;
+            white-space: nowrap;
+        }
+
+        .eq-preview::after {
+            content: '';
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            border: 8px solid transparent;
+            border-top-color: var(--border-color);
+        }
+
+        .eq-preview::before {
+            content: '';
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            border: 6px solid transparent;
+            border-top-color: #ffffff;
+            margin-top: -2px;
+            z-index: 1;
+        }
+
+        .eq-ref:hover .eq-preview {
+            opacity: 1;
+            visibility: visible;
+            transform: translateX(-50%) translateY(0);
+        }
+
+        /* Prevent overflow on mobile */
+        @media (max-width: 480px) {
+            .footnote-popover, .eq-preview {
+                left: 0;
+                transform: translateX(0);
+                max-width: 280px;
+            }
+            .footnote-popover::after, .footnote-popover::before,
+            .eq-preview::after, .eq-preview::before {
+                left: 20px;
+                transform: none;
+            }
+            .footnote-ref:hover .footnote-popover,
+            .eq-ref:hover .eq-preview {
+                transform: translateX(0) translateY(0);
+            }
+        }
+
+        /* Responsive design */
+        @media (max-width: 768px) {
+            header h1 {
+                font-size: 1.8rem;
+            }
+
+            .article-card {
+                padding: 1.5rem;
+            }
+
+            article p {
+                font-size: 1rem;
+            }
+
+            .figures-side-by-side {
+                gap: 20px;
+            }
+
+            .figures-side-by-side figure {
+                width: 100%;
+                max-width: 300px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 0 15px;
+            }
+
+            .article-card {
+                padding: 1.25rem;
+            }
+
+            header {
+                padding: 1.5rem 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>The 19th Problem</h1>
+    </header>
+
+    
+
+    <main class="container">
+        <article class="article-card">
+            <p>Have you ever wondered why soap bubbles are spherical, or why soap films look like they are pulling themselves into the shape of the least possible area, or why light moving through glass of varying density bends and curves to find the fastest route, not the straightest one?</p>
+
+            <figure id="fig-soapfilm">
+                <img src="SoapFilm.jpeg" alt="A soap film stretched across a wire frame, forming a smooth minimal surface" style="width: 60%; max-width: 500px;">
+                <figcaption>A soap film on a wire frame.</figcaption>
+            </figure>
+
+            <p>In each case, nature is quietly solving an optimization problem. Something is being minimized, whether it is the area or the time.</p>
+
+            <p>One thing to note is that even if the wire frame itself (the boundary) has sharp, jagged corners, the soap film suspended inside is perfectly smooth. It is definitely interesting to ponder on why the film develops no gaps, tears, or defects.</p>
+
+            <p><em>Why should this be true? And more importantly: must it always be true?</em></p>
+
+            <p>Before answering this, let's rewind to the dawn of the 20th century.</p>
+
+            <p>In the International Congress of Mathematicians held at Paris in August 1900, the German Mathematician David Hilbert proposed 23 problems, most of which would prove to be very influential in the coming century.<sup class="footnote-ref" data-footnote="1">1<span class="footnote-popover">He actually had 24 problems but he chose not to publish the last one.</span></sup></p>
+
+            <figure id="fig-hilbert">
+                <img src="Hilbert .jpg" alt="David Hilbert, German mathematician" style="width: 50%; max-width: 400px;">
+                <figcaption>David Hilbert (1862–1943)</figcaption>
+            </figure>
+
+            <p>While many of his problems arose due to the urge to understand the foundational bedrock of Mathematics like the continuum hypothesis, a few were inspired by physics. Belonging to the latter category is the topic of our blog, which is the 19th problem. Hilbert was fascinated by the observation that physical principles, usually cast as variational problems (like the principle of least action), seemed to produce solutions of remarkable smoothness.</p>
+
+            <p>These are but special cases of a universal variational principle. Hilbert observed that such analytic solutions arise from minimizing functional integrals of the form:</p>
+
+            <p>\[
+            J(u) = \int_{B_1} F(\nabla u) \, dx, \tag{1}
+            \]</p>
+
+            <p>where \( B_1 \) denotes the unit ball (all points within distance 1 of the origin), and \( F \) (often called the Lagrangian) is analytic and <em>strictly convex</em>. In the language of linear algebra, convexity here means the Hessian matrix of \( F \) is positive definite (specifically, \( \det(D^2 F) > 0 \)).</p>
+
+            <p><em>The question is this: If the energy function \( F \) is analytic, does it follow that the minimizing configuration \( u \) is also analytic?</em></p>
+
+            <p>Intuitively, the answer seemed to be yes. To prove it, we translate the minimization problem into an equation. We know from single-variable calculus that if \( f(x) \) has a minimum at \( x_0 \), then \( f'(x_0) = 0 \). We apply the same logic here.</p>
+
+            <p>Suppose \( u(x) \) is the true solution. Imagine we distort this solution by adding a small "perturbation" \( \phi(x) \), scaled by a tiny number \( \epsilon \):</p>
+
+            <p>\[
+            u_\epsilon(x) = u(x) + \epsilon \phi(x).
+            \]</p>
+
+            <p>Since \( u \) is a minimizer, the derivative of the energy with respect to \( \epsilon \) must be zero at \( \epsilon = 0 \):</p>
+
+            <p>\[
+            \frac{d}{d\epsilon} J(u + \epsilon \phi) \bigg|_{\epsilon=0} = 0.
+            \]</p>
+
+            <figure id="fig-perturbation">
+                <img src="figures/fig_perturbation.png" alt="The true solution u(x) and a perturbed solution u(x) + epsilon*phi(x)" style="width: 70%; max-width: 550px;">
+                <figcaption>The true solution \( u(x) \) (solid) and a perturbed solution \( u(x) + \epsilon\phi(x) \) (dashed).</figcaption>
+            </figure>
+
+            <p>Calculating this (using the Chain Rule inside the integral) and integrating by parts gives the celebrated Euler-Lagrange equation:</p>
+
+            <p>\[
+            \text{div}(\nabla F(\nabla u)) = 0. \tag{2}
+            \]</p>
+
+            <p>Now, we expand this. Applying the Chain Rule to the term \( \nabla F(\nabla u) \), we get:</p>
+
+            <p>\[
+            \sum_{i,j=1}^n F_{ij}(\nabla u)\, u_{ij} = 0, \tag{3}
+            \]</p>
+
+            <p>where \( F_{ij} \) are entries of the Hessian of \( F \), and \( u_{ij} \) are the second partial derivatives of \( u \).</p>
+
+            <p>Here comes the trouble. If we differentiate <span class="eq-ref" data-eq="3">Equation (3)<span class="eq-preview">\( \sum_{i,j=1}^n F_{ij}(\nabla u)\, u_{ij} = 0 \)</span></span> with respect to \( x_k \), letting \( v = u_{x_k} \), we obtain a linear elliptic equation for the partial derivatives of \( u \):</p>
+
+            <p>\[
+            \sum_{i,j=1}^n \frac{\partial}{\partial x_i} \Big( a_{ij}(x) \frac{\partial v}{\partial x_j} \Big) = 0, \quad \text{where } a_{ij}(x) = F_{ij}(\nabla u(x)). \tag{4}
+            \]</p>
+
+            <p>However, the coefficients \( a_{ij}(x) = F_{ij}(\nabla u(x)) \) of the linearized <span class="eq-ref" data-eq="4">Equation (4)<span class="eq-preview">\( \sum_{i,j} \frac{\partial}{\partial x_i}\bigl(a_{ij}(x)\frac{\partial v}{\partial x_j}\bigr) = 0 \)</span></span> depend intrinsically on the unknown gradient. If we assume only that \( u \) has bounded slope (mathematically, that it is Lipschitz) so that the gradient \( \nabla u \) is bounded but not known to be continuous, then these coefficients are bounded, but they may be discontinuous.</p>
+
+            <p>We are thus caught in a vicious circle: to prove the coefficients are smooth, we need the solution's gradient to be smooth; but to prove the solution is smooth, the classical theory demands the coefficients be smooth. This "gap" between having a bounded slope versus a continuous slope was what Morrey later called the "sad state of affairs" that hindered progress for decades.</p>
+
+            <figure id="fig-morrey">
+                <img src="Charles_Morrey_Jr.jpeg" alt="Charles Morrey Jr., American mathematician" style="width: 50%; max-width: 400px;">
+                <figcaption>Charles Morrey Jr. (1907–1984)</figcaption>
+            </figure>
+
+            <p>The solution was finally achieved by bridging this gap. Let us illustrate the strategy in 2D, using geometric intuition.</p>
+
+            <p>You are likely familiar with the gradient \( \nabla u \) as a vector field pointing in the direction of steepest increase. But for this problem, we need a shift in perspective. Imagine mapping every point \( x \) in our domain not to its height \( u(x) \), but to its slope vector \( \nabla u(x) \).</p>
+
+            <p>This creates a "gradient map" from the physical domain into a "plane of slopes."</p>
+
+            <p><em>The core question of regularity is simply: Is this map continuous? Or can the slope jump abruptly from one value to another, creating a sharp crease or kink in our soap film?</em></p>
+
+            <figure id="fig-gradient-map">
+                <img src="figures/fig_gradient_map.png" alt="The gradient map takes a point x in the physical domain to its slope vector in the plane of slopes" style="width: 85%; max-width: 700px;">
+                <figcaption>The Gradient Map: a location \( x \) in the physical domain (left) maps to its slope vector \( \nabla u(x) \) in the plane of slopes (right).</figcaption>
+            </figure>
+
+            <p>Imagine the image of the gradient map \( \nabla u \) as a region (a "blob") in the plane. Fix a direction \( e \) (a unit vector) and consider the strip in the gradient plane between two parallel lines perpendicular to \( e \), defined by values \( a < b \).</p>
+
+            <p>Let \( v(x) = \nabla u(x) \cdot e \) be the corresponding directional derivative. If the gradient image \( \nabla u(B_r) \) crosses this strip, it means \( v \) takes values both below \( a \) and above \( b \) within the ball \( B_r \).</p>
+
+            <figure id="fig-chopping">
+                <img src="figures/fig_chopping.png" alt="Chopping at the gradient image with parallel lines" style="width: 80%; max-width: 650px;">
+                <figcaption>Chopping at the gradient image with lines: the ball \( B_r \) maps to a blob \( \nabla u(B_r) \) that crosses the strip between \( p \cdot e = a \) and \( p \cdot e = b \).</figcaption>
+            </figure>
+
+            <p>Here we use the Maximum Principle. The Maximum Principle is a powerful property of elliptic equations. You've seen a special case already: Laplace's equation \( \nabla^2 u = 0 \). Its solutions (harmonic functions) obey the Mean Value Property and the Maximum Principle: the maximum and minimum occur on the boundary. Our linearized <span class="eq-ref" data-eq="4">Equation (4)<span class="eq-preview">\( \sum_{i,j} \frac{\partial}{\partial x_i}\bigl(a_{ij}(x)\frac{\partial v}{\partial x_j}\bigr) = 0 \)</span></span> is a generalization of Laplace's equation with variable coefficients \( a_{ij}(x) \). The principle still holds: the oscillation of \( v \) inside a ball is controlled by its oscillation on the boundary, much like how the temperature at the center of a room is bounded by the temperatures on the walls.</p>
+
+            <p>In simple terms, for elliptic equations, the values inside a domain are controlled by the values on the boundary (much like temperature in a room is controlled by the walls).</p>
+
+            <p>By this principle, if \( v \) oscillates inside \( B_r \), it must oscillate at least as much on the boundary circle \( \partial B_r \). This allows us to restrict our attention to the boundary.</p>
+
+            <p>To see if this oscillation can persist as \( r \to 0 \), we quantify its "energy cost" using a geometric estimate:</p>
+
+            <p>\[
+            (\text{osc}_{\partial B_r} v)^2 \le \frac{\pi}{\ln(1/2r)} \int_{B_{1/2}} |\nabla v|^2 \, dx. \tag{5}
+            \]</p>
+
+            <p>Suppose, for contradiction, that the oscillation stays large. Specifically, assume that on all circles \( \partial B_r \), the oscillation is bounded below by a constant \( \delta > 0 \).</p>
+
+            <p>Rearranging this estimate and summing over shrinking radii, we find the energy must grow like \( \ln(1/r) \), which diverges as \( r \to 0 \) (just as \( \sum 1/n \) diverges):</p>
+
+            <p>\[
+            \text{Energy} \sim \int \frac{1}{r} \, dr \to \infty.
+            \]</p>
+
+            <p>However, we know there exists a finite upper bound. The differential equation itself provides a "natural" energy bound (Caccioppoli inequality):</p>
+
+            <p>\[
+            \int_{B_{1/2}} |\nabla v|^2 \, dx \le C \int_{B_1} v^2 \, dx < \infty. \tag{6}
+            \]</p>
+
+            <p>This is a contradiction: <span class="eq-ref" data-eq="5">Equation (5)<span class="eq-preview">\( (\text{osc}_{\partial B_r} v)^2 \le \frac{\pi}{\ln(1/2r)} \int_{B_{1/2}} |\nabla v|^2 \, dx \)</span></span> requires infinite energy, but <span class="eq-ref" data-eq="6">Equation (6)<span class="eq-preview">\( \int_{B_{1/2}} |\nabla v|^2 \, dx \le C \int_{B_1} v^2 \, dx < \infty \)</span></span> bounds it finitely.</p>
+
+            <p>Therefore, for sufficiently small \( r \), the gradient image \( \nabla u(B_r) \) cannot cross the strip. It must lie entirely on one side. By "chopping" with strips in various directions, we force the gradient image to localize to a single point as \( r \to 0 \). Thus, \( \nabla u \) is continuous.</p>
+
+            <p>It is worth pausing to remark that this success in 2D relies on a "happy accident of geometry," a special feature that disappears in higher dimensions. The linearized equation implies that the gradient map \( \nabla u: \mathbb{R}^2 \to \mathbb{R}^2 \) behaves like a linear transformation with bounded distortion. Recall from linear algebra that a matrix \( A \) maps the unit circle to an ellipse. The "distortion" is determined by the condition number (the ratio of eigenvalues):</p>
+
+            <p>\[
+            K = \frac{|\lambda_{\max}|}{|\lambda_{\min}|}. \tag{7}
+            \]</p>
+
+            <figure id="fig-distortion">
+                <img src="figures/fig_distortion.png" alt="A linear map transforms the unit circle into an ellipse, with distortion K" style="width: 80%; max-width: 650px;">
+                <figcaption>A linear map \( A \) transforms the unit circle into an ellipse. The distortion \( K \) measures how "stretched" the ellipse is.</figcaption>
+            </figure>
+
+            <p>In 2D, the ellipticity condition in <span class="eq-ref" data-eq="4">Equation (4)<span class="eq-preview">\( \sum_{i,j} \frac{\partial}{\partial x_i}\bigl(a_{ij}(x)\frac{\partial v}{\partial x_j}\bigr) = 0 \)</span></span> forces this ratio to be bounded. We know that multiplying by a complex number corresponds to a matrix that only rotates and scales (it maps circles to circles, so \( K = 1 \)). The condition we have of \( K < \infty \) forces the space to stay "close" to this ideal structure. It cannot flatten the circle into a line (which would mean \( K \to \infty \)). This geometric "rigidity" is the safety net: it prevents the gradient from tearing or becoming discontinuous.</p>
+
+            <p>This is the "accident": in 2D, the rigid structure of complex numbers prevents the gradient from tearing or becoming discontinuous. However, this is strictly a two-dimensional luxury. In 3D, there is no direct equivalent to complex numbers, and this geometric "safety net" vanishes.</p>
+
+            <p>But while we have it, we use it. The "chopping" argument works because in 2D, a line cuts the plane in half. We can trap the oscillation. This grants us the precise rate of convergence. The scale invariance of our equation implies that if the oscillation drops by a factor on one scale, it must drop by the same factor on the next.</p>
+
+            <p>Mathematically, we obtain a recurrence relation for the oscillation \( \omega(r) \).<sup class="footnote-ref" data-footnote="2">2<span class="footnote-popover">We write \( \omega(r) := \text{osc}_{\partial B_r} v \) for the oscillation.</span></sup> If we shrink the radius by \( \delta \), the oscillation drops by half:</p>
+
+            <p>\[
+            \omega(\delta r) \le \frac{1}{2} \omega(r) \implies \omega(\delta^k) \le 2^{-k} \omega(1). \tag{8}
+            \]</p>
+
+            <p>This implies that the oscillation decays as a power of the radius:</p>
+
+            <p>\[
+            \omega(r) \le C r^\alpha. \tag{9}
+            \]</p>
+
+            <p><span class="eq-ref" data-eq="9">Equation (9)<span class="eq-preview">\( \omega(r) \le C r^\alpha \)</span></span> guarantees that the gradient \( \nabla u \) is continuous with a controlled rate of convergence (Hölder continuity). Thus, in the planar case, the specific geometry of 2D forces regularity. The wild oscillations are controlled by the very cost of their existence. While higher dimensions offer distinct (and much harder) challenges where this "happy accident" no longer applies, our excursion pauses here, having admired the clear view from the two-dimensional case.</p>
+
+        </article>
+    </main>
+
+    <a href="blog.pdf" target="_blank" class="pdf-button" aria-label="Download PDF version" title="Download PDF version">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+            <polyline points="14 2 14 8 20 8"></polyline>
+            <line x1="16" y1="13" x2="8" y2="13"></line>
+            <line x1="16" y1="17" x2="8" y2="17"></line>
+            <polyline points="10 9 9 9 8 9"></polyline>
+        </svg>
+        <span>PDF Version</span>
+    </a>
+
+    <button class="listen-button" id="listenBtn" aria-label="Listen to article" aria-pressed="false" role="button" tabindex="0" title="Listen to article (Accessibility feature - Press Enter or Space to activate)">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M11 5L6 9H2v6h4l5 4V5z"></path>
+            <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path>
+        </svg>
+        <span id="listenText">Listen</span>
+    </button>
+
+    <footer class="footer">
+        <p>© 2026 Math 495 Blog.</p>
+    </footer>
+
+    <script>
+        // Text-to-Speech functionality
+        const listenBtn = document.getElementById('listenBtn');
+        const listenText = document.getElementById('listenText');
+        let isPlaying = false;
+        let utterance = null;
+        let fullText = '';
+        let currentPosition = 0;
+        let startTime = 0;
+        let isUserPaused = false;
+        let lastBoundaryTime = 0;
+        let lastBoundaryPosition = 0;
+        let lastWordBoundaryPosition = 0;
+        let lastWordBoundaryTime = 0;
+
+        function getArticleText() {
+            const article = document.querySelector('.article-card');
+            if (!article) return '';
+
+            // Get all text content from paragraphs
+            const paragraphs = article.querySelectorAll('p');
+            let text = '';
+            
+            paragraphs.forEach(p => {
+                // Remove MathJax and get clean text
+                const pClone = p.cloneNode(true);
+                const mathElements = pClone.querySelectorAll('.MathJax, script, mjx-container');
+                mathElements.forEach(el => el.remove());
+                
+                // Replace LaTeX notation with readable text
+                let pText = pClone.textContent || pClone.innerText || '';
+                // Remove LaTeX delimiters
+                pText = pText.replace(/\\\(/g, '').replace(/\\\)/g, '');
+                pText = pText.replace(/\$([^$]+)\$/g, '$1');
+                // Convert common math notation to readable text
+                pText = pText.replace(/\^(\d+)/g, ' to the power of $1');
+                pText = pText.replace(/\^\{([^}]+)\}/g, ' to the power of $1');
+                pText = pText.replace(/\\times/g, ' times ');
+                pText = pText.replace(/\\cdot/g, ' times ');
+                pText = pText.replace(/\\mathbf\{([^}]+)\}/g, '$1');
+                pText = pText.replace(/\\text\{([^}]+)\}/g, '$1');
+                
+                text += pText.trim() + '. ';
+            });
+
+            // Get figure captions
+            const captions = article.querySelectorAll('figcaption');
+            captions.forEach(caption => {
+                text += caption.textContent + '. ';
+            });
+
+            return text.trim();
+        }
+
+        function getVoice() {
+            // Try to get a preferred voice (Siri, then other high-quality voices)
+            const voices = window.speechSynthesis.getVoices();
+            
+            // First priority: Siri voices (available on macOS/iOS)
+            const siriVoices = voices.filter(v => 
+                v.name.toLowerCase().includes('siri') ||
+                v.name.includes('Siri')
+            );
+            
+            if (siriVoices.length > 0) {
+                return siriVoices[0];
+            }
+            
+            // Second priority: Other high-quality voices
+            const preferredVoices = voices.filter(v => 
+                v.name.includes('Samantha') || 
+                v.name.includes('Karen') || 
+                v.name.includes('Victoria') ||
+                v.name.includes('Zira') ||
+                v.name.includes('Google') ||
+                v.name.includes('Microsoft') ||
+                v.name.includes('Enhanced') ||
+                v.name.includes('Premium')
+            );
+            
+            if (preferredVoices.length > 0) {
+                return preferredVoices[0];
+            }
+            
+            // Fallback to any English voice
+            const englishVoices = voices.filter(v => v.lang.startsWith('en'));
+            return englishVoices.length > 0 ? englishVoices[0] : null;
+        }
+
+        function speakText(text, startPos = 0) {
+            if ('speechSynthesis' in window) {
+                // Cancel any ongoing speech
+                window.speechSynthesis.cancel();
+
+                // Use the text from the start position
+                const textToSpeak = startPos > 0 ? text.substring(startPos) : text;
+
+                utterance = new SpeechSynthesisUtterance(textToSpeak);
+                
+                // Get available voices and select a preferred one
+                const voices = window.speechSynthesis.getVoices();
+                const selectedVoice = getVoice();
+                if (selectedVoice) {
+                    utterance.voice = selectedVoice;
+                }
+                
+                utterance.lang = 'en-US';
+                utterance.rate = 0.9; // Slightly slower for better comprehension
+                utterance.pitch = 1;
+                utterance.volume = 1;
+
+                utterance.onstart = () => {
+                    isPlaying = true;
+                    listenBtn.classList.add('playing');
+                    listenText.textContent = 'Pause';
+                    listenBtn.setAttribute('aria-label', 'Pause listening');
+                    listenBtn.setAttribute('aria-pressed', 'true');
+                    startTime = Date.now();
+                    lastBoundaryTime = Date.now();
+                    lastBoundaryPosition = startPos;
+                    lastWordBoundaryTime = Date.now();
+                    lastWordBoundaryPosition = startPos;
+                };
+
+                utterance.onend = () => {
+                    isPlaying = false;
+                    currentPosition = 0; // Reset position when finished
+                    fullText = '';
+                    listenBtn.classList.remove('playing');
+                    listenText.textContent = 'Listen';
+                    listenBtn.setAttribute('aria-label', 'Listen to article');
+                    listenBtn.setAttribute('aria-pressed', 'false');
+                };
+
+                utterance.onerror = (event) => {
+                    // Only show error if it's not a user-initiated pause
+                    if (!isUserPaused && event.error !== 'interrupted') {
+                        isPlaying = false;
+                        listenBtn.classList.remove('playing');
+                        listenText.textContent = 'Listen';
+                        listenBtn.setAttribute('aria-label', 'Listen to article');
+                        listenBtn.setAttribute('aria-pressed', 'false');
+                        alert('Speech synthesis error. Please try again.');
+                    }
+                    // Reset the flag after handling
+                    isUserPaused = false;
+                };
+
+                // Track progress using actual character index from boundary events
+                utterance.onboundary = (event) => {
+                    // Use the actual character index from the event
+                    // charIndex is relative to the textToSpeak, so add startPos
+                    if (event.charIndex !== undefined && event.charIndex !== null) {
+                        const boundaryPos = startPos + event.charIndex;
+                        currentPosition = boundaryPos;
+                        lastBoundaryPosition = boundaryPos;
+                        lastBoundaryTime = Date.now();
+                        
+                        // Track word boundaries separately (more frequent, more accurate)
+                        if (event.name === 'word') {
+                            lastWordBoundaryPosition = boundaryPos;
+                            lastWordBoundaryTime = Date.now();
+                        }
+                    }
+                };
+
+                window.speechSynthesis.speak(utterance);
+            } else {
+                alert('Your browser does not support text-to-speech. Please use a modern browser like Chrome, Edge, or Safari.');
+            }
+        }
+
+        function pauseSpeaking() {
+            if (window.speechSynthesis && isPlaying) {
+                // Set flag to indicate user-initiated pause
+                isUserPaused = true;
+                
+                // Calculate position: prefer word boundary over sentence boundary for accuracy
+                // Use last word boundary position plus small time-based estimate
+                if (lastWordBoundaryTime > 0) {
+                    const timeSinceLastWord = (Date.now() - lastWordBoundaryTime) / 1000; // seconds
+                    const charsPerSecond = 0.9 * 10; // Conservative estimate (slightly slower)
+                    const additionalChars = Math.floor(timeSinceLastWord * charsPerSecond);
+                    
+                    // Use the last word boundary position plus a small estimate
+                    // This gives us a position close to where we paused, not at the next sentence
+                    currentPosition = lastWordBoundaryPosition + additionalChars;
+                    
+                    // Don't go beyond the last known sentence boundary (safety check)
+                    if (lastBoundaryPosition > 0 && currentPosition > lastBoundaryPosition) {
+                        currentPosition = lastBoundaryPosition;
+                    }
+                } else if (lastBoundaryTime > 0) {
+                    // Fallback: use sentence boundary if no word boundary available
+                    const timeSinceLastBoundary = (Date.now() - lastBoundaryTime) / 1000;
+                    const charsPerSecond = 0.9 * 10;
+                    const additionalChars = Math.floor(timeSinceLastBoundary * charsPerSecond);
+                    currentPosition = lastBoundaryPosition + additionalChars;
+                } else if (startTime > 0) {
+                    // Final fallback: estimate from start time
+                    const elapsed = (Date.now() - startTime) / 1000;
+                    const charsPerSecond = 0.9 * 10;
+                    currentPosition = Math.floor(elapsed * charsPerSecond);
+                }
+                
+                // Cancel speech (this may trigger onerror, but we've set the flag)
+                window.speechSynthesis.cancel();
+                
+                isPlaying = false;
+                listenBtn.classList.remove('playing');
+                listenText.textContent = 'Resume';
+                listenBtn.setAttribute('aria-label', 'Resume listening');
+                listenBtn.setAttribute('aria-pressed', 'false');
+            }
+        }
+
+        function toggleListen() {
+            if (isPlaying) {
+                pauseSpeaking();
+            } else {
+                // Reset pause flag when starting/resuming
+                isUserPaused = false;
+                
+                // If we have stored text and position, resume from there
+                if (fullText && currentPosition > 0) {
+                    speakText(fullText, currentPosition);
+                } else {
+                    // Get fresh text and start from beginning
+                    const articleText = getArticleText();
+                    if (articleText) {
+                        fullText = articleText;
+                        currentPosition = 0;
+                        speakText(fullText, 0);
+                    } else {
+                        alert('No article content found to read.');
+                    }
+                }
+            }
+        }
+
+        listenBtn.addEventListener('click', toggleListen);
+
+        // Keyboard accessibility
+        listenBtn.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                toggleListen();
+            }
+        });
+
+        // Load voices when they become available (some browsers load them asynchronously)
+        if ('speechSynthesis' in window) {
+            // Try to get voices immediately
+            let voices = window.speechSynthesis.getVoices();
+            if (voices.length === 0) {
+                // If no voices yet, wait for them to load
+                window.speechSynthesis.onvoiceschanged = () => {
+                    voices = window.speechSynthesis.getVoices();
+                };
+            }
+        }
+
+        // Clean up on page unload
+        window.addEventListener('beforeunload', () => {
+            if (window.speechSynthesis) {
+                window.speechSynthesis.cancel();
+            }
+        });
+
+            </script>
+</body>
+</html>

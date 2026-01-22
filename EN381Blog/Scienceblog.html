@@ -1,0 +1,685 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Science Blog — abc Conjecture, IUTT, and the Debate</title>
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" async></script>
+
+    <style>
+        :root {
+            --primary: #4a6fa5;
+            --secondary: #166088;
+            --accent: #2a9d8f;
+            --light: #f8f9fa;
+            --dark: #212529;
+            --text-primary: #1a1a1a;
+            --text-secondary: #555;
+            --border-color: #0d0d0d;
+            --bg-light: #fafafa;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, #fafafa 0%, #f5f5f5 100%);
+            background-attachment: fixed;
+            color: var(--text-primary);
+            line-height: 1.8;
+            font-size: 18px;
+        }
+
+        header {
+            background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+            color: var(--text-primary);
+            border-bottom: 3px solid var(--border-color);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            padding: 2.5rem 1rem;
+            text-align: center;
+            margin-bottom: 3rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            backdrop-filter: blur(10px);
+        }
+
+        header h1 {
+            margin: 0;
+            padding: 0;
+            font-size: 2.5rem;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            color: var(--text-primary);
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 0 20px 40px;
+            animation: fadeIn 0.6s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .article-card {
+            background: #ffffff;
+            border: 2px solid var(--border-color);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            padding: 3.5rem;
+            margin-bottom: 2rem;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .article-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, var(--secondary), var(--accent));
+        }
+
+        .article-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+        }
+
+        article p {
+            margin: 1.5rem 0;
+            font-weight: 400;
+            font-size: 1.1rem;
+            line-height: 1.9;
+            color: var(--text-primary);
+        }
+
+        /* Drop cap styling for first paragraph */
+        article p:first-of-type::first-letter {
+            font-size: 4rem;
+            line-height: 0.8;
+            float: left;
+            padding-right: 10px;
+            padding-top: 6px;
+            color: var(--text-primary);
+            font-weight: 700;
+            font-family: Georgia, serif;
+        }
+
+        a {
+            color: var(--secondary);
+            text-decoration: none;
+            border-bottom: 2px solid rgba(22, 96, 136, 0.2);
+            padding-bottom: 2px;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+
+        a:hover {
+            color: var(--accent);
+            border-bottom-color: var(--accent);
+            transform: translateY(-1px);
+        }
+
+        figure {
+            margin: 2.5rem 0;
+            text-align: center;
+            transition: transform 0.3s ease;
+        }
+
+        figure:hover {
+            transform: scale(1.01);
+        }
+
+        figure img {
+            max-width: 100%;
+            height: auto;
+            border: 2px solid var(--border-color);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.12);
+            border-radius: 8px;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            background: #ffffff;
+        }
+
+        figure img:hover {
+            transform: translateY(-4px) scale(1.02);
+            box-shadow: 0 12px 28px rgba(0, 0, 0, 0.18);
+            border-color: var(--accent);
+        }
+
+        figure figcaption {
+            font-size: 0.95rem;
+            color: var(--text-secondary);
+            font-weight: 500;
+            margin-top: 14px;
+            font-style: italic;
+            letter-spacing: 0.3px;
+        }
+
+        /* Side-by-side container for Fermat and Wiles */
+        .figures-side-by-side {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin: 3rem 0;
+            flex-wrap: wrap;
+        }
+
+        .figures-side-by-side figure {
+            margin: 0;
+            width: 300px;
+            flex-shrink: 0;
+        }
+
+        .figures-side-by-side figure img {
+            width: 100%;
+            height: auto;
+        }
+
+        /* Half-size images for specific figures */
+        #fig-mochizuki img {
+            width: 50%;
+            max-width: 400px;
+        }
+
+        .footer {
+            background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+            color: var(--text-secondary);
+            border-top: 3px solid var(--border-color);
+            text-align: center;
+            padding: 2.5rem 0;
+            margin-top: 5rem;
+            font-size: 0.9rem;
+            box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.05);
+        }
+
+        /* Text-to-Speech Button */
+        .listen-button {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: var(--text-primary);
+            color: white;
+            border: 2px solid var(--border-color);
+            border-radius: 50px;
+            padding: 1rem 1.5rem;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-family: inherit;
+        }
+
+        .listen-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.3);
+            background: #333;
+        }
+
+        .listen-button:active {
+            transform: translateY(0);
+        }
+
+        .listen-button.playing {
+            background: var(--text-primary);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            }
+            50% {
+                box-shadow: 0 4px 20px rgba(231, 76, 60, 0.5);
+            }
+        }
+
+        .listen-button svg {
+            width: 20px;
+            height: 20px;
+            fill: currentColor;
+        }
+
+        @media (max-width: 768px) {
+            .listen-button {
+                bottom: 20px;
+                right: 20px;
+                padding: 0.8rem 1.2rem;
+                font-size: 0.9rem;
+            }
+        }
+
+        /* Math rendering improvements */
+        .MathJax {
+            font-size: 1.1em !important;
+        }
+
+        /* Responsive design */
+        @media (max-width: 768px) {
+            header h1 {
+                font-size: 1.8rem;
+            }
+
+            .article-card {
+                padding: 1.5rem;
+            }
+
+            article p {
+                font-size: 1rem;
+            }
+
+            .figures-side-by-side {
+                gap: 20px;
+            }
+
+            .figures-side-by-side figure {
+                width: 100%;
+                max-width: 300px;
+            }
+
+            #fig-scholze img,
+            #fig-mochizuki img {
+                width: 80%;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 0 15px;
+            }
+
+            .article-card {
+                padding: 1.25rem;
+            }
+
+            header {
+                padding: 1.5rem 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>The Battle for the \(\mathbf{abc}\) Conjecture</h1>
+    </header>
+
+    
+
+    <main class="container">
+        <article class="article-card">
+            <p>One of the most fundamental theorems that we learn in high school is the Pythagorean Theorem, which states that in a right-angle triangle, the sum of the squares of the two shorter sides is equal to the square of the longer side, i.e., \(a^2+b^2=c^2\), where a,b, and c are integers. There are infinitely many solutions for this when a,b, and c are integers. However, when we deal with the case where, instead of 2, it is an integer exponent greater than 2, things start to get a bit weird. Around 1637, Pierre de Fermat claimed that he had a marvelous proof that no three positive integers a,b, and c can satisfy the equation \(a^n+b^n=c^n\) for any integer greater than 2. This problem was commonly referred to as Fermat's Last Theorem. Here's a fun fact: Fermat scribbled this claim in the margin of his copy of an ancient Greek mathematics book, adding that the margin was too narrow to contain his proof. Most mathematicians believe Fermat was probably mistaken—he likely had a proof that worked for specific cases (like \(n=4\), which he did prove correctly) but thought it worked for all exponents, or he had a flawed proof that he mistakenly believed was correct (see <a href="https://www.nsf.gov/news/350-years-later-fermats-last-theorem-finally#:~:text=Mathematics,4%20and%20other%20special%20cases." target="_blank" rel="noopener noreferrer">NSF article</a>). Although Fermat claimed that he solved it but there was no evidence of it. In fact, it took more than 350 years for Andrew Wiles to finally prove Fermat's Last Theorem in 1994. The proof was very complicated and used a lot of modern mathematics like elliptic curves and modular forms. The interesting question was why a tiny change in the exponent from 2 to 3 made such a huge barrier?</p>
+
+            <div class="figures-side-by-side">
+                <figure id="fig-fermat">
+                    <img src="Pierre_de_Fermat.jpg" alt="A formal oil painting portrait of Pierre de Fermat, a 17th-century French mathematician with a serious expression, long light-colored hair, and dark academic robes with a white collar.">
+                    <figcaption>Pierre de Fermat</figcaption>
+                </figure>
+
+                <figure id="fig-wiles">
+                    <img src="AW.jpg" alt="Andrew Wiles, a mathematician with glasses, standing in front of a chalkboard displaying Fermat's equation. He is wearing a striped shirt and patterned sweater, smiling gently.">
+                    <figcaption>Andrew Wiles, who proved Fermat's Last Theorem in 1994</figcaption>
+                </figure>
+            </div>
+
+            <p>In 1985, Masser and Oesterlé proposed a conjecture known as the abc conjecture. The conjecture deals with three positive integers a, b, and c that are coprime (meaning they share no common prime factors) and satisfy the equation \(a + b = c\).</p>
+
+            <div class="figures-side-by-side">
+                <figure id="fig-masser">
+                    <img src="David_Masser.jpg" alt="A headshot of David Masser, a mathematician, smiling gently. He has light-colored hair, glasses, and a short beard, with a green ivy-covered wall in the background.">
+                    <figcaption>David Masser</figcaption>
+                </figure>
+
+                <figure id="fig-oesterle">
+                    <img src="Oesterle_Joseph.jpg" alt="A headshot of Joseph Oesterlé, a mathematician, with a serious expression. He is bald with a white beard and glasses, wearing a suit.">
+                    <figcaption>Joseph Oesterlé</figcaption>
+                </figure>
+            </div>
+
+            <p>Let's look at a simple example. Take a = 2, b = 3, so c = 5. Here, \(2 + 3 = 5\). Notice that all three numbers are coprime—they don't share any prime factors.</p>
+
+            <p>To understand the abc conjecture, we need to know about the "radical" of a number. The radical of a number is the product of all its different prime factors, but we only count each prime once. For example, the number \(16 = 2^4\) has radical 2 (just the prime 2, counted once). The number \(12 = 2^2 \times 3\) has radical \(2 \times 3 = 6\).</p>
+
+            <p>Now, here's what the abc conjecture says. When you have three coprime numbers where \(a + b = c\), you calculate the radical of the product \(abc\). The conjecture claims that c is usually smaller than this radical raised to some power.</p>
+
+            <p>What does "repeated small primes" mean? By "small primes," we mean primes like 2, 3, 5, 7 (small numbers). By "repeated," we mean the same prime appears many times as a factor. For example, \(2^{10} = 2 \times 2 \times 2 \times 2 \times 2 \times 2 \times 2 \times 2 \times 2 \times 2\) means the prime 2 is repeated 10 times. The number \(2^{10} \times 3^5\) means the prime 2 is repeated 10 times and the prime 3 is repeated 5 times. The key insight is this: if a and b are both made of the same small primes (like 2 and 3) raised to high powers, then c cannot also be small—it must be relatively large. For example, if \(a = 2^{10} = 1,024\) and \(b = 3^{10} = 59,049\), then \(c = 60,073\). Notice that a uses only the prime 2 (repeated 10 times), and b uses only the prime 3 (repeated 10 times). Even though we're only using the small primes 2 and 3, the result c is quite large. The abc conjecture says this pattern usually holds: when a and b are built from the same small primes raised to high powers, c tends to be large.</p>
+
+            <p>Why does this matter for Fermat's Last Theorem? If the abc conjecture were true, it would immediately show that equations like \(a^n + b^n = c^n\) are impossible for \(n > 2\), which would trivially prove Fermat's Last Theorem.</p>
+
+            <p>Shinichi Mochizuki, a mathematician from the RIMS of Kyoto University, made an astonishing claim in 2012 that he had successfully proven the abc conjecture by relying on his own invention: Inter-Universal Teichmüller Theory (IUTT). This theory does not resemble other proofs; rather, it is akin to introducing a completely new set of rules for the operation of numbers. The biggest challenge to proving abc is to link two very basic characteristics of the number set: its additive structure (\(a+b=c\)) and its multiplicative structure. In regular math, it is almost impossible to completely separate these two sides for comparison. IUTT comes up with a different viewpoint: Don't 'combine' them; 'isolate' them. The method behind that is to virtually divide one mathematical object into multiple individual 'realms' (Hodge Theaters). The Additive Realm is tailored to deal with the equation \(a+b=c\) very efficiently, while the Multiplicative Realm is designed to tackle the prime factors very efficiently. So, the proof goes on by transferring the arithmetic object through one universe to another via a special bridge known as a theta-link.</p>
+
+            <figure id="fig-mochizuki">
+                <img src="SMJP.png.jpg" alt="Researcher at RIMS, Kyoto University (photo credit: Kyoto University)">
+                <figcaption>At RIMS, Kyoto University (photo credit: Kyoto University).</figcaption>
+            </figure>
+
+            <p>The huge complexity and unconventional nature of IUTT made it impossible for most mathematicians to verify the proof. Mochizuki submitted his papers, but the common peer review process was not able to reach a consensus since only a limited number of people comprehended the new mathematics. This is where the dispute became personal and polarizing. In 2018, two eminent Western arithmetic geometers, the Fields Medalist Peter Scholze and Jakob Stix, spent several days in Kyoto discussing the work with Mochizuki (see <a href="https://www.quantamagazine.org/titans-of-mathematics-clash-over-epic-proof-of-abc-conjecture-20180920/" target="_blank" rel="noopener noreferrer">Quanta Magazine report</a>). They came back to declare they had discovered a significant logical flaw in the proof, which was particularly concerning a crucial technical step called Corollary 3.12. Scholze and Stix asserted that in this step, Mochizuki is drawing a comparison between two instances of the same mathematical object, which, notwithstanding the "re-initialization," are not really independent enough for the transformation to be valid. To put it simply, the object had not really lost its additive history when it was being studied in the multiplicative domain.</p>
+
+            <div class="figures-side-by-side">
+                <figure id="fig-scholze">
+                    <img src="PS.png.jpg" alt="Meeting participant in Kyoto (photo credit as provided)">
+                    <figcaption>2018 Fields Medalist Peter Scholze</figcaption>
+                </figure>
+
+                <figure id="fig-stix">
+                    <img src="Jakob_Stix_Oberwolfach_2024.jpg" alt="Jakob Stix, a mathematician, smiling outdoors with a metallic sculpture in the background. He has light-colored hair, dark-rimmed glasses, and is wearing a striped collared shirt.">
+                    <figcaption>Jakob Stix</figcaption>
+                </figure>
+            </div>
+
+            <p>This perspective became the leading view among number theorists outside Mochizuki's narrow circle: the proof was incorrect, and the abc conjecture is still open. On the other hand, Mochizuki and his allies, including Kirti Joshi, wholly disagree, claiming that Scholze and Stix were simply not able to conceive the most elementary notions of IUTT, especially the significance of the new labels and species. Since that time Joshi has released his own series of papers in which he says he has fixed and completed Mochizuki's work, and claims that structurally IUTT is actually correct. Interestingly, despite Joshi coming to his defense, Mochizuki has reportedly been dismissive of Joshi's corrections by saying the work needed no fixing and was correct all along. Even though the main papers were formally published in 2021, the entire mathematical community has not bought into either side, and one of number theory's most important conjectures remains open.</p>
+
+            
+        </article>
+    </main>
+
+    <button class="listen-button" id="listenBtn" aria-label="Listen to article" aria-pressed="false" role="button" tabindex="0" title="Listen to article (Accessibility feature - Press Enter or Space to activate)">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M11 5L6 9H2v6h4l5 4V5z"></path>
+            <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path>
+        </svg>
+        <span id="listenText">Listen</span>
+    </button>
+
+    <footer class="footer">
+        <p>© 2025 EN381 Blog.</p>
+    </footer>
+
+    <script>
+        // Text-to-Speech functionality
+        const listenBtn = document.getElementById('listenBtn');
+        const listenText = document.getElementById('listenText');
+        let isPlaying = false;
+        let utterance = null;
+        let fullText = '';
+        let currentPosition = 0;
+        let startTime = 0;
+        let isUserPaused = false;
+        let lastBoundaryTime = 0;
+        let lastBoundaryPosition = 0;
+        let lastWordBoundaryPosition = 0;
+        let lastWordBoundaryTime = 0;
+
+        function getArticleText() {
+            const article = document.querySelector('.article-card');
+            if (!article) return '';
+
+            // Get all text content from paragraphs
+            const paragraphs = article.querySelectorAll('p');
+            let text = '';
+            
+            paragraphs.forEach(p => {
+                // Remove MathJax and get clean text
+                const pClone = p.cloneNode(true);
+                const mathElements = pClone.querySelectorAll('.MathJax, script, mjx-container');
+                mathElements.forEach(el => el.remove());
+                
+                // Replace LaTeX notation with readable text
+                let pText = pClone.textContent || pClone.innerText || '';
+                // Remove LaTeX delimiters
+                pText = pText.replace(/\\\(/g, '').replace(/\\\)/g, '');
+                pText = pText.replace(/\$([^$]+)\$/g, '$1');
+                // Convert common math notation to readable text
+                pText = pText.replace(/\^(\d+)/g, ' to the power of $1');
+                pText = pText.replace(/\^\{([^}]+)\}/g, ' to the power of $1');
+                pText = pText.replace(/\\times/g, ' times ');
+                pText = pText.replace(/\\cdot/g, ' times ');
+                pText = pText.replace(/\\mathbf\{([^}]+)\}/g, '$1');
+                pText = pText.replace(/\\text\{([^}]+)\}/g, '$1');
+                
+                text += pText.trim() + '. ';
+            });
+
+            // Get figure captions
+            const captions = article.querySelectorAll('figcaption');
+            captions.forEach(caption => {
+                text += caption.textContent + '. ';
+            });
+
+            return text.trim();
+        }
+
+        function getVoice() {
+            // Try to get a preferred voice (Siri, then other high-quality voices)
+            const voices = window.speechSynthesis.getVoices();
+            
+            // First priority: Siri voices (available on macOS/iOS)
+            const siriVoices = voices.filter(v => 
+                v.name.toLowerCase().includes('siri') ||
+                v.name.includes('Siri')
+            );
+            
+            if (siriVoices.length > 0) {
+                return siriVoices[0];
+            }
+            
+            // Second priority: Other high-quality voices
+            const preferredVoices = voices.filter(v => 
+                v.name.includes('Samantha') || 
+                v.name.includes('Karen') || 
+                v.name.includes('Victoria') ||
+                v.name.includes('Zira') ||
+                v.name.includes('Google') ||
+                v.name.includes('Microsoft') ||
+                v.name.includes('Enhanced') ||
+                v.name.includes('Premium')
+            );
+            
+            if (preferredVoices.length > 0) {
+                return preferredVoices[0];
+            }
+            
+            // Fallback to any English voice
+            const englishVoices = voices.filter(v => v.lang.startsWith('en'));
+            return englishVoices.length > 0 ? englishVoices[0] : null;
+        }
+
+        function speakText(text, startPos = 0) {
+            if ('speechSynthesis' in window) {
+                // Cancel any ongoing speech
+                window.speechSynthesis.cancel();
+
+                // Use the text from the start position
+                const textToSpeak = startPos > 0 ? text.substring(startPos) : text;
+
+                utterance = new SpeechSynthesisUtterance(textToSpeak);
+                
+                // Get available voices and select a preferred one
+                const voices = window.speechSynthesis.getVoices();
+                const selectedVoice = getVoice();
+                if (selectedVoice) {
+                    utterance.voice = selectedVoice;
+                }
+                
+                utterance.lang = 'en-US';
+                utterance.rate = 0.9; // Slightly slower for better comprehension
+                utterance.pitch = 1;
+                utterance.volume = 1;
+
+                utterance.onstart = () => {
+                    isPlaying = true;
+                    listenBtn.classList.add('playing');
+                    listenText.textContent = 'Pause';
+                    listenBtn.setAttribute('aria-label', 'Pause listening');
+                    listenBtn.setAttribute('aria-pressed', 'true');
+                    startTime = Date.now();
+                    lastBoundaryTime = Date.now();
+                    lastBoundaryPosition = startPos;
+                    lastWordBoundaryTime = Date.now();
+                    lastWordBoundaryPosition = startPos;
+                };
+
+                utterance.onend = () => {
+                    isPlaying = false;
+                    currentPosition = 0; // Reset position when finished
+                    fullText = '';
+                    listenBtn.classList.remove('playing');
+                    listenText.textContent = 'Listen';
+                    listenBtn.setAttribute('aria-label', 'Listen to article');
+                    listenBtn.setAttribute('aria-pressed', 'false');
+                };
+
+                utterance.onerror = (event) => {
+                    // Only show error if it's not a user-initiated pause
+                    if (!isUserPaused && event.error !== 'interrupted') {
+                        isPlaying = false;
+                        listenBtn.classList.remove('playing');
+                        listenText.textContent = 'Listen';
+                        listenBtn.setAttribute('aria-label', 'Listen to article');
+                        listenBtn.setAttribute('aria-pressed', 'false');
+                        alert('Speech synthesis error. Please try again.');
+                    }
+                    // Reset the flag after handling
+                    isUserPaused = false;
+                };
+
+                // Track progress using actual character index from boundary events
+                utterance.onboundary = (event) => {
+                    // Use the actual character index from the event
+                    // charIndex is relative to the textToSpeak, so add startPos
+                    if (event.charIndex !== undefined && event.charIndex !== null) {
+                        const boundaryPos = startPos + event.charIndex;
+                        currentPosition = boundaryPos;
+                        lastBoundaryPosition = boundaryPos;
+                        lastBoundaryTime = Date.now();
+                        
+                        // Track word boundaries separately (more frequent, more accurate)
+                        if (event.name === 'word') {
+                            lastWordBoundaryPosition = boundaryPos;
+                            lastWordBoundaryTime = Date.now();
+                        }
+                    }
+                };
+
+                window.speechSynthesis.speak(utterance);
+            } else {
+                alert('Your browser does not support text-to-speech. Please use a modern browser like Chrome, Edge, or Safari.');
+            }
+        }
+
+        function pauseSpeaking() {
+            if (window.speechSynthesis && isPlaying) {
+                // Set flag to indicate user-initiated pause
+                isUserPaused = true;
+                
+                // Calculate position: prefer word boundary over sentence boundary for accuracy
+                // Use last word boundary position plus small time-based estimate
+                if (lastWordBoundaryTime > 0) {
+                    const timeSinceLastWord = (Date.now() - lastWordBoundaryTime) / 1000; // seconds
+                    const charsPerSecond = 0.9 * 10; // Conservative estimate (slightly slower)
+                    const additionalChars = Math.floor(timeSinceLastWord * charsPerSecond);
+                    
+                    // Use the last word boundary position plus a small estimate
+                    // This gives us a position close to where we paused, not at the next sentence
+                    currentPosition = lastWordBoundaryPosition + additionalChars;
+                    
+                    // Don't go beyond the last known sentence boundary (safety check)
+                    if (lastBoundaryPosition > 0 && currentPosition > lastBoundaryPosition) {
+                        currentPosition = lastBoundaryPosition;
+                    }
+                } else if (lastBoundaryTime > 0) {
+                    // Fallback: use sentence boundary if no word boundary available
+                    const timeSinceLastBoundary = (Date.now() - lastBoundaryTime) / 1000;
+                    const charsPerSecond = 0.9 * 10;
+                    const additionalChars = Math.floor(timeSinceLastBoundary * charsPerSecond);
+                    currentPosition = lastBoundaryPosition + additionalChars;
+                } else if (startTime > 0) {
+                    // Final fallback: estimate from start time
+                    const elapsed = (Date.now() - startTime) / 1000;
+                    const charsPerSecond = 0.9 * 10;
+                    currentPosition = Math.floor(elapsed * charsPerSecond);
+                }
+                
+                // Cancel speech (this may trigger onerror, but we've set the flag)
+                window.speechSynthesis.cancel();
+                
+                isPlaying = false;
+                listenBtn.classList.remove('playing');
+                listenText.textContent = 'Resume';
+                listenBtn.setAttribute('aria-label', 'Resume listening');
+                listenBtn.setAttribute('aria-pressed', 'false');
+            }
+        }
+
+        function toggleListen() {
+            if (isPlaying) {
+                pauseSpeaking();
+            } else {
+                // Reset pause flag when starting/resuming
+                isUserPaused = false;
+                
+                // If we have stored text and position, resume from there
+                if (fullText && currentPosition > 0) {
+                    speakText(fullText, currentPosition);
+                } else {
+                    // Get fresh text and start from beginning
+                    const articleText = getArticleText();
+                    if (articleText) {
+                        fullText = articleText;
+                        currentPosition = 0;
+                        speakText(fullText, 0);
+                    } else {
+                        alert('No article content found to read.');
+                    }
+                }
+            }
+        }
+
+        listenBtn.addEventListener('click', toggleListen);
+
+        // Keyboard accessibility
+        listenBtn.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                toggleListen();
+            }
+        });
+
+        // Load voices when they become available (some browsers load them asynchronously)
+        if ('speechSynthesis' in window) {
+            // Try to get voices immediately
+            let voices = window.speechSynthesis.getVoices();
+            if (voices.length === 0) {
+                // If no voices yet, wait for them to load
+                window.speechSynthesis.onvoiceschanged = () => {
+                    voices = window.speechSynthesis.getVoices();
+                };
+            }
+        }
+
+        // Clean up on page unload
+        window.addEventListener('beforeunload', () => {
+            if (window.speechSynthesis) {
+                window.speechSynthesis.cancel();
+            }
+        });
+    </script>
+</body>
+</html>
+
+

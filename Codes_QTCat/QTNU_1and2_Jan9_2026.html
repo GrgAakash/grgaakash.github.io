@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Q,T-Catalan Chain Decompositions - NU₁ & NU₂ Maps Explorer</title>
+    <link rel="stylesheet" href="styles.css">
+    <!-- MathJax -->
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\\[', '\\]']]
+            }
+        };
+    </script>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1 class="text-3d-large">Q,T-Catalan Chain Decompositions</h1>
+            <p class="subtitle">Explore NU₁-tails, NU₂-bridging, and global chain construction for q,t-Catalan numbers</p>
+        </header>
+
+        <main>
+
+            <section class="input-section">
+                <h2 class="text-3d">Generate Chain Sequence</h2>
+
+                <div class="method-selection">
+                    <label>
+                        <input type="radio" name="method" value="NU1" checked>
+                        NU₁ (Successor Map)
+                    </label>
+                    <label>
+                        <input type="radio" name="method" value="ND1">
+                        ND₁ (Predecessor Map)
+                    </label>
+                    <label>
+                        <input type="radio" name="method" value="NU2">
+                        NU₂ (Extension Map)
+                    </label>
+                    <label>
+                        <input type="radio" name="method" value="ND2">
+                        ND₂ (Extension Inverse)
+                    </label>
+                    <label>
+                        <input type="radio" name="method" value="NU">
+                        Extended NU (NU₁ ∪ NU₂)
+                    </label>
+                    <label>
+                        <input type="radio" name="method" value="ND">
+                        Extended ND (ND₁ ∪ ND₂)
+                    </label>
+                </div>
+
+                <div class="input-group">
+                    <label for="input-type">Input Type:</label>
+                    <select id="input-type">
+                        <option value="partition">Integer Partition (comma-separated integers)</option>
+                        <option value="qdv">Quasi-Dyck Vector (comma-separated, can include negatives)</option>
+                    </select>
+                </div>
+
+                <div class="input-group">
+                    <label for="input-vector" id="input-label">Input (comma-separated):</label>
+                    <input type="text" id="input-vector" placeholder="5,4,4,1" value="5,4,4,1">
+                    <button id="generate-sequence" class="btn btn-primary">Generate Sequence</button>
+                </div>
+
+                <div class="input-group">
+                    <label for="max-iterations">Max Iterations:</label>
+                    <input type="number" id="max-iterations" min="1" max="500" value="5">
+                </div>
+
+                <div class="input-group">
+                    <label for="show-vectors">Show Dyck Vectors:</label>
+                    <input type="checkbox" id="show-vectors" checked>
+                </div>
+            </section>
+
+            <!-- Results Section -->
+            <section class="results-section" id="results-section" style="display: none;">
+                <h2 class="text-3d">Sequence Results</h2>
+                <div class="sequence-info">
+                    <div class="info-card">
+                        <h3>Initial State</h3>
+                        <p><strong>Partition:</strong> <span id="initial-partition"></span></p>
+                        <p><strong>Dyck Vector:</strong> <span id="initial-vector"></span></p>
+                        <p><strong>Deficit:</strong> <span id="initial-deficit"></span></p>
+                        <p><strong>Dinv:</strong> <span id="initial-dinv"></span></p>
+                        <p><strong>Min Triangle Height:</strong> <span id="initial-min-triangle"></span></p>
+                        <p><strong>Type:</strong> <span id="initial-type"></span></p>
+                    </div>
+                    <div class="info-card">
+                        <h3>Final State</h3>
+                        <p><strong>Partition:</strong> <span id="final-partition"></span></p>
+                        <p><strong>Dyck Vector:</strong> <span id="final-vector"></span></p>
+                        <p><strong>Deficit:</strong> <span id="final-deficit"></span></p>
+                        <p><strong>Dinv:</strong> <span id="final-dinv"></span></p>
+                        <p><strong>Min Triangle Height:</strong> <span id="final-min-triangle"></span></p>
+                        <p><strong>Type:</strong> <span id="final-type"></span></p>
+                    </div>
+                    <div class="info-card">
+                        <h3>Chain Statistics</h3>
+                        <p><strong>Iterations:</strong> <span id="total-iterations"></span></p>
+                        <p><strong>Termination:</strong> <span id="termination-reason"></span></p>
+                        <p><strong>Method:</strong> <span id="method-used"></span></p>
+                        <p><strong>Chain Type:</strong> <span id="chain-type"></span></p>
+                        <p><strong>Deficit Preserved:</strong> <span id="deficit-preserved"></span></p>
+                    </div>
+                </div>
+
+                <div class="sequence-visualization">
+                    <h3>Sequence Visualization</h3>
+                    <div id="sequence-chart" class="chart-container"></div>
+                </div>
+
+                <div class="detailed-sequence">
+                    <h3>Detailed Sequence</h3>
+                    <div id="sequence-table" class="sequence-table"></div>
+                </div>
+            </section>
+
+
+
+            <!-- Compute f(μ) Section -->
+            <section class="analysis-section">
+                <h2 class="text-3d">Compute f(μ)</h2>
+                <div class="math-explanation">
+                    <p><strong>Definition 0.7:</strong> The map f acts on multiplicities:</p>
+                    <ul style="margin: 8px 0; padding-left: 20px;">
+                        <li><strong>Even multiplicity</strong> aᵉ → (a−1)ᵉ (all parts decrease by 1)</li>
+                        <li><strong>Odd multiplicity</strong> aᵉ → ((a−1)ᵉ⁻¹, a−2) (most drop by 1, one drops by 2)</li>
+                    </ul>
+                </div>
+
+                <div class="input-group">
+                    <label for="f-mu-input">Partition μ (comma-separated):</label>
+                    <input type="text" id="f-mu-input" placeholder="4,3,1,1,1,1,1" value="4,3,1,1,1,1,1">
+                    <button id="compute-f-btn" class="btn btn-secondary">Compute f(μ)</button>
+                </div>
+
+                <div id="f-results" class="summary-card" style="margin-top: 12px; display: none;">
+                    <h3>Results</h3>
+                    <p><strong>Input μ:</strong> <span id="f-input-display"></span></p>
+                    <p><strong>|μ|:</strong> <span id="f-mu-size"></span></p>
+                    <p><strong>Multiplicities:</strong> <span id="f-multiplicities"></span></p>
+                    <hr style="margin: 10px 0; border-color: #444;">
+                    <p><strong>f(μ) =</strong> <span id="f-output" style="font-size: 1.2em; color: #4CAF50;"></span></p>
+                    <p><strong>|f(μ)|:</strong> <span id="f-output-size"></span></p>
+                </div>
+            </section>
+
+            <!-- Flag Type Explorer -->
+            <section class="analysis-section">
+                <h2 class="text-3d">Flag Type Explorer (λ, a, ε) → μ</h2>
+                <div class="math-explanation">
+                    <p><strong>HLLL Parameterization:</strong> Every flagpole partition μ is determined by (λ, a, ε):</p>
+                    <ul style="margin: 8px 0; padding-left: 20px;">
+                        <li><strong>λ</strong> = flag type (a partition)</li>
+                        <li><strong>a</strong> = integer parameter (number of 2s in TI₂)</li>
+                        <li><strong>ε ∈ {0,1}</strong> = binary switch</li>
+                    </ul>
+                    <p style="margin-top: 8px;"><strong>Size formula:</strong> |μ| = |λ| + ρ(μ) − 2, where ρ = 3 + a + d(λ) + ℓ(λ) + ε</p>
+                </div>
+
+                <div class="input-group">
+                    <label for="lambda-input">Flag type λ (comma-separated):</label>
+                    <input type="text" id="lambda-input" placeholder="2,1" value="2,1">
+                </div>
+                <div class="input-group">
+                    <label for="target-k">Target size k:</label>
+                    <input type="number" id="target-k" min="1" max="30" value="12">
+                    <button id="compute-pairs-btn" class="btn btn-secondary">Compute (a, ε) Pairs</button>
+                </div>
+
+                <div id="pairs-results" class="summary-card" style="margin-top: 12px; display: none;">
+                    <h3>Results for λ = <span id="lambda-display"></span>, k = <span id="k-display"></span></h3>
+                    <p><strong>|λ| =</strong> <span id="lambda-size"></span>, 
+                       <strong>d(λ) =</strong> <span id="lambda-distinct"></span>, 
+                       <strong>ℓ(λ) =</strong> <span id="lambda-parts"></span></p>
+                    <hr style="margin: 10px 0; border-color: #444;">
+                    <div id="pair-0" class="pair-result" style="margin: 15px 0; padding: 10px; background: #2a2a2a; border-radius: 8px;"></div>
+                    <div id="pair-1" class="pair-result" style="margin: 15px 0; padding: 10px; background: #2a2a2a; border-radius: 8px;"></div>
+                </div>
+            </section>
+
+            <!-- SMALL Condition Verification -->
+            <section class="analysis-section">
+                <h2 class="text-3d">SMALL Condition Verification</h2>
+                <div class="math-explanation">
+                    <p><strong>Definition:</strong> A non-negative integer <em>r</em> is said to be SMALL with respect to <em>k</em> if:</p>
+                    <p style="font-size: 1.1em; margin: 8px 0;">$$ r \leq \left\lfloor \frac{k}{2} \right\rfloor - 2 $$</p>
+                    <p>Find all partitions μ of size k where ρ(TI₂(μ)) = k+2-r and verify the SMALL condition: |ρ⁻¹(DV₊)| = 2·p(r)</p>
+                </div>
+
+                <div class="input-group">
+                    <label for="small-k">Partition Size (k):</label>
+                    <input type="number" id="small-k" min="1" max="12" value="4">
+                    <small id="k-example" style="display: block; margin-top: 4px; color: #666;">
+                        Example: k=10 → max r = ⌊5⌋ - 2 = 3 (valid r ∈ {0,1,2,3})
+                    </small>
+                </div>
+                <div class="input-group">
+                    <label for="small-r">SMALL number (r):</label>
+                    <input type="number" id="small-r" min="0" max="8" value="2">
+                    <small id="r-constraint" style="display: block; margin-top: 4px; color: #666;">
+                        Must satisfy: r ≤ ⌊k/2⌋ - 2
+                    </small>
+                </div>
+                <div class="input-group">
+                    <button id="verify-small" class="btn btn-secondary">Verify SMALL Condition</button>
+                </div>
+
+                <div id="small-results" class="deficit-analysis-results" style="display: none;">
+                    <h3>SMALL Condition Results</h3>
+                    <div id="small-summary" class="summary-card"></div>
+                    <div id="small-details" class="deficit-analysis-details"></div>
+                </div>
+            </section>
+
+
+
+            <!-- Mathematical Background -->
+            <section class="math-section">
+                <h2 class="text-3d">Mathematical Background</h2>
+                <div class="math-content">
+                    <div class="math-card">
+                        <h3>Quasi-Dyck Vectors</h3>
+                        <ul>
+                            <li><strong>Definition:</strong> Sequences (v₁, v₂, ..., vₙ) where v₁ = 0 and v_{i+1} ≤ v_i + 1</li>
+                            <li><strong>Dyck Vectors:</strong> QDVs where all entries are non-negative</li>
+                            <li><strong>Reduced Dyck Vector:</strong> Vector of minimum length in a Dyck class</li>
+                            <li><strong>Key Formula:</strong> QDV_n(λ) = (0-λ_n, 1-λ_{n-1}, ..., n-1-λ_1)</li>
+                        </ul>
+                    </div>
+                    <div class="math-card">
+                        <h3>NU₁ Operator (Successor Map)</h3>
+                        <ul>
+                            <li><strong>Definition:</strong> NU₁(γ) = ⟨ℓ+1, γ₁-1, γ₂-1, ..., γₗ-1⟩</li>
+                            <li><strong>Domain:</strong> γ₁ ≤ ℓ(γ) + 2</li>
+                            <li><strong>Properties:</strong> Preserves deficit, increases dinv by 1</li>
+                            <li><strong>Termination:</strong> NU₁-final objects where γ₁ > ℓ(γ) + 2</li>
+                        </ul>
+                    </div>
+                    <div class="math-card">
+                        <h3>ND₁ Operator (Predecessor Map)</h3>
+                        <ul>
+                            <li><strong>Definition:</strong> ND₁(γ) = ⟨γ₂+1, γ₃+1, ..., γₗ+1, 1^{γ₁-ℓ}⟩</li>
+                            <li><strong>Domain:</strong> γ₁ ≥ ℓ(γ)</li>
+                            <li><strong>Properties:</strong> Preserves deficit, decreases dinv by 1</li>
+                        </ul>
+                    </div>
+                    <div class="math-card">
+                        <h3>NU₂ Operator (Extension Map)</h3>
+                        <ul>
+                            <li><strong>Rule (a):</strong> [012^h A(-1)^{h-1}] → [00^{h-1}1A1^h]</li>
+                            <li><strong>Rule (b):</strong> [012^k B(-1)^k] → [00^k B01^k]</li>
+                            <li><strong>Domain:</strong> NU₁-final objects</li>
+                            <li><strong>Range:</strong> NU₁-initial objects</li>
+                            <li><strong>Properties:</strong> Preserves deficit, increases dinv by 1</li>
+                        </ul>
+                    </div>
+
+                    <div class="math-card">
+                        <h3>Chain Types</h3>
+                        <ul>
+                            <li><strong>NU₁-fragment:</strong> Finite chain terminated by NU₁-final object</li>
+                            <li><strong>NU₁-tail:</strong> Infinite chain starting from TI(μ)</li>
+                            <li><strong>Second-order tail:</strong> Extended tail starting from TI₂(μ)</li>
+                            <li><strong>Global chain:</strong> Complete chain C_μ for partition μ</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+        </main>
+
+        <footer>
+            <p>&copy; 2024 q,t-Catalan Chain Decompositions - Exploring NU₁-tails and NU₂-bridging for combinatorial chain construction</p>
+        </footer>
+    </div>
+
+    <script src="corrected_nu_nd_script_Jan9_2026.js?v=5"></script>
+    <script>
+        (function(){
+            function parseCSVNumbers(s){
+                return s.split(',').map(x=>x.trim()).filter(x=>x.length).map(Number).sort((a,b)=>b-a);
+            }
+
+            // SMALL validation functions
+            function isValidSMALLNumber(k, r) {
+                return r <= Math.floor(k / 2) - 2;
+            }
+
+            function updateSMALLValidation() {
+                const k = parseInt(document.getElementById('small-k').value);
+                const r = parseInt(document.getElementById('small-r').value);
+
+                const maxR = Math.floor(k / 2) - 2;
+                const rInput = document.getElementById('small-r');
+                const constraintText = document.getElementById('r-constraint');
+
+                // Update constraint display
+                constraintText.textContent = `Must satisfy: r ≤ ⌊${k}/2⌋ - 2 = ${maxR}`;
+
+                // Update input max attribute
+                rInput.max = Math.max(0, maxR);
+
+                // Update styling based on validity
+                if (isValidSMALLNumber(k, r)) {
+                    rInput.style.borderColor = '#4CAF50';
+                    constraintText.style.color = '#4CAF50';
+                } else {
+                    rInput.style.borderColor = '#f44336';
+                    constraintText.style.color = '#f44336';
+                }
+            }
+            function ensureTIUI(){
+                if(document.getElementById('ti-section')) return; // already added
+                const main = document.querySelector('main');
+                const sec = document.createElement('section');
+                sec.className = 'analysis-section';
+                sec.id = 'ti-section';
+                sec.innerHTML = `
+                    <h2 class="text-3d">Tail Initiators (TI / TI₂)</h2>
+                    <div class="input-group">
+                        <label for="ti-mu">Partition μ (comma-separated):</label>
+                        <input type="text" id="ti-mu" placeholder="3,1,1" value="3,1,1">
+                        <button id="btn-ti2" class="btn btn-outline">Compute TI₂</button>
+                    </div>
+                    <div id="ti-output" class="summary-card" style="margin-top:12px;">
+                        <p><strong>TI(μ) QDV:</strong> <span id="ti-qdv">—</span></p>
+                        <p><strong>TI(μ) Partition:</strong> <span id="ti-part">—</span></p>
+                        <p><strong>TI₂(μ) Final QDV:</strong> <span id="ti2-qdv">—</span></p>
+                        <p><strong>TI₂(μ) Type:</strong> <span id="ti2-type">—</span></p>
+                        <p><strong>Is Flagpole:</strong> <span id="ti2-flagpole">—</span></p>
+                        <p><strong>Steps:</strong></p>
+                        <div id="ti-steps" style="white-space:pre-wrap; font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;">—</div>
+                    </div>
+                `;
+
+                const math = document.querySelector('.math-section');
+                (math && math.parentNode) ? math.parentNode.insertBefore(sec, math) : main.appendChild(sec);
+
+                document.getElementById('btn-ti2').addEventListener('click', function(){
+                    try {
+                        const mu = parseCSVNumbers(document.getElementById('ti-mu').value);
+                        if (!window.computeTI2 || !window.QDVToPartition) { alert('Helpers not loaded yet. Hard-reload the page.'); return; }
+                        const res = window.computeTI2(mu);
+                        const finalQ = res.finalQDV || [];
+                        const steps = res.steps || [];
+
+                        // Show final TI₂ result
+                        document.getElementById('ti2-qdv').textContent = `[${finalQ.join(', ')}]`;
+                        document.getElementById('ti2-qdv').style.fontSize = '';
+                        document.getElementById('ti2-qdv').style.color = '';
+
+                        // Check type classification
+                        if (finalQ.length && window.getTI2Type && window.isFlagpoleTI2) {
+                            const typeStr = window.getTI2Type(finalQ);
+                            const isFlagpole = window.isFlagpoleTI2(finalQ);
+                            document.getElementById('ti2-type').textContent = typeStr;
+                            document.getElementById('ti2-flagpole').textContent = isFlagpole ? '✓ Yes' : '✗ No';
+                            document.getElementById('ti2-flagpole').style.color = isFlagpole ? '#2e7d32' : '#c62828';
+                            document.getElementById('ti2-flagpole').style.fontWeight = 'bold';
+                        } else {
+                            document.getElementById('ti2-type').textContent = '—';
+                            document.getElementById('ti2-flagpole').textContent = '—';
+                        }
+
+                        const lines = steps.map(s => `${s.used}: [${s.qdv.join(', ')}]`);
+                        document.getElementById('ti-steps').textContent = lines.length ? lines.join('\n') : '—';
+                        // Also show TI if we have it
+                        if (steps.length) {
+                            document.getElementById('ti-qdv').textContent = `[${steps[0].qdv.join(', ')}]`;
+                            const tiP = window.QDVToPartition(steps[0].qdv);
+                            document.getElementById('ti-part').textContent = `⟨${tiP.join(', ')}⟩`;
+                        }
+                    } catch(e){ alert(e.message); }
+                });
+            }
+            // Add SMALL validation event listeners
+            function setupSMALLValidation() {
+                const kInput = document.getElementById('small-k');
+                const rInput = document.getElementById('small-r');
+
+                if (kInput && rInput) {
+                    kInput.addEventListener('input', updateSMALLValidation);
+                    rInput.addEventListener('input', updateSMALLValidation);
+                    // Initialize validation on page load
+                    updateSMALLValidation();
+                }
+            }
+
+            // Setup f(μ) computation
+            function setupFComputation() {
+                const btn = document.getElementById('compute-f-btn');
+                if (!btn) return;
+                
+                btn.addEventListener('click', function() {
+                    try {
+                        const muStr = document.getElementById('f-mu-input').value;
+                        const mu = parseCSVNumbers(muStr);
+                        
+                        if (!window.computeF) {
+                            alert('computeF not loaded. Refresh the page.');
+                            return;
+                        }
+                        
+                        const fMu = window.computeF(mu);
+                        const muSize = mu.reduce((a, b) => a + b, 0);
+                        const fSize = fMu.length > 0 ? fMu.reduce((a, b) => a + b, 0) : 0;
+                        
+                        // Count multiplicities
+                        const mult = {};
+                        for (const p of mu) {
+                            mult[p] = (mult[p] || 0) + 1;
+                        }
+                        const multStr = Object.entries(mult)
+                            .sort((a, b) => parseInt(b[0]) - parseInt(a[0]))
+                            .map(([p, c]) => `${p}^${c}`)
+                            .join(', ');
+                        
+                        document.getElementById('f-results').style.display = 'block';
+                        document.getElementById('f-input-display').textContent = `(${mu.join(', ')})`;
+                        document.getElementById('f-mu-size').textContent = muSize;
+                        document.getElementById('f-multiplicities').textContent = multStr;
+                        document.getElementById('f-output').textContent = fMu.length > 0 ? `(${fMu.join(', ')})` : '∅ (empty)';
+                        document.getElementById('f-output-size').textContent = fSize;
+                    } catch (e) {
+                        alert('Error: ' + e.message);
+                    }
+                });
+            }
+            
+            // Setup Flag Type Explorer
+            function setupFlagTypeExplorer() {
+                const btn = document.getElementById('compute-pairs-btn');
+                if (!btn) return;
+                
+                btn.addEventListener('click', function() {
+                    try {
+                        const lambdaStr = document.getElementById('lambda-input').value;
+                        const lambda = lambdaStr.trim() ? parseCSVNumbers(lambdaStr) : [];
+                        const k = parseInt(document.getElementById('target-k').value);
+                        
+                        if (!window.computeAEpsilonPairs || !window.getPartitionStats || !window.buildTI2FromParams) {
+                            alert('Functions not loaded. Refresh the page.');
+                            return;
+                        }
+                        
+                        const stats = window.getPartitionStats(lambda);
+                        const pairs = window.computeAEpsilonPairs(lambda, k);
+                        
+                        // Display header info
+                        document.getElementById('pairs-results').style.display = 'block';
+                        document.getElementById('lambda-display').textContent = lambda.length > 0 ? `(${lambda.join(', ')})` : '∅';
+                        document.getElementById('k-display').textContent = k;
+                        document.getElementById('lambda-size').textContent = stats.size;
+                        document.getElementById('lambda-distinct').textContent = stats.distinctParts;
+                        document.getElementById('lambda-parts').textContent = stats.totalParts;
+                        
+                        // Display each pair
+                        for (let i = 0; i < 2; i++) {
+                            const pair = pairs[i];
+                            const div = document.getElementById(`pair-${i}`);
+                            
+                            if (pair.valid) {
+                                const ti2 = window.buildTI2FromParams(lambda, pair.a, pair.epsilon);
+                                div.innerHTML = `
+                                    <p style="font-size: 1.1em; margin-bottom: 8px;">
+                                        <strong style="color: #4CAF50;">Case ${i + 1}: ε = ${pair.epsilon}</strong>
+                                    </p>
+                                    <p><strong>a =</strong> ${pair.a}</p>
+                                    <p><strong>ρ(μ) =</strong> ${pair.rho}</p>
+                                    <p><strong>μ =</strong> <span style="color: #64B5F6;">(${pair.mu.join(', ')})</span></p>
+                                    <p><strong>|μ| =</strong> ${pair.muSize} ${pair.muSize === k ? '✓' : '✗'}</p>
+                                    <p><strong>TI₂ =</strong> <span style="font-family: monospace; color: #FFB74D;">[${ti2.join(', ')}]</span></p>
+                                `;
+                                div.style.borderLeft = '4px solid #4CAF50';
+                            } else {
+                                div.innerHTML = `
+                                    <p style="font-size: 1.1em; margin-bottom: 8px;">
+                                        <strong style="color: #f44336;">Case ${i + 1}: ε = ${pair.epsilon}</strong>
+                                    </p>
+                                    <p><strong>a =</strong> ${pair.a} <span style="color: #f44336;">(invalid: ${pair.reason || 'a < 0'})</span></p>
+                                    <p>No valid μ for these parameters.</p>
+                                `;
+                                div.style.borderLeft = '4px solid #f44336';
+                            }
+                        }
+                    } catch (e) {
+                        alert('Error: ' + e.message);
+                    }
+                });
+            }
+
+            // Attach after script load
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', function() {
+                    ensureTIUI();
+                    setupSMALLValidation();
+                    setupFComputation();
+                    setupFlagTypeExplorer();
+                });
+            } else {
+                ensureTIUI();
+                setupSMALLValidation();
+                setupFComputation();
+                setupFlagTypeExplorer();
+            }
+        })();
+    </script>
+</body>
+</html>

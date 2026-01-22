@@ -1,0 +1,100 @@
+# Site settings
+title: Aakash Gurung
+email: aakash.grg159@gmail.com
+description: >-
+  Mathematics and Computer Science student at The University of Alabama, 
+  focusing on combinatorics, mathematical research, and computer science.
+baseurl: "" # the subpath of your site, e.g. /blog
+url: "https://grgaakash.github.io" # the base hostname & protocol for your site
+repository: grgaakash/grgaakash.github.io
+
+# Author settings
+author:
+  name: Aakash Gurung
+  avatar: /assets/images/profile.jpg
+  bio: BS Mathematics and Computer Science Student at The University of Alabama
+  location: Tuscaloosa, AL
+  email: aakash.grg159@gmail.com
+  phone: 9295196616
+  github: grgaakash
+  linkedin: aakash-gurung-6737641b1  # Updated LinkedIn username
+  # Add other social media links as needed
+
+# Build settings
+markdown: kramdown
+plugins:
+  - jekyll-sitemap
+  # - jekyll-scholar
+  # - jekyll-last-modified-at
+
+# Collections
+collections:
+  publications:
+    output: true
+    permalink: /:collection/:path/
+  projects:
+    output: true
+    permalink: /:collection/:path/
+  news:
+    output: true
+    permalink: /:collection/:path/
+  awards:
+    output: true
+    permalink: /:collection/:path/
+
+# Display settings
+data:
+  display:
+    homepage:
+      show_news: false
+      show_projects: false
+      show_publications: false
+      show_awards: false
+      num_news: 5
+      num_projects: 6
+      num_publications: 5
+
+# Scholar settings
+scholar:
+  style: apa
+  locale: en
+  sort_by: year,month
+  order: descending
+  source: ./_bibliography
+  bibliography: references.bib
+  bibliography_template: "bibliography"
+  replace_strings: true
+  join_strings: true
+  details_dir: bibliography
+  details_layout: bibtex.html
+  details_link: Details
+  query: "@*"
+
+# Basic settings
+lang: en
+timezone: Asia/Kathmandu
+
+# Analytics (Optional)
+google_analytics: 
+
+# Navigation
+nav_order:
+  - name: Home
+    url: /
+  - name: Projects
+    url: /projects
+  - name: Research
+    url: /research
+  - name: CV
+    url: /assets/CV.pdf
+
+exclude:
+  - Gemfile
+  - Gemfile.lock
+  - README.md
+  - LICENSE
+  - .gitignore
+
+include:
+  - "SIHR Stochastic vs ODE/src"
+ 
