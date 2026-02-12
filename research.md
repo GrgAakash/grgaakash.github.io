@@ -14,6 +14,12 @@ title: Research
                 </div>
                 <div class="card-body">
                     <div class="research-item mb-4">
+                        <h4>Stochastic Pairing Dynamics</h4>
+                        <p class="text-muted">Jan 2026 - Present</p>
+                        <p>Investigating stochastic pairing dynamics through random walk and probabilistic transition models.</p>
+                        <p>Mentor: Professor Chuntian Wang</p>
+                    </div>
+                    <div class="research-item mb-4">
                         <h4>Structural Properties of Flagpole Partitions</h4>
                         <p class="text-muted">Feb 2025 - Present</p>
                         <p>Learned about \(q, t\) Catalan numbers, Dyck vectors, and their connection to integer partition structures. Working on finalizing the proof of conjecture on second-order tail initiators via explicit inverse mappings between flagpole partitions and flag types.</p>

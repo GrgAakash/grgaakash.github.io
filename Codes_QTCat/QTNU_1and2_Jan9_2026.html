@@ -57,15 +57,7 @@
                 </div>
 
                 <div class="input-group">
-                    <label for="input-type">Input Type:</label>
-                    <select id="input-type">
-                        <option value="partition">Integer Partition (comma-separated integers)</option>
-                        <option value="qdv">Quasi-Dyck Vector (comma-separated, can include negatives)</option>
-                    </select>
-                </div>
-
-                <div class="input-group">
-                    <label for="input-vector" id="input-label">Input (comma-separated):</label>
+                    <label for="input-vector" id="input-label">Integer Partition (comma-separated):</label>
                     <input type="text" id="input-vector" placeholder="5,4,4,1" value="5,4,4,1">
                     <button id="generate-sequence" class="btn btn-primary">Generate Sequence</button>
                 </div>
@@ -129,14 +121,6 @@
             <!-- Compute f(μ) Section -->
             <section class="analysis-section">
                 <h2 class="text-3d">Compute f(μ)</h2>
-                <div class="math-explanation">
-                    <p><strong>Definition 0.7:</strong> The map f acts on multiplicities:</p>
-                    <ul style="margin: 8px 0; padding-left: 20px;">
-                        <li><strong>Even multiplicity</strong> aᵉ → (a−1)ᵉ (all parts decrease by 1)</li>
-                        <li><strong>Odd multiplicity</strong> aᵉ → ((a−1)ᵉ⁻¹, a−2) (most drop by 1, one drops by 2)</li>
-                    </ul>
-                </div>
-
                 <div class="input-group">
                     <label for="f-mu-input">Partition μ (comma-separated):</label>
                     <input type="text" id="f-mu-input" placeholder="4,3,1,1,1,1,1" value="4,3,1,1,1,1,1">
@@ -183,8 +167,8 @@
                        <strong>d(λ) =</strong> <span id="lambda-distinct"></span>, 
                        <strong>ℓ(λ) =</strong> <span id="lambda-parts"></span></p>
                     <hr style="margin: 10px 0; border-color: #444;">
-                    <div id="pair-0" class="pair-result" style="margin: 15px 0; padding: 10px; background: #2a2a2a; border-radius: 8px;"></div>
-                    <div id="pair-1" class="pair-result" style="margin: 15px 0; padding: 10px; background: #2a2a2a; border-radius: 8px;"></div>
+                    <div id="pair-0" class="pair-result" style="margin: 15px 0; padding: 10px; background: #f5f5f5; border-radius: 8px; border: 1px solid #ddd;"></div>
+                    <div id="pair-1" class="pair-result" style="margin: 15px 0; padding: 10px; background: #f5f5f5; border-radius: 8px; border: 1px solid #ddd;"></div>
                 </div>
             </section>
 
@@ -236,6 +220,7 @@
                             <li><strong>Reduced Dyck Vector:</strong> Vector of minimum length in a Dyck class</li>
                             <li><strong>Key Formula:</strong> QDV_n(λ) = (0-λ_n, 1-λ_{n-1}, ..., n-1-λ_1)</li>
                         </ul>
+                        <p style="margin-top: 12px;"><a href="dyck_visualizer.html" target="_blank">Dyck Path Visualizer</a> — visualize lattice paths from Dyck vectors</p>
                     </div>
                     <div class="math-card">
                         <h3>NU₁ Operator (Successor Map)</h3>

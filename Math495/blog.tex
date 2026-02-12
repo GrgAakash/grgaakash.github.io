@@ -4,6 +4,8 @@
 \usepackage{enumerate}
 \usepackage{graphicx}
 \usepackage{multicol}
+\usepackage[autostyle, english = american]{csquotes}
+\MakeOuterQuote{"}
 \usepackage[all]{xy}
 \usepackage{tikz}
 \usetikzlibrary{snakes,patterns}
@@ -47,7 +49,7 @@ In each case, nature is quietly solving an optimization problem. Something is be
 
 \textit{Why should this be true? And more importantly: must it always be true?}\\
 
-Before answering this, let's rewind to the dawn of the $20^{th}$ century. In the International Congress of Mathematicians held at Paris in August 1900, the German Mathematician David Hilbert proposed $23$ problems, most of which would prove to be very influential in the coming century. \footnote{He actually had $24$ problems but he chose not to publish it.} 
+Before answering this, let's rewind to the dawn of the $20^{th}$ century. In the International Congress of Mathematicians held at Paris in August 1900, the German Mathematician David Hilbert proposed $23$ problems, most of which would prove to be very influential in the coming century. \footnote{He actually had a list of $24$ problems but he chose to publish only $23$.} 
 \begin{figure}[h]
     \centering
     \includegraphics[width=0.5\textwidth]{Hilbert .jpg}
@@ -56,7 +58,7 @@ Before answering this, let's rewind to the dawn of the $20^{th}$ century. In the
 
 
 
-While many of his problems arose due to the urge to understand the foundational bedrock of Mathematics like the continuum hypothesis, a few were inspired by physics. Belonging to the latter category is the topic of our blog, which is the $19^{th}$ problem. Hilbert was fascinated by the observation that physical principles, usually cast as variational problems (like the principle of least action), seemed to produce solutions of remarkable smoothness.
+While many of his problems arose due to the urge to understand the foundational bedrock of Mathematics like the continuum hypothesis, a few were inspired by physics. Belonging to the latter category is the topic of our blog, which is the $19^{th}$ problem. Hilbert was fascinated by the observation that physical principles, usually cast as variational problems (like the principle of least action), seemed to produce solutions of remarkable smoothness.\\
 
 These are but special cases of a universal variational principle. Hilbert observed that such analytic solutions arise from minimizing functional integrals of the form:
 \begin{equation}\label{eq:functional}
@@ -67,7 +69,7 @@ where the function \( F \) (often called the Lagrangian) is analytic and \textit
 \textit{The question is this: If the energy function \( F \) is analytic, does it follow that the minimizing configuration \( u \) is also analytic?}\\
 
 
-Intuitively, the answer seemed to be yes. To prove it, we translate the minimization problem into an equation. We know from single-variable calculus that if \( f(x) \) has a minimum at \( x_0 \), then \( f'(x_0) = 0 \). We apply the same logic here.
+Intuitively, the answer seemed to be yes. To prove it, we translate the minimization problem into an equation. We know from single-variable calculus that if \( f(x) \) has a minimum at \( x_0 \), then \( f'(x_0) = 0 \). We apply the same logic here.\\
 
 Suppose \( u(x) \) is the true solution. Imagine we distort this solution by adding a small "perturbation" \( \phi(x) \), scaled by a tiny number \( \epsilon \):
 \[
@@ -144,9 +146,8 @@ need the solution's gradient to be smooth; but to prove the solution is smooth,
 the classical theory demands the coefficients be smooth. This ``gap'' between
 having a bounded slope versus a continuous slope was what Morrey later called the
 ``sad state of affairs'' that hindered progress for decades.
-
-
-The solution was finally achieved by bridging this gap. Let us illustrate the strategy in 2D, using geometric intuition.
+\\
+The solution was finally achieved by bridging this gap. Let us illustrate the strategy in 2D, using geometric intuition.\\
 
 You are likely familiar with the gradient $\nabla u$ as a vector field pointing in the direction of steepest increase. But for this problem, we need a shift in perspective. Imagine mapping every point $x$ in our domain not to its height $u(x)$, but to its slope vector $\nabla u(x)$.
 This creates a ``gradient map'' from the physical domain into a ``plane of slopes.''\\
@@ -278,9 +279,7 @@ Its solutions (harmonic functions) obey the Mean Value Property and the Maximum 
 
 
 
-In simple terms, for elliptic equations, the values inside a domain are controlled by the values on the boundary (much like temperature in a room is controlled by the walls).
-
-By this principle, if \( v \) oscillates inside \( B_r \), it must oscillate at least as much on the boundary circle \( \partial B_r \). 
+In simple terms, for elliptic equations, the values inside a domain are controlled by the values on the boundary (much like temperature in a room is controlled by the walls). By this principle, if \( v \) oscillates inside \( B_r \), it must oscillate at least as much on the boundary circle \( \partial B_r \). 
 This allows us to restrict our attention to the boundary.
 
 To see if this oscillation can persist as \( r \to 0 \), we quantify its "energy cost" using a geometric estimate:
@@ -291,7 +290,7 @@ To see if this oscillation can persist as \( r \to 0 \), we quantify its "energy
 
 Suppose, for contradiction, that the oscillation stays large. Specifically, assume that on all circles \( \partial B_r \), the oscillation is bounded below by a constant \( \delta > 0 \).
 
-Summing these oscillations (integrating with respect to \( r \)), due to the term \( \ln(1/r) \) , the required energy must diverge (recall the harmonic series):
+Summing these oscillations, due to the term \( \ln(1/r) \) , the required energy must diverge (recall the harmonic series):
 \[
 \text{Energy} \sim \int \frac{1}{r} \, dr \to \infty.
 \]
@@ -305,13 +304,19 @@ This is a contradiction: \cref{eq:courant-lebesgue} requires infinite energy, bu
 
 Therefore, for sufficiently small \( r \), the gradient image \( \nabla u(B_r) \) cannot cross the strip. It must lie entirely on one side. By "chopping" with strips in various directions, we force the gradient image to localize to a single point as \( r \to 0 \). Thus, \( \nabla u \) is continuous.\\
 
+In 3D, we analogously attempt to trap the gradient using parallel planes. If the gradient persists in crossing these planes, it again implies a singularity with characteristic scale $|\nabla v| \sim \frac{\delta}{r}$. However, the geometric measure of the boundary (surface area) now scales as $r^2$.
 
+The energy integral in 3D becomes:
 
+$$\text{Energy}_{3D} = \int_{0}^{1} \left( \int_{\partial B_r} |\nabla v|^2 \, d\sigma \right) dr.$$
 
+Substituting the 3D scaling factor ($d\sigma \sim 4\pi r^2$) gives us:
 
+$$\text{Energy}_{3D} \sim \int_{0}^{1} \left( \frac{\delta}{r} \right)^2 \cdot (4\pi r^2) \, dr \sim 4\pi \delta^2 \int_{0}^{1} 1 \, dr = 4\pi \delta^2 < \infty.$$
 
+There is no contradiction. The integral converges, meaning the energy cost of a persistent singularity is finite. The gradient can effectively "afford" to keep oscillating across the planes forever without violating the global energy bounds established by the Caccioppoli inequality.\\
 
-It is worth pausing to remark that this success in 2D relies on a "happy accident of geometry" - a special feature that disappears in higher dimensions. The linearized equation implies that the gradient map
+While the ``chopping'' argument above relies on energy estimates, there is a second, completely different reason why 2D solutions are smooth. This second method relies on  on a "happy accident of geometry", a special feature that disappears in higher dimensions. The linearized equation implies that the gradient map
 \(
 \nabla u: \mathbb{R}^2 \to \mathbb{R}^2
 \)
@@ -364,11 +369,19 @@ K = \frac{|\lambda_{\max}|}{|\lambda_{\min}|}.
 \caption{Action of a linear map on the unit circle and the induced distortion.}
 \end{figure}
 
-In 2D, the ellipticity condition in \cref{eq:linearized} forces this ratio to be bounded. We know that multiplying by a complex number corresponds to a matrix that only rotates and scales (it maps circles to circles, so $K=1$). The condition we have of $K < \infty$ forces the space to stay "close" to this ideal structure. It cannot flatten the circle into a line (which would mean $K \to \infty$). This geometric "rigidity" is the safety net: it prevents the gradient from tearing or becoming discontinuous.
+You might wonder: \textit{Why is this distortion $K$ bounded?}\\
 
-This is the "accident": in 2D, the rigid structure of complex numbers prevents the gradient from tearing or becoming discontinuous. However, this is strictly a two-dimensional luxury. In 3D, there is no direct equivalent to complex numbers, and this geometric "safety net" vanishes.But while we have it, we use it. The "chopping" argument works because in 2D, a line cuts the plane in half. We can trap the oscillation. This grants us the precise rate of convergence. The scale invariance of our equation implies that if the oscillation drops by a factor on one scale, it must drop by the same factor on the next.
+In 2D, the linearized equation $\sum a_{ij}v_{ij} = 0$ acts as a tight "lock" on the eigenvalues $\mu_1, \mu_2$ of the Hessian matrix $D^2u$. Since the coefficient matrix $a_{ij}$ is positive definite, for the weighted sum of eigenvalues to be zero, $\mu_1$ and $\mu_2$ must have opposite signs. More importantly, the uniform ellipticity constants $[\lambda, \lambda^{-1}]$ force their magnitudes to be comparable:$$|\mu_1| \approx |\mu_2|.$$Because they are "locked" together, one eigenvalue cannot grow large without the other growing continuously with it. This ensures that their ratio $K = \frac{|\mu_{\text{max}}|}{|\mu_{\text{min}}|}$ stays finite. Geometrically, this means the gradient map is \textit{quasiconformal}: it transforms infinitesimal circles into ellipses of bounded eccentricity, a property known to strictly enforce continuity.\\
 
-Mathematically, we obtain a recurrence relation for the oscillation \( \omega(r) \). If we shrink the radius by \( \delta \), the oscillation drops by half:
+ In higher dimensions, this "safety net" vanishes. Let's take 3D as an example, we still have a single scalar equation $\sum a_{ij}v_{ij} = 0$, but now it must constrain three eigenvalues $\mu_1, \mu_2, \mu_3$. This single constraint is too weak to lock them together. Imagine a scenario where one eigenvalue is massive, and the other two are small and negative. The equation can still be satisfied, but the distortion ratio may blow up. This allows the map to stretch space infinitely in one direction while remaining a valid solution to the equation. Consequently, the gradient map in 3D loses the quasiconformal property, and the geometric guarantee of regularity is lost.\\
+
+
+How does preventing a circle from stretching into a thin ellipse guarantee that the solution is smooth? The link is provided by Mori's Theorem. The theorem states that any map with bounded distortion $K$ (a $K$-quasiconformal map) is automatically Hölder continuous with an exponent $\alpha$ determined by the dimension and the distortion. Specifically, for dimension $n \ge 2$:$$\alpha = K^{\frac{1}{1-n}}.$$In our specific 2D, this exponent simplifies elegantly:$$\alpha = K^{\frac{1}{1-2}} = K^{-1} = \frac{1}{K}.$$This provides a direct translation from geometry to analysis: if the distortion $K$ is finite, the Hölder exponent $\alpha$ is positive. Intuitively, this means that because the map cannot stretch space infinitely, it cannot "tear" values apart. Points that are close in the domain are forced to map to values that are close in the range.\\
+
+
+% Here is the link to Mori's theorem: https://www.ams.org/journals/tran/2011-363-11/S0002-9947-2011-05281-5/S0002-9947-2011-05281-5.pdf
+
+Mathematically, both the "chopping" argument and the "bounded distortion" argument enforce the same decay estimate. If we shrink the radius by a factor $\delta$, the oscillation drops by a fixed fraction:
 \begin{equation}\label{eq:recurrence}
 \omega(\delta r) \le \frac{1}{2} \omega(r) \implies \omega(\delta^k) \le 2^{-k} \omega(1).
 \end{equation}
@@ -378,7 +391,10 @@ This implies that the oscillation decays as a power of the radius:
 \omega(r) \le C r^\alpha.
 \end{equation}
 
-\Cref{eq:holder} guarantees that the gradient $\nabla u$ is continuous with a controlled rate of convergence (Hölder continuity). Thus, in the planar case, the specific geometry of 2D forces regularity. The wild oscillations are controlled by the very cost of their existence. While higher dimensions offer distinct (and much harder) challenges where this "happy accident" no longer applies, our excursion pauses here, having admired the clear view from the two-dimensional case.
+\Cref{eq:holder} guarantees that the gradient $\nabla u$ is continuous with a controlled rate of convergence (Hölder continuity). Thus, in the planar case, the specific geometry of 2D forces regularity. The wild oscillations are controlled by the very cost of their existence.\\
+
+
+
 
 
 

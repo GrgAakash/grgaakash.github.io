@@ -572,7 +572,7 @@
 
     <main class="container">
         <article class="article-card">
-            <p>Have you ever wondered why soap bubbles are spherical, or why soap films look like they are pulling themselves into the shape of the least possible area, or why light moving through glass of varying density bends and curves to find the fastest route, not the straightest one?</p>
+            <p>Have you ever wondered why soap bubbles are spherical, or why soap films look like they are pulling themselves into the shape of the least possible area, or why the light moving through glass of varying density bends and curves to find the fastest route, not the straightest one?</p>
 
             <figure id="fig-soapfilm">
                 <img src="SoapFilm.jpeg" alt="A soap film stretched across a wire frame, forming a smooth minimal surface" style="width: 60%; max-width: 500px;">
@@ -587,7 +587,7 @@
 
             <p>Before answering this, let's rewind to the dawn of the 20th century.</p>
 
-            <p>In the International Congress of Mathematicians held at Paris in August 1900, the German Mathematician David Hilbert proposed 23 problems, most of which would prove to be very influential in the coming century.<sup class="footnote-ref" data-footnote="1">1<span class="footnote-popover">He actually had 24 problems but he chose not to publish the last one.</span></sup></p>
+            <p>In the International Congress of Mathematicians held at Paris in August 1900, the German Mathematician David Hilbert proposed 23 problems, most of which would prove to be very influential in the coming century.<sup class="footnote-ref" data-footnote="1">1<span class="footnote-popover">He actually had a list of 24 problems but he chose to publish only 23.</span></sup></p>
 
             <figure id="fig-hilbert">
                 <img src="Hilbert .jpg" alt="David Hilbert, German mathematician" style="width: 50%; max-width: 400px;">
@@ -602,7 +602,7 @@
             J(u) = \int_{B_1} F(\nabla u) \, dx, \tag{1}
             \]</p>
 
-            <p>where \( B_1 \) denotes the unit ball (all points within distance 1 of the origin), and \( F \) (often called the Lagrangian) is analytic and <em>strictly convex</em>. In the language of linear algebra, convexity here means the Hessian matrix of \( F \) is positive definite (specifically, \( \det(D^2 F) > 0 \)).</p>
+            <p>where the function \( F \) (often called the Lagrangian) is analytic and <em>strictly convex</em>. In the language of linear algebra, convexity here means the Hessian matrix of \( F \) is positive definite (specifically, \( \det(D^2 F) > 0 \)).</p>
 
             <p><em>The question is this: If the energy function \( F \) is analytic, does it follow that the minimizing configuration \( u \) is also analytic?</em></p>
 
@@ -628,7 +628,7 @@
             <p>Calculating this (using the Chain Rule inside the integral) and integrating by parts gives the celebrated Euler-Lagrange equation:</p>
 
             <p>\[
-            \text{div}(\nabla F(\nabla u)) = 0. \tag{2}
+            \operatorname{Div}(\nabla F(\nabla u)) = 0. \tag{2}
             \]</p>
 
             <p>Now, we expand this. Applying the Chain Rule to the term \( \nabla F(\nabla u) \), we get:</p>
@@ -645,7 +645,7 @@
             \sum_{i,j=1}^n \frac{\partial}{\partial x_i} \Big( a_{ij}(x) \frac{\partial v}{\partial x_j} \Big) = 0, \quad \text{where } a_{ij}(x) = F_{ij}(\nabla u(x)). \tag{4}
             \]</p>
 
-            <p>However, the coefficients \( a_{ij}(x) = F_{ij}(\nabla u(x)) \) of the linearized <span class="eq-ref" data-eq="4">Equation (4)<span class="eq-preview">\( \sum_{i,j} \frac{\partial}{\partial x_i}\bigl(a_{ij}(x)\frac{\partial v}{\partial x_j}\bigr) = 0 \)</span></span> depend intrinsically on the unknown gradient. If we assume only that \( u \) has bounded slope (mathematically, that it is Lipschitz) so that the gradient \( \nabla u \) is bounded but not known to be continuous, then these coefficients are bounded, but they may be discontinuous.</p>
+            <p>However, the coefficients \( a_{ij}(x) = F_{ij}(\nabla u(x)) \) of the linearized <span class="eq-ref" data-eq="4">Equation (4)<span class="eq-preview">\( \sum_{i,j} \frac{\partial}{\partial x_i}\bigl(a_{ij}(x)\frac{\partial v}{\partial x_j}\bigr) = 0 \)</span></span> depend intrinsically on the unknown gradient. If we assume only that \( u \) has bounded slope so that the gradient \( \nabla u \) is bounded but not known to be continuous, then these coefficients are bounded, but they may be discontinuous.</p>
 
             <p>We are thus caught in a vicious circle: to prove the coefficients are smooth, we need the solution's gradient to be smooth; but to prove the solution is smooth, the classical theory demands the coefficients be smooth. This "gap" between having a bounded slope versus a continuous slope was what Morrey later called the "sad state of affairs" that hindered progress for decades.</p>
 
@@ -664,7 +664,7 @@
 
             <figure id="fig-gradient-map">
                 <img src="figures/fig_gradient_map.png" alt="The gradient map takes a point x in the physical domain to its slope vector in the plane of slopes" style="width: 85%; max-width: 700px;">
-                <figcaption>The Gradient Map: a location \( x \) in the physical domain (left) maps to its slope vector \( \nabla u(x) \) in the plane of slopes (right).</figcaption>
+                <figcaption><strong>The Gradient Map.</strong> This map takes a location \( x \) in the physical domain (left) and sends it to its corresponding slope vector \( \nabla u(x) \) in the plane of slopes (right). If the solution is smooth, the red "blob" of slopes will be connected. If the solution has a crease, this blob will be torn apart.</figcaption>
             </figure>
 
             <p>Imagine the image of the gradient map \( \nabla u \) as a region (a "blob") in the plane. Fix a direction \( e \) (a unit vector) and consider the strip in the gradient plane between two parallel lines perpendicular to \( e \), defined by values \( a < b \).</p>
@@ -673,24 +673,22 @@
 
             <figure id="fig-chopping">
                 <img src="figures/fig_chopping.png" alt="Chopping at the gradient image with parallel lines" style="width: 80%; max-width: 650px;">
-                <figcaption>Chopping at the gradient image with lines: the ball \( B_r \) maps to a blob \( \nabla u(B_r) \) that crosses the strip between \( p \cdot e = a \) and \( p \cdot e = b \).</figcaption>
+                <figcaption>Chopping at the gradient image with lines</figcaption>
             </figure>
 
-            <p>Here we use the Maximum Principle. The Maximum Principle is a powerful property of elliptic equations. You've seen a special case already: Laplace's equation \( \nabla^2 u = 0 \). Its solutions (harmonic functions) obey the Mean Value Property and the Maximum Principle: the maximum and minimum occur on the boundary. Our linearized <span class="eq-ref" data-eq="4">Equation (4)<span class="eq-preview">\( \sum_{i,j} \frac{\partial}{\partial x_i}\bigl(a_{ij}(x)\frac{\partial v}{\partial x_j}\bigr) = 0 \)</span></span> is a generalization of Laplace's equation with variable coefficients \( a_{ij}(x) \). The principle still holds: the oscillation of \( v \) inside a ball is controlled by its oscillation on the boundary, much like how the temperature at the center of a room is bounded by the temperatures on the walls.</p>
+            <p>Here we use the Maximum Principle. The Maximum Principle is a powerful property of elliptic equations. You've seen a special case already: Laplace's equation \( \nabla^2 u = 0 \). Its solutions (harmonic functions) obey the Mean Value Property and the Maximum Principle: the maximum and minimum occur on the boundary. Our linearized <span class="eq-ref" data-eq="4">Equation (4)<span class="eq-preview">\( \sum_{i,j} \frac{\partial}{\partial x_i}\bigl(a_{ij}(x)\frac{\partial v}{\partial x_j}\bigr) = 0 \)</span></span> is a generalization of Laplace's equation with variable coefficients \( a_{ij}(x) \). The principle still holds: the oscillation of \( v \) inside a ball is controlled by its oscillation on the boundary—like how the temperature at the center of a room is bounded by the temperatures on the walls.</p>
 
-            <p>In simple terms, for elliptic equations, the values inside a domain are controlled by the values on the boundary (much like temperature in a room is controlled by the walls).</p>
-
-            <p>By this principle, if \( v \) oscillates inside \( B_r \), it must oscillate at least as much on the boundary circle \( \partial B_r \). This allows us to restrict our attention to the boundary.</p>
+            <p>In simple terms, for elliptic equations, the values inside a domain are controlled by the values on the boundary (much like temperature in a room is controlled by the walls). By this principle, if \( v \) oscillates inside \( B_r \), it must oscillate at least as much on the boundary circle \( \partial B_r \). This allows us to restrict our attention to the boundary.</p>
 
             <p>To see if this oscillation can persist as \( r \to 0 \), we quantify its "energy cost" using a geometric estimate:</p>
 
             <p>\[
-            (\text{osc}_{\partial B_r} v)^2 \le \frac{\pi}{\ln(1/2r)} \int_{B_{1/2}} |\nabla v|^2 \, dx. \tag{5}
+            (\operatorname{osc}_{\partial B_r} v)^2 \le \frac{\pi}{\ln(1/2r)} \int_{B_{1/2}} |\nabla v|^2 \, dx. \tag{5}
             \]</p>
 
             <p>Suppose, for contradiction, that the oscillation stays large. Specifically, assume that on all circles \( \partial B_r \), the oscillation is bounded below by a constant \( \delta > 0 \).</p>
 
-            <p>Rearranging this estimate and summing over shrinking radii, we find the energy must grow like \( \ln(1/r) \), which diverges as \( r \to 0 \) (just as \( \sum 1/n \) diverges):</p>
+            <p>Summing these oscillations, due to the term \( \ln(1/r) \), the required energy must diverge (recall the harmonic series):</p>
 
             <p>\[
             \text{Energy} \sim \int \frac{1}{r} \, dr \to \infty.
@@ -702,11 +700,27 @@
             \int_{B_{1/2}} |\nabla v|^2 \, dx \le C \int_{B_1} v^2 \, dx < \infty. \tag{6}
             \]</p>
 
-            <p>This is a contradiction: <span class="eq-ref" data-eq="5">Equation (5)<span class="eq-preview">\( (\text{osc}_{\partial B_r} v)^2 \le \frac{\pi}{\ln(1/2r)} \int_{B_{1/2}} |\nabla v|^2 \, dx \)</span></span> requires infinite energy, but <span class="eq-ref" data-eq="6">Equation (6)<span class="eq-preview">\( \int_{B_{1/2}} |\nabla v|^2 \, dx \le C \int_{B_1} v^2 \, dx < \infty \)</span></span> bounds it finitely.</p>
+            <p>This is a contradiction: <span class="eq-ref" data-eq="5">Equation (5)<span class="eq-preview">\( (\operatorname{osc}_{\partial B_r} v)^2 \le \frac{\pi}{\ln(1/2r)} \int_{B_{1/2}} |\nabla v|^2 \, dx \)</span></span> requires infinite energy, but <span class="eq-ref" data-eq="6">Equation (6)<span class="eq-preview">\( \int_{B_{1/2}} |\nabla v|^2 \, dx \le C \int_{B_1} v^2 \, dx < \infty \)</span></span> bounds it finitely.</p>
 
             <p>Therefore, for sufficiently small \( r \), the gradient image \( \nabla u(B_r) \) cannot cross the strip. It must lie entirely on one side. By "chopping" with strips in various directions, we force the gradient image to localize to a single point as \( r \to 0 \). Thus, \( \nabla u \) is continuous.</p>
 
-            <p>It is worth pausing to remark that this success in 2D relies on a "happy accident of geometry," a special feature that disappears in higher dimensions. The linearized equation implies that the gradient map \( \nabla u: \mathbb{R}^2 \to \mathbb{R}^2 \) behaves like a linear transformation with bounded distortion. Recall from linear algebra that a matrix \( A \) maps the unit circle to an ellipse. The "distortion" is determined by the condition number (the ratio of eigenvalues):</p>
+            <p>In 3D, we analogously attempt to trap the gradient using parallel planes. If the gradient persists in crossing these planes, it again implies a singularity with characteristic scale \( |\nabla v| \sim \frac{\delta}{r} \). However, the geometric measure of the boundary (surface area) now scales as \( r^2 \).</p>
+
+            <p>The energy integral in 3D becomes:</p>
+
+            <p>\[
+            \text{Energy}_{3D} = \int_{0}^{1} \left( \int_{\partial B_r} |\nabla v|^2 \, d\sigma \right) dr.
+            \]</p>
+
+            <p>Substituting the 3D scaling factor (\( d\sigma \sim 4\pi r^2 \)) gives us:</p>
+
+            <p>\[
+            \text{Energy}_{3D} \sim \int_{0}^{1} \left( \frac{\delta}{r} \right)^2 \cdot (4\pi r^2) \, dr \sim 4\pi \delta^2 \int_{0}^{1} 1 \, dr = 4\pi \delta^2 < \infty.
+            \]</p>
+
+            <p>There is no contradiction. The integral converges, meaning the energy cost of a persistent singularity is finite. The gradient can effectively "afford" to keep oscillating across the planes forever without violating the global energy bounds established by the Caccioppoli inequality.</p>
+
+            <p>While the "chopping" argument above relies on energy estimates, there is a second, completely different reason why 2D solutions are smooth. This second method relies on a "happy accident of geometry," a special feature that disappears in higher dimensions. The linearized equation implies that the gradient map \( \nabla u: \mathbb{R}^2 \to \mathbb{R}^2 \) behaves like a linear transformation with bounded distortion. Recall from linear algebra that a matrix \( A \) maps the unit circle to an ellipse. The "distortion" is determined by the condition number (the ratio of eigenvalues):</p>
 
             <p>\[
             K = \frac{|\lambda_{\max}|}{|\lambda_{\min}|}. \tag{7}
@@ -714,16 +728,18 @@
 
             <figure id="fig-distortion">
                 <img src="figures/fig_distortion.png" alt="A linear map transforms the unit circle into an ellipse, with distortion K" style="width: 80%; max-width: 650px;">
-                <figcaption>A linear map \( A \) transforms the unit circle into an ellipse. The distortion \( K \) measures how "stretched" the ellipse is.</figcaption>
+                <figcaption>Action of a linear map on the unit circle and the induced distortion.</figcaption>
             </figure>
 
-            <p>In 2D, the ellipticity condition in <span class="eq-ref" data-eq="4">Equation (4)<span class="eq-preview">\( \sum_{i,j} \frac{\partial}{\partial x_i}\bigl(a_{ij}(x)\frac{\partial v}{\partial x_j}\bigr) = 0 \)</span></span> forces this ratio to be bounded. We know that multiplying by a complex number corresponds to a matrix that only rotates and scales (it maps circles to circles, so \( K = 1 \)). The condition we have of \( K < \infty \) forces the space to stay "close" to this ideal structure. It cannot flatten the circle into a line (which would mean \( K \to \infty \)). This geometric "rigidity" is the safety net: it prevents the gradient from tearing or becoming discontinuous.</p>
+            <p>You might wonder: <em>Why is this distortion \( K \) bounded?</em></p>
 
-            <p>This is the "accident": in 2D, the rigid structure of complex numbers prevents the gradient from tearing or becoming discontinuous. However, this is strictly a two-dimensional luxury. In 3D, there is no direct equivalent to complex numbers, and this geometric "safety net" vanishes.</p>
+            <p>In 2D, the linearized equation \( \sum a_{ij}v_{ij} = 0 \) acts as a tight "lock" on the eigenvalues \( \mu_1, \mu_2 \) of the Hessian matrix \( D^2u \). Since the coefficient matrix \( a_{ij} \) is positive definite, for the weighted sum of eigenvalues to be zero, \( \mu_1 \) and \( \mu_2 \) must have opposite signs. More importantly, the uniform ellipticity constants force their magnitudes to be comparable: \( |\mu_1| \approx |\mu_2| \). Because they are "locked" together, one eigenvalue cannot grow large without the other growing continuously with it. This ensures that their ratio \( K = \frac{|\mu_{\text{max}}|}{|\mu_{\text{min}}|} \) stays finite. Geometrically, this means the gradient map is <em>quasiconformal</em>: it transforms infinitesimal circles into ellipses of bounded eccentricity, a property known to strictly enforce continuity.</p>
 
-            <p>But while we have it, we use it. The "chopping" argument works because in 2D, a line cuts the plane in half. We can trap the oscillation. This grants us the precise rate of convergence. The scale invariance of our equation implies that if the oscillation drops by a factor on one scale, it must drop by the same factor on the next.</p>
+            <p>In higher dimensions, this "safety net" vanishes. In 3D, we still have a single scalar equation \( \sum a_{ij}v_{ij} = 0 \), but now it must constrain three eigenvalues \( \mu_1, \mu_2, \mu_3 \). This single constraint is too weak to lock them together. Imagine a scenario where one eigenvalue is massive, and the other two are small and negative. The equation can still be satisfied, but the distortion ratio may blow up. This allows the map to stretch space infinitely in one direction while remaining a valid solution to the equation. Consequently, the gradient map in 3D loses the quasiconformal property, and the geometric guarantee of regularity is lost.</p>
 
-            <p>Mathematically, we obtain a recurrence relation for the oscillation \( \omega(r) \).<sup class="footnote-ref" data-footnote="2">2<span class="footnote-popover">We write \( \omega(r) := \text{osc}_{\partial B_r} v \) for the oscillation.</span></sup> If we shrink the radius by \( \delta \), the oscillation drops by half:</p>
+            <p>How does preventing a circle from stretching into a thin ellipse guarantee that the solution is smooth? The link is provided by Mori's Theorem. The theorem states that any map with bounded distortion \( K \) (a \( K \)-quasiconformal map) is automatically Hölder continuous with an exponent \( \alpha \) determined by the dimension and the distortion. Specifically, for dimension \( n \ge 2 \): \( \alpha = K^{\frac{1}{1-n}} \). In our specific 2D case, this exponent simplifies elegantly: \( \alpha = K^{\frac{1}{1-2}} = K^{-1} = \frac{1}{K} \). This provides a direct translation from geometry to analysis: if the distortion \( K \) is finite, the Hölder exponent \( \alpha \) is positive. Intuitively, this means that because the map cannot stretch space infinitely, it cannot "tear" values apart. Points that are close in the domain are forced to map to values that are close in the range.</p>
+
+            <p>Mathematically, both the "chopping" argument and the "bounded distortion" argument enforce the same decay estimate. If we shrink the radius by a factor \( \delta \), the oscillation drops by a fixed fraction:<sup class="footnote-ref" data-footnote="2">2<span class="footnote-popover">\( \omega(r) := \operatorname{osc}_{\partial B_r} v \)</span></sup></p>
 
             <p>\[
             \omega(\delta r) \le \frac{1}{2} \omega(r) \implies \omega(\delta^k) \le 2^{-k} \omega(1). \tag{8}
@@ -735,7 +751,7 @@
             \omega(r) \le C r^\alpha. \tag{9}
             \]</p>
 
-            <p><span class="eq-ref" data-eq="9">Equation (9)<span class="eq-preview">\( \omega(r) \le C r^\alpha \)</span></span> guarantees that the gradient \( \nabla u \) is continuous with a controlled rate of convergence (Hölder continuity). Thus, in the planar case, the specific geometry of 2D forces regularity. The wild oscillations are controlled by the very cost of their existence. While higher dimensions offer distinct (and much harder) challenges where this "happy accident" no longer applies, our excursion pauses here, having admired the clear view from the two-dimensional case.</p>
+            <p><span class="eq-ref" data-eq="9">Equation (9)<span class="eq-preview">\( \omega(r) \le C r^\alpha \)</span></span> guarantees that the gradient \( \nabla u \) is continuous with a controlled rate of convergence (Hölder continuity). Thus, in the planar case, the specific geometry of 2D forces regularity. The wild oscillations are controlled by the very cost of their existence.</p>
 
         </article>
     </main>

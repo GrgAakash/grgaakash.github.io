@@ -550,7 +550,7 @@ function ND(partition) {
             if (calculateDeficit(pNext) === defc0) return pNext;
         }
         
-        const resultQDV = ND2(qdv);
+        const resultQDV = ND2(qdv, true);  // suppress alert when trying as part of Extended ND
         if (resultQDV) {
             const pNext = QDVToPartition(resultQDV);
             if (calculateDeficit(pNext) === defc0) return pNext;
@@ -697,198 +697,14 @@ function isNU2RuleAPattern(qdv) {
 function generateNuSequence() {
     const input = document.getElementById('input-vector').value;
     const method = document.querySelector('input[name="method"]:checked').value;
-    const inputType = document.getElementById('input-type').value;
     const maxIterations = parseInt(document.getElementById('max-iterations').value);
     
     try {
-        let sequence, deficits, dinvs, types, iterations, terminationReason;
+        const partition = parsePartitionInput(input);
+        const result = generateSequence(partition, method, maxIterations);
+        const { sequence, deficits, dinvs, types, iterations, terminationReason } = result;
         
-        if (inputType === 'qdv') {
-            // Handle QDV input
-            const qdv = parseQDVInput(input);
-            const partition = QDVToPartition(qdv);
-            // Pre-validate rule templates for NU₂/ND₂ to block run if not applicable
-            if (method === 'NU2') {
-                const okA = matchesNU2RuleA(qdv);
-                const okB = matchesNU2RuleB(qdv);
-                if (!okA && !okB) {
-                    alert('NU₂ is undefined for this input: it matches neither Rule (a) nor Rule (b) template.');
-                    return;
-                }
-            }
-            if (method === 'ND2') {
-                const okA = matchesND2RuleA(qdv);
-                const okB = matchesND2RuleB(qdv);
-                if (!okA && !okB) {
-                    alert('ND₂ is undefined for this input: it matches neither inverse Rule (a) nor inverse Rule (b) template.');
-                    return;
-                }
-            }
-            
-            // For QDV input, we need special handling for NU₂ and ND₂
-            if (method === 'NU2') {
-                // Direct QDV to QDV transformation
-                const resultQDV = NU2(qdv);
-                if (resultQDV) {
-                    const resultPartition = QDVToPartition(resultQDV);
-                    sequence = [partition, resultPartition];
-                    deficits = [calculateDeficit(partition), calculateDeficit(resultPartition)];
-                    dinvs = [calculateDinv(partition), calculateDinv(resultPartition)];
-                    types = [getPartitionType(partition), getPartitionType(resultPartition)];
-                    iterations = 1;
-                    terminationReason = 'NU₂ transformation completed';
-                    
-                    // Store the actual QDVs used for display
-                    window.lastQDVSequence = [qdv, resultQDV];
-                } else {
-                    sequence = [partition];
-                    deficits = [calculateDeficit(partition)];
-                    dinvs = [calculateDinv(partition)];
-                    types = [getPartitionType(partition)];
-                    iterations = 0;
-                    terminationReason = 'NU₂ not applicable to this QDV pattern';
-                    
-                    // Store the original QDV for display
-                    window.lastQDVSequence = [qdv];
-                }
-            } else if (method === 'ND2') {
-                // Direct QDV to QDV transformation for ND₂
-                const resultQDV = ND2(qdv);
-                if (resultQDV) {
-                    const resultPartition = QDVToPartition(resultQDV);
-                    sequence = [partition, resultPartition];
-                    deficits = [calculateDeficit(partition), calculateDeficit(resultPartition)];
-                    dinvs = [calculateDinv(partition), calculateDinv(resultPartition)];
-                    types = [getPartitionType(partition), getPartitionType(resultPartition)];
-                    iterations = 1;
-                    terminationReason = 'ND₂ transformation completed';
-                    window.lastQDVSequence = [qdv, resultQDV];
-                } else {
-                    sequence = [partition];
-                    deficits = [calculateDeficit(partition)];
-                    dinvs = [calculateDinv(partition)];
-                    types = [getPartitionType(partition)];
-                    iterations = 0;
-                    terminationReason = 'ND₂ not applicable to this QDV pattern';
-                    window.lastQDVSequence = [qdv];
-                }
-            } else if (method === 'ND1') {
-                // QDV input: apply ND₁ vector rule iteratively until blocked
-                const qList = [qdv];
-                let cur = qdv;
-                while (true) {
-                    const next = ND1_QDV(cur);
-                    if (!next) break;
-                    qList.push(next);
-                    cur = next;
-                }
-                const parts = qList.map(QDVToPartition);
-                sequence = parts;
-                deficits = parts.map(p => calculateDeficit(p));
-                dinvs = parts.map(p => calculateDinv(p));
-                types = parts.map(p => getPartitionType(p));
-                iterations = Math.max(0, parts.length - 1);
-                terminationReason = 'ND₁ (vector) completed';
-                window.lastQDVSequence = qList;
-            } else if (method === 'NU') {
-                // Unified NU: try NU₂ on QDV first; if not applicable, fall back to NU₁ on partition
-                const resultQDV = NU2(qdv, true);
-                if (resultQDV) {
-                    const resultPartition = QDVToPartition(resultQDV);
-                    sequence = [partition, resultPartition];
-                    deficits = [calculateDeficit(partition), calculateDeficit(resultPartition)];
-                    dinvs = [calculateDinv(partition), calculateDinv(resultPartition)];
-                    types = [getPartitionType(partition), getPartitionType(resultPartition)];
-                    iterations = 1;
-                    terminationReason = 'Unified NU: NU₂ applied';
-                    window.lastQDVSequence = [qdv, resultQDV];
-                } else {
-                    const nu1Result = NU1(partition);
-                    if (nu1Result) {
-                        sequence = [partition, nu1Result];
-                        deficits = [calculateDeficit(partition), calculateDeficit(nu1Result)];
-                        dinvs = [calculateDinv(partition), calculateDinv(nu1Result)];
-                        types = [getPartitionType(partition), getPartitionType(nu1Result)];
-                        iterations = 1;
-                        terminationReason = 'Unified NU: NU₁ applied';
-                        window.lastQDVSequence = [qdv, partitionToQDV(nu1Result, nu1Result[0] + nu1Result.length)];
-                    } else {
-                        sequence = [partition];
-                        deficits = [calculateDeficit(partition)];
-                        dinvs = [calculateDinv(partition)];
-                        types = [getPartitionType(partition)];
-                        iterations = 0;
-                        terminationReason = 'Unified NU not applicable to this input';
-                        window.lastQDVSequence = [qdv];
-                    }
-                }
-            } else if (method === 'ND') {
-                // Unified ND: try ND₁ on QDV first; if not applicable, try ND₂; then fall back to ND₁ on partition
-                const nd1Q = ND1_QDV(qdv);
-                if (nd1Q) {
-                    const resultPartition = QDVToPartition(nd1Q);
-                    sequence = [partition, resultPartition];
-                    deficits = [calculateDeficit(partition), calculateDeficit(resultPartition)];
-                    dinvs = [calculateDinv(partition), calculateDinv(resultPartition)];
-                    types = [getPartitionType(partition), getPartitionType(resultPartition)];
-                    iterations = 1;
-                    terminationReason = 'Unified ND: ND₁ applied (vector rule)';
-                    window.lastQDVSequence = [qdv, nd1Q];
-                } else {
-                    const resultQDV = ND2(qdv, true);
-                    if (resultQDV) {
-                        const resultPartition = QDVToPartition(resultQDV);
-                        sequence = [partition, resultPartition];
-                        deficits = [calculateDeficit(partition), calculateDeficit(resultPartition)];
-                        dinvs = [calculateDinv(partition), calculateDinv(resultPartition)];
-                        types = [getPartitionType(partition), getPartitionType(resultPartition)];
-                        iterations = 1;
-                        terminationReason = 'Unified ND: ND₂ applied';
-                        window.lastQDVSequence = [qdv, resultQDV];
-                    } else {
-                        const nd1Result = ND1(partition);
-                        if (nd1Result) {
-                            sequence = [partition, nd1Result];
-                            deficits = [calculateDeficit(partition), calculateDeficit(nd1Result)];
-                            dinvs = [calculateDinv(partition), calculateDinv(nd1Result)];
-                            types = [getPartitionType(partition), getPartitionType(nd1Result)];
-                            iterations = 1;
-                            terminationReason = 'Unified ND: ND₁ applied (partition rule)';
-                            window.lastQDVSequence = [qdv, partitionToQDV(nd1Result, nd1Result[0] + nd1Result.length)];
-                        } else {
-                            sequence = [partition];
-                            deficits = [calculateDeficit(partition)];
-                            dinvs = [calculateDinv(partition)];
-                            types = [getPartitionType(partition)];
-                            iterations = 0;
-                            terminationReason = 'Unified ND not applicable to this input';
-                            window.lastQDVSequence = [qdv];
-                        }
-                    }
-                }
-            } else {
-                // Convert QDV to partition and use standard sequence generation
-                const result = generateSequence(partition, method, maxIterations);
-                sequence = result.sequence;
-                deficits = result.deficits;
-                dinvs = result.dinvs;
-                types = result.types;
-                iterations = result.iterations;
-                terminationReason = result.terminationReason;
-            }
-        } else {
-            // Handle partition input (existing logic)
-            const partition = parsePartitionInput(input);
-            const result = generateSequence(partition, method, maxIterations);
-            sequence = result.sequence;
-            deficits = result.deficits;
-            dinvs = result.dinvs;
-            types = result.types;
-            iterations = result.iterations;
-            terminationReason = result.terminationReason;
-        }
-        
-        displayNuResults(sequence, deficits, dinvs, types, method, iterations, sequence[0], terminationReason, inputType);
+        displayNuResults(sequence, deficits, dinvs, types, method, iterations, sequence[0], terminationReason, 'partition');
         
     } catch (error) {
         showError(error.message);
@@ -1255,26 +1071,9 @@ function verifySMALLCondition() {
     }
 }
 
-function updateInputLabel() {
-    const inputType = document.getElementById('input-type').value;
-    const label = document.getElementById('input-label');
-    const input = document.getElementById('input-vector');
-    
-    if (inputType === 'qdv') {
-        label.textContent = 'Quasi-Dyck Vector (comma-separated, can include negatives):';
-        input.placeholder = '0,1,2,2,A,-1,-1';
-        input.value = '0,1,2,2,2,-1,-1';
-    } else {
-        label.textContent = 'Partition (comma-separated integers):';
-        input.placeholder = '5,4,4,1';
-        input.value = '5,4,4,1';
-    }
-}
-
 document.addEventListener('DOMContentLoaded', function() {
     document.getElementById('generate-sequence').addEventListener('click', generateNuSequence);
     document.getElementById('verify-small').addEventListener('click', verifySMALLCondition);
-    document.getElementById('input-type').addEventListener('change', updateInputLabel);
     
     document.getElementById('input-vector').addEventListener('keypress', function(e) {
         if (e.key === 'Enter') {
@@ -1282,7 +1081,6 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
     
-    updateInputLabel();
     generateNuSequence();
 });
 

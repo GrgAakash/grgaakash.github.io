@@ -108,7 +108,7 @@ title: Projects
                         <div id="qtcatDetails" class="collapse">
                             <p class="text-muted">2025</p>
                             <p>An advanced interactive tool for exploring Q,T-Catalan chain decompositions through NU₁, NU₂, ND₁, and ND₂ maps, including NU₁-tails, NU₂-bridging, and global chain construction.</p>
-                            <p><a href="Codes_QTCat/QTNU_1and2_Jan9_2026.html" target="_blank" class="btn btn-primary">Explore Q,T-Catalan Chains</a></p>
+                            <p><a href="Codes_QTCat/QTNU_1and2_Jan9_2026.html" target="_blank" class="btn btn-primary">Explore Q,T-Catalan Chains</a> &nbsp; <a href="Codes_QTCat/dyck_visualizer.html" target="_blank" class="btn btn-primary">Dyck Path Visualizer</a></p>
                         </div>
                     </div>
 

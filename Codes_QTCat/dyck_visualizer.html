@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dyck Path Visualizer</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        /* Dyck visualizer specific overrides */
+        .dyck-input-row {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            margin-bottom: 16px;
+            flex-wrap: wrap;
+        }
+        .dyck-input-row input[type=text] {
+            flex: 1;
+            min-width: 200px;
+        }
+        .dyck-error { color: #c62828; font-size: 0.95em; margin-bottom: 10px; }
+        .dyck-stats {
+            display: flex;
+            gap: 24px;
+            margin: 12px 0 18px;
+            font-size: 0.95em;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        .dyck-stats span { color: #555; }
+        .dyck-stats strong { color: #0d0d0d; }
+        .dyck-stat-val { color: #D97706 !important; font-weight: bold; }
+        #canvas-wrap {
+            background: #ffffff;
+            border: 2px solid #0d0d0d;
+            box-shadow: 2px 2px 0px #0d0d0d;
+            padding: 20px;
+            display: inline-block;
+            margin: 20px 0;
+        }
+        canvas { display: block; }
+        .dyck-legend {
+            display: flex;
+            gap: 18px;
+            margin-top: 14px;
+            font-size: 0.85em;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        .dyck-legend-item { display: flex; align-items: center; gap: 5px; }
+        .dyck-legend-swatch {
+            width: 16px;
+            height: 16px;
+            border-radius: 0;
+            border: 2px solid #0d0d0d;
+        }
+        .dyck-examples {
+            margin-top: 20px;
+            font-size: 0.9em;
+            color: #555;
+            text-align: center;
+            line-height: 1.7;
+        }
+        .dyck-examples a {
+            color: #D97706;
+            cursor: pointer;
+            text-decoration: underline;
+        }
+        .dyck-examples a:hover { color: #0d0d0d; }
+        .tikz-section {
+            margin-top: 20px;
+            width: 100%;
+            max-width: 700px;
+        }
+        .tikz-section .btn { margin-right: 10px; margin-bottom: 10px; }
+        .copied-msg {
+            color: #2e7d32;
+            font-size: 0.85em;
+            margin-left: 10px;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        .copied-msg.show { opacity: 1; }
+        #tikz-output {
+            display: none;
+            background: #ffffff;
+            border: 2px solid #0d0d0d;
+            padding: 14px;
+            margin-top: 12px;
+            text-align: left;
+            font-family: 'Courier New', monospace;
+            font-size: 0.8em;
+            color: #0d0d0d;
+            white-space: pre-wrap;
+            word-break: break-all;
+            max-height: 400px;
+            overflow-y: auto;
+            line-height: 1.5;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1 class="text-3d-large">Dyck Path Visualizer</h1>
+            <p class="subtitle">Enter a Dyck vector (area vector) to visualize the corresponding lattice path</p>
+        </header>
+
+        <main>
+            <section>
+                <h2 class="text-3d">Convert: Dyck Vector ↔ Partition</h2>
+                <div class="input-group">
+                    <label>Dyck vector → Partition</label>
+                    <div class="dyck-input-row">
+                        <input type="text" id="conv-dv-input" placeholder="e.g. 0,1,2,2,0,1,1" value="0,1,2,2,0,1,1">
+                        <button class="btn" onclick="dvToPartition()">→ Partition</button>
+                        <span id="conv-partition-out" style="margin-left: 10px; font-weight: bold;"></span>
+                    </div>
+                </div>
+                <div class="input-group">
+                    <label>Partition → Dyck vector</label>
+                    <div class="dyck-input-row">
+                        <input type="text" id="conv-part-input" placeholder="e.g. 5,4,4,1" value="5,4,4,1">
+                        <button class="btn" onclick="partitionToDv()">→ Dyck</button>
+                        <span id="conv-dv-out" style="margin-left: 10px; font-weight: bold; font-family: monospace;"></span>
+                        <button class="btn btn-secondary" onclick="useDvInVisualize()" style="margin-left: 8px;">Use in Visualize</button>
+                    </div>
+                </div>
+            </section>
+
+            <section>
+                <h2 class="text-3d">Visualize</h2>
+                <div class="input-group">
+                    <label for="dv-input">Dyck vector:</label>
+                    <div class="dyck-input-row">
+                        <input type="text" id="dv-input" value="0,1,2,2,0,1,1"
+                               placeholder="e.g. 0,1,2,2,0,1,1">
+                        <button class="btn" onclick="draw()">Draw</button>
+                    </div>
+                </div>
+                <div class="dyck-error" id="error"></div>
+
+                <div class="dyck-stats" id="stats"></div>
+
+                <div id="canvas-wrap">
+                    <canvas id="grid" width="100" height="100"></canvas>
+                </div>
+
+                <div class="dyck-legend">
+                    <div class="dyck-legend-item"><div class="dyck-legend-swatch" style="background:#000; border-color:#000"></div> Dyck path</div>
+                </div>
+
+                <div class="dyck-examples">
+                    Try:
+                    <a onclick="setAndDraw('0,1,2,2,0,1,1')">0,1,2,2,0,1,1</a> (λ=⟨5,4,4,1⟩) &nbsp;|&nbsp;
+                    <a onclick="setAndDraw('0,0,0,0')">0,0,0,0</a> (minimal) &nbsp;|&nbsp;
+                    <a onclick="setAndDraw('0,1,2,3')">0,1,2,3</a> (maximal) &nbsp;|&nbsp;
+                    <a onclick="setAndDraw('0,1,0,1,0')">0,1,0,1,0</a> &nbsp;|&nbsp;
+                    <a onclick="setAndDraw('0,1,2,1,2,1')">0,1,2,1,2,1</a>
+                </div>
+
+                <div class="tikz-section">
+                    <button class="btn btn-secondary" onclick="showTikz()">Extract TikZ Code</button>
+                    <button class="btn" onclick="copyTikz()">Copy to Clipboard</button>
+                    <span class="copied-msg" id="copied-msg">Copied!</span>
+                    <div id="tikz-output"></div>
+                </div>
+            </section>
+        </main>
+
+        <footer>
+            <p>&copy; q,t-Catalan Chain Decompositions - Dyck Path Visualizer</p>
+        </footer>
+    </div>
+
+    <script>
+// Convert Dyck vector to partition
+function dvToPartition() {
+  const raw = document.getElementById('conv-dv-input').value.trim();
+  const dv = parse(raw);
+  const err = validate(dv);
+  const out = document.getElementById('conv-partition-out');
+  if (err) { out.textContent = ''; out.style.color = '#c62828'; out.textContent = 'Error: ' + err; return; }
+  const n = dv.length;
+  const parts = [];
+  for (let i = 1; i <= n; i++) parts.push((i - 1) - dv[i - 1]);
+  const partition = parts.slice().reverse().filter(p => p > 0);
+  const partStr = partition.length ? partition.join(', ') : '0';
+  out.style.color = '#0d0d0d';
+  out.textContent = '⟨' + partStr + '⟩';
+}
+
+// Convert partition to Dyck vector
+function partitionToDv() {
+  const raw = document.getElementById('conv-part-input').value.trim();
+  if (!raw) { document.getElementById('conv-dv-out').textContent = ''; return; }
+  const parts = raw.split(',').map(x => parseInt(x.trim(), 10)).filter(x => !isNaN(x)).sort((a, b) => b - a);
+  if (parts.length === 0 || parts.some(p => p < 1)) {
+    document.getElementById('conv-dv-out').textContent = 'Error: use positive integers';
+    document.getElementById('conv-dv-out').style.color = '#c62828';
+    return;
+  }
+  let n = 0;
+  for (let j = 0; j < parts.length; j++) n = Math.max(n, parts[j] + (j + 1));
+  if (n <= 0) n = 1;
+  const qdv = [];
+  for (let i = 1; i <= n; i++) {
+    const idx = n - i;
+    const lam = (idx >= 0 && idx < parts.length) ? parts[idx] : 0;
+    qdv.push((i - 1) - lam);
+  }
+  const out = document.getElementById('conv-dv-out');
+  out.style.color = '#0d0d0d';
+  out.textContent = '[' + qdv.join(', ') + ']';
+  out._lastDv = qdv;
+}
+
+function useDvInVisualize() {
+  const outEl = document.getElementById('conv-dv-out');
+  if (outEl._lastDv) {
+    document.getElementById('dv-input').value = outEl._lastDv.join(', ');
+    draw();
+  } else {
+    partitionToDv();
+    setTimeout(function() {
+      if (outEl._lastDv) {
+        document.getElementById('dv-input').value = outEl._lastDv.join(', ');
+        draw();
+      }
+    }, 10);
+  }
+}
+
+function setAndDraw(v) {
+  document.getElementById('dv-input').value = v;
+  draw();
+}
+
+function parse(s) {
+  return s.split(',').map(x => parseInt(x.trim(), 10));
+}
+
+function validate(dv) {
+  if (!dv.length) return 'Empty vector';
+  if (dv.some(isNaN)) return 'Non-numeric entry';
+  if (dv[0] !== 0) return 'Must start with 0';
+  for (let i = 0; i < dv.length - 1; i++) {
+    if (dv[i+1] > dv[i] + 1)
+      return `v[${i+2}]=${dv[i+1]} > v[${i+1}]+1=${dv[i]+1}`;
+  }
+  if (dv.some(v => v < 0)) return 'Negative entries: this is a QDV, not a Dyck vector';
+  return null;
+}
+
+function computeDinv(dv) {
+  const n = dv.length;
+  let count = 0;
+  for (let j = 0; j < n; j++) {
+    for (let i = -n; i < j; i++) {
+      const vi = i >= 0 ? dv[i] : i;
+      const diff = vi - dv[j];
+      if (diff === 0 || diff === 1) count++;
+    }
+  }
+  return count;
+}
+
+function draw() {
+  const errEl = document.getElementById('error');
+  const statsEl = document.getElementById('stats');
+  errEl.textContent = '';
+  statsEl.innerHTML = '';
+
+  const raw = document.getElementById('dv-input').value.trim();
+  const dv = parse(raw);
+  const err = validate(dv);
+  if (err) { errEl.textContent = err; return; }
+
+  const n = dv.length;
+
+  // Recover partition
+  const parts = [];
+  for (let i = 1; i <= n; i++) parts.push((i - 1) - dv[i - 1]);
+  const partition = parts.slice().reverse().filter(p => p > 0);
+
+  const area = dv.reduce((a, b) => a + b, 0);
+  const dinv = computeDinv(dv);
+  const deficit = n*(n-1)/2 - area - dinv;
+
+  const partStr = partition.length ? partition.join(', ') : '0';
+  statsEl.innerHTML =
+    `<div><span>n = </span><strong class="dyck-stat-val">${n}</strong></div>
+     <div><span>λ = ⟨</span><strong class="dyck-stat-val">${partStr}</strong><span>⟩</span></div>
+     <div><span>area = </span><strong class="dyck-stat-val">${area}</strong></div>
+     <div><span>dinv = </span><strong class="dyck-stat-val">${dinv}</strong></div>
+     <div><span>deficit = </span><strong class="dyck-stat-val">${deficit}</strong></div>`;
+
+  // Canvas setup
+  const cell = Math.max(32, Math.min(64, 400 / n));
+  const margin = { left: 60, top: 20, right: 20, bottom: 30 };
+  const W = margin.left + n * cell + margin.right;
+  const H = margin.top + n * cell + margin.bottom;
+  const canvas = document.getElementById('grid');
+  const dpr = window.devicePixelRatio || 1;
+  canvas.width = W * dpr;
+  canvas.height = H * dpr;
+  canvas.style.width = W + 'px';
+  canvas.style.height = H + 'px';
+  const ctx = canvas.getContext('2d');
+  ctx.scale(dpr, dpr);
+
+  // Helpers
+  function cx(col) { return margin.left + col * cell; }
+  function cy(row) { return margin.top + (n - row) * cell; }
+
+  // Clear - white background
+  ctx.fillStyle = '#ffffff';
+  ctx.fillRect(0, 0, W, H);
+
+  // Fill only area cells (between path and diagonal) — light blue/lavender
+  for (let i = 1; i <= n; i++) {
+    const w = (i - 1) - dv[i - 1];
+    for (let c = Math.max(0, w); c < i - 1; c++) {
+      ctx.fillStyle = '#b8c5e0';
+      ctx.fillRect(cx(c) + 1, cy(i) + 1, cell - 2, cell - 2);
+    }
+  }
+
+  // Grid lines
+  ctx.strokeStyle = '#ccc';
+  ctx.lineWidth = 0.5;
+  for (let i = 0; i <= n; i++) {
+    ctx.beginPath();
+    ctx.moveTo(cx(0), cy(i)); ctx.lineTo(cx(n), cy(i)); ctx.stroke();
+    ctx.beginPath();
+    ctx.moveTo(cx(i), cy(0)); ctx.lineTo(cx(i), cy(n)); ctx.stroke();
+  }
+
+  // Build path points
+  const pathPts = [[0, 0]];
+  for (let i = 1; i <= n; i++) {
+    const xi = (i - 1) - dv[i - 1];
+    const last = pathPts[pathPts.length - 1];
+    if (last[0] < xi) pathPts.push([xi, i - 1]);
+    pathPts.push([xi, i]);
+  }
+  if (pathPts[pathPts.length - 1][0] < n) pathPts.push([n, n]);
+
+  // Draw Dyck path — thick black
+  ctx.strokeStyle = '#000000';
+  ctx.lineWidth = 3;
+  ctx.lineCap = 'round';
+  ctx.lineJoin = 'round';
+  ctx.beginPath();
+  ctx.moveTo(cx(pathPts[0][0]), cy(pathPts[0][1]));
+  for (let i = 1; i < pathPts.length; i++) {
+    ctx.lineTo(cx(pathPts[i][0]), cy(pathPts[i][1]));
+  }
+  ctx.stroke();
+
+  // Straight diagonal line from (0,0) to (n,n) — dashed thin gray
+  ctx.strokeStyle = '#888';
+  ctx.lineWidth = 1;
+  ctx.setLineDash([5, 4]);
+  ctx.beginPath();
+  ctx.moveTo(cx(0), cy(0));
+  ctx.lineTo(cx(n), cy(n));
+  ctx.stroke();
+  ctx.setLineDash([]);
+
+  // Axis labels
+  ctx.fillStyle = '#555';
+  ctx.font = `${Math.max(9, cell * 0.25)}px 'Courier New', monospace`;
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'top';
+  for (let i = 0; i <= n; i++) {
+    ctx.fillText(i, cx(i), cy(0) + 4);
+  }
+  ctx.textAlign = 'right';
+  ctx.textBaseline = 'middle';
+  for (let i = 0; i <= n; i++) {
+    ctx.fillText(i, cx(0) - 42, cy(i));
+  }
+}
+
+function generateTikz() {
+  const raw = document.getElementById('dv-input').value.trim();
+  const dv = parse(raw);
+  const err = validate(dv);
+  if (err) return '% Error: ' + err;
+
+  const n = dv.length;
+  const scale = n <= 6 ? 0.7 : (n <= 10 ? 0.55 : 0.45);
+
+  const parts = [];
+  for (let i = 1; i <= n; i++) parts.push((i - 1) - dv[i - 1]);
+  const partition = parts.slice().reverse().filter(p => p > 0);
+  const partStr = partition.length ? partition.join(', ') : '0';
+
+  const area = dv.reduce((a, b) => a + b, 0);
+  const dinv = computeDinv(dv);
+  const deficit = n*(n-1)/2 - area - dinv;
+
+  const pathPts = [[0, 0]];
+  for (let i = 1; i <= n; i++) {
+    const xi = (i - 1) - dv[i - 1];
+    const last = pathPts[pathPts.length - 1];
+    if (last[0] < xi) pathPts.push([xi, i - 1]);
+    pathPts.push([xi, i]);
+  }
+  if (pathPts[pathPts.length - 1][0] < n) pathPts.push([n, n]);
+
+  let tikz = '';
+  tikz += `% Dyck path for v = (${dv.join(', ')})\n`;
+  tikz += `% lambda = <${partStr}>,  area = ${area},  dinv = ${dinv},  deficit = ${deficit}\n`;
+  tikz += `\\begin{tikzpicture}[scale=${scale}]\n`;
+
+  for (let i = 1; i <= n; i++) {
+    const w = (i - 1) - dv[i - 1];
+    for (let c = 0; c < Math.max(0, w); c++) {
+      tikz += `  \\fill[blue!15] (${c},${i-1}) rectangle (${c+1},${i});\n`;
+    }
+  }
+
+  for (let i = 1; i <= n; i++) {
+    const w = (i - 1) - dv[i - 1];
+    for (let c = Math.max(0, w); c < i - 1; c++) {
+      tikz += `  \\fill[orange!20] (${c},${i-1}) rectangle (${c+1},${i});\n`;
+    }
+  }
+
+  tikz += `  % Grid\n`;
+  tikz += `  \\draw[gray!30, thin] (0,0) grid (${n},${n});\n`;
+  tikz += `  % Diagonal staircase\n`;
+  tikz += `  \\draw[gray, dashed, thick] (0,0)`;
+  for (let i = 0; i < n; i++) {
+    tikz += ` -- (${i+1},${i}) -- (${i+1},${i+1})`;
+  }
+  tikz += `;\n`;
+  tikz += `  % Dyck path\n`;
+  tikz += `  \\draw[red, very thick] (${pathPts[0][0]},${pathPts[0][1]})`;
+  for (let i = 1; i < pathPts.length; i++) {
+    tikz += ` -- (${pathPts[i][0]},${pathPts[i][1]})`;
+  }
+  tikz += `;\n`;
+
+  tikz += `  % Area values\n`;
+  for (let i = 1; i <= n; i++) {
+    if (dv[i-1] > 0) {
+      const w = (i - 1) - dv[i - 1];
+      const midx = (Math.max(0, w) + (i - 1)) / 2;
+      tikz += `  \\node[font=\\tiny] at (${midx.toFixed(1)},${i - 0.5}) {${dv[i-1]}};\n`;
+    }
+  }
+
+  tikz += `  % Endpoints\n`;
+  tikz += `  \\fill[green!60!black] (0,0) circle (3pt);\n`;
+  tikz += `  \\fill[red!80!black] (${n},${n}) circle (3pt);\n`;
+  tikz += `\\end{tikzpicture}`;
+  return tikz;
+}
+
+function showTikz() {
+  const el = document.getElementById('tikz-output');
+  el.textContent = generateTikz();
+  el.style.display = 'block';
+}
+
+function copyTikz() {
+  const code = generateTikz();
+  navigator.clipboard.writeText(code).then(() => {
+    const msg = document.getElementById('copied-msg');
+    msg.classList.add('show');
+    setTimeout(() => msg.classList.remove('show'), 1500);
+  });
+}
+
+document.getElementById('dv-input').addEventListener('keydown', e => {
+  if (e.key === 'Enter') draw();
+});
+draw();
+    </script>
+</body>
+</html>
