@@ -134,8 +134,8 @@
             color: var(--text-primary);
         }
 
-        /* Drop cap styling for first paragraph */
-        article p:first-of-type::first-letter {
+        /* Drop cap styling for first paragraph only (direct child of article) */
+        article > p:first-of-type::first-letter {
             font-size: 4rem;
             line-height: 0.8;
             float: left;
@@ -623,9 +623,9 @@
             <p>Now, we have,
             \[ \int_{-\infty}^{\infty} (|x|~g(x))' \, dx = \int_{-\infty}^{\infty} (|x|)'g(x) \, dx + \int_{-\infty}^{\infty} |x|g(x)' \, dx \]</p>
 
-            <p>The middle term seem to be problematic due to the presence of \((|x|)'\), and it definitely is. Does that mean problems of this kind are unsolvable? Fortunately, we are not completely out of luck; if \(g(x)\) is any test function \(\phi \in C_c^\infty(\mathbb{R})\), we immediately observe that</p>
+            <p>The middle term seem to be problematic due to the presence of \((|x|)'\), and it definitely is. Does that mean problems of this kind are unsolvable? Fortunately, we are not completely out of luck; if \(g(x)\) is any test function \(\phi \in C_c^\infty(\mathbb{R})\), we immediately observe that<sup class="footnote-ref" data-footnote="1">1<span class="footnote-popover">By definition, \(\exists\) a compact set \(K \subset \mathbb{R}\) such that \(\phi(x) = 0 ~~ \forall x \notin K\). Since \(K\) is compact in \(\mathbb{R}\), it is bounded, so \(\exists R > 0\) such that \(K \subseteq [-R, R]\) and \(\phi(x) = 0\) for all \(|x| > R\). Now the boundary term is \(\left[ |x| \phi(x) \right]_{-\infty}^{\infty} = \lim_{a \to \infty} |a| \phi(a) - \lim_{b \to -\infty} |b| \phi(b).\) For \(a > R\), \(a \notin K\), so \(|a| \phi(a) = a \cdot 0 = 0\), hence \(\lim_{a \to \infty} |a| \phi(a) = 0\). For \(b < -R\), \(b \notin K\), so \(|b| \phi(b) = -b \cdot 0 = 0\), hence \(\lim_{b \to -\infty} |b| \phi(b) = 0\). Thus, the boundary term vanishes.</span></sup></p>
 
-            <p>\[ [|x| \phi(x)]_{-\infty}^{\infty} = \int_{-\infty}^{\infty} (|x|)'\phi \, dx + \int_{-\infty}^{\infty} |x|\phi' \, dx \]<sup class="footnote-ref footnote-ref--below" data-footnote="1">1<span class="footnote-popover">By definition, \(\exists\) a compact set \(K \subset \mathbb{R}\) such that \(\phi(x) = 0 ~~ \forall x \notin K\). Since \(K\) is compact in \(\mathbb{R}\), it is bounded, so \(\exists R > 0\) such that \(K \subseteq [-R, R]\) and \(\phi(x) = 0\) for all \(|x| > R\). Now the boundary term is \(\left[ |x| \phi(x) \right]_{-\infty}^{\infty} = \lim_{a \to \infty} |a| \phi(a) - \lim_{b \to -\infty} |b| \phi(b).\) For \(a > R\), \(a \notin K\), so \(|a| \phi(a) = a \cdot 0 = 0\), hence \(\lim_{a \to \infty} |a| \phi(a) = 0\). For \(b < -R\), \(b \notin K\), so \(|b| \phi(b) = -b \cdot 0 = 0\), hence \(\lim_{b \to -\infty} |b| \phi(b) = 0\). Thus, the boundary term vanishes.</span></sup></p>
+            <p>\[ [|x| \phi(x)]_{-\infty}^{\infty} = \int_{-\infty}^{\infty} (|x|)'\phi \, dx + \int_{-\infty}^{\infty} |x|\phi' \, dx \]</p>
 
             <p>\[
             \int_{-\infty}^{\infty} (|x|)' \phi(x) \, dx = - \int_{-\infty}^{\infty} |x| \phi'(x) \, dx \tag{1}
