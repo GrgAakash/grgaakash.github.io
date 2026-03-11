@@ -550,7 +550,7 @@ function ND(partition) {
             if (calculateDeficit(pNext) === defc0) return pNext;
         }
         
-        const resultQDV = ND2(qdv, true);  // suppress alert when trying as part of Extended ND
+        const resultQDV = ND2(qdv, true); 
         if (resultQDV) {
             const pNext = QDVToPartition(resultQDV);
             if (calculateDeficit(pNext) === defc0) return pNext;
