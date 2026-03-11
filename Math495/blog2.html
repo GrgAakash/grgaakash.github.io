@@ -1,0 +1,1153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Math 495 Blog: Post 2</title>
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['\\(', '\\)']],
+                displayMath: [['\\[', '\\]']]
+            },
+            startup: {
+                pageReady: () => {
+                    return MathJax.startup.defaultPageReady().then(() => {
+                        // Re-typeset popovers and previews after initial render
+                        const popovers = document.querySelectorAll('.footnote-popover, .eq-preview');
+                        if (popovers.length > 0 && MathJax.typesetPromise) {
+                            MathJax.typesetPromise(Array.from(popovers));
+                        }
+                    });
+                }
+            }
+        };
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" async></script>
+
+    <style>
+        :root {
+            --primary: #4a6fa5;
+            --secondary: #166088;
+            --accent: #2a9d8f;
+            --light: #f8f9fa;
+            --dark: #212529;
+            --text-primary: #1a1a1a;
+            --text-secondary: #555;
+            --border-color: #0d0d0d;
+            --bg-light: #fafafa;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, #fafafa 0%, #f5f5f5 100%);
+            background-attachment: fixed;
+            color: var(--text-primary);
+            line-height: 1.8;
+            font-size: 18px;
+        }
+
+        header {
+            background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+            color: var(--text-primary);
+            border-bottom: 3px solid var(--border-color);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            padding: 2.5rem 1rem;
+            text-align: center;
+            margin-bottom: 3rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            backdrop-filter: blur(10px);
+        }
+
+        header h1 {
+            margin: 0;
+            padding: 0;
+            font-size: 2.5rem;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            color: var(--text-primary);
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 0 20px 40px;
+            animation: fadeIn 0.6s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .article-card {
+            background: #ffffff;
+            border: 2px solid var(--border-color);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            padding: 3.5rem;
+            margin-bottom: 2rem;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .article-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, var(--secondary), var(--accent));
+        }
+
+        .article-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+        }
+
+        article p {
+            margin: 1.5rem 0;
+            font-weight: 400;
+            font-size: 1.1rem;
+            line-height: 1.9;
+            color: var(--text-primary);
+        }
+
+        /* Drop cap styling for first paragraph */
+        article p:first-of-type::first-letter {
+            font-size: 4rem;
+            line-height: 0.8;
+            float: left;
+            padding-right: 10px;
+            padding-top: 6px;
+            color: var(--text-primary);
+            font-weight: 700;
+            font-family: Georgia, serif;
+        }
+
+        a {
+            color: var(--secondary);
+            text-decoration: none;
+            border-bottom: 2px solid rgba(22, 96, 136, 0.2);
+            padding-bottom: 2px;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+
+        a:hover {
+            color: var(--accent);
+            border-bottom-color: var(--accent);
+            transform: translateY(-1px);
+        }
+
+        figure {
+            margin: 2.5rem 0;
+            text-align: center;
+            transition: transform 0.3s ease;
+        }
+
+        figure:hover {
+            transform: scale(1.01);
+        }
+
+        figure img {
+            max-width: 100%;
+            height: auto;
+            border: 2px solid var(--border-color);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.12);
+            border-radius: 8px;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            background: #ffffff;
+        }
+
+        figure img:hover {
+            transform: translateY(-4px) scale(1.02);
+            box-shadow: 0 12px 28px rgba(0, 0, 0, 0.18);
+            border-color: var(--accent);
+        }
+
+        figure figcaption {
+            font-size: 0.95rem;
+            color: var(--text-secondary);
+            font-weight: 500;
+            margin-top: 14px;
+            font-style: italic;
+            letter-spacing: 0.3px;
+        }
+
+        .footer {
+            background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+            color: var(--text-secondary);
+            border-top: 3px solid var(--border-color);
+            text-align: center;
+            padding: 2.5rem 0;
+            margin-top: 5rem;
+            font-size: 0.9rem;
+            box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.05);
+        }
+
+        /* PDF Download Button */
+        .pdf-button {
+            position: fixed;
+            bottom: 100px;
+            right: 30px;
+            background: #dc3545;
+            color: white;
+            border: 2px solid var(--border-color);
+            border-radius: 50px;
+            padding: 1rem 1.5rem;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-family: inherit;
+            text-decoration: none;
+        }
+
+        .pdf-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.3);
+            background: #c82333;
+            color: white;
+            border-bottom: none;
+        }
+
+        .pdf-button:active {
+            transform: translateY(0);
+        }
+
+        .pdf-button svg {
+            width: 20px;
+            height: 20px;
+            fill: currentColor;
+        }
+
+        /* Text-to-Speech Button */
+        .listen-button {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: var(--text-primary);
+            color: white;
+            border: 2px solid var(--border-color);
+            border-radius: 50px;
+            padding: 1rem 1.5rem;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-family: inherit;
+        }
+
+        .listen-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.3);
+            background: #333;
+        }
+
+        .listen-button:active {
+            transform: translateY(0);
+        }
+
+        .listen-button.playing {
+            background: var(--text-primary);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            }
+            50% {
+                box-shadow: 0 4px 20px rgba(231, 76, 60, 0.5);
+            }
+        }
+
+        .listen-button svg {
+            width: 20px;
+            height: 20px;
+            fill: currentColor;
+        }
+
+        @media (max-width: 768px) {
+            .pdf-button {
+                bottom: 90px;
+                right: 20px;
+                padding: 0.8rem 1.2rem;
+                font-size: 0.9rem;
+            }
+
+            .listen-button {
+                bottom: 20px;
+                right: 20px;
+                padding: 0.8rem 1.2rem;
+                font-size: 0.9rem;
+            }
+        }
+
+        /* Math rendering improvements */
+        .MathJax {
+            font-size: 1.1em !important;
+        }
+
+        /* Footnote popover styles */
+        .footnote-ref {
+            cursor: pointer;
+            color: var(--secondary);
+            font-weight: 600;
+            transition: color 0.2s ease;
+            position: relative;
+        }
+
+        .footnote-ref:hover {
+            color: var(--accent);
+        }
+
+        .footnote-popover {
+            position: absolute;
+            bottom: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #ffffff;
+            border: 2px solid var(--border-color);
+            border-radius: 8px;
+            padding: 12px 16px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+            font-size: 0.9rem;
+            line-height: 1.6;
+            color: var(--text-primary);
+            width: max-content;
+            max-width: 350px;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.2s ease, visibility 0.2s ease, transform 0.2s ease;
+            transform: translateX(-50%) translateY(8px);
+            margin-bottom: 8px;
+        }
+
+        .footnote-popover::after {
+            content: '';
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            border: 8px solid transparent;
+            border-top-color: var(--border-color);
+        }
+
+        .footnote-popover::before {
+            content: '';
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            border: 6px solid transparent;
+            border-top-color: #ffffff;
+            margin-top: -2px;
+            z-index: 1;
+        }
+
+        .footnote-ref:hover .footnote-popover,
+        .footnote-popover.show {
+            opacity: 1;
+            visibility: visible;
+            transform: translateX(-50%) translateY(0);
+        }
+
+        /* Popover that appears below */
+        .footnote-ref--below .footnote-popover {
+            bottom: auto;
+            top: 100%;
+            left: auto;
+            right: -10px;
+            transform: translateY(-8px);
+            margin-bottom: 0;
+            margin-top: 8px;
+        }
+
+        .footnote-ref--below .footnote-popover::after {
+            top: auto;
+            bottom: 100%;
+            left: auto;
+            right: 15px;
+            transform: none;
+            border-top-color: transparent;
+            border-bottom-color: var(--border-color);
+        }
+
+        .footnote-ref--below .footnote-popover::before {
+            top: auto;
+            bottom: 100%;
+            left: auto;
+            right: 17px;
+            transform: none;
+            margin-top: 0;
+            margin-bottom: -2px;
+            border-top-color: transparent;
+            border-bottom-color: #ffffff;
+        }
+
+        .footnote-ref--below:hover .footnote-popover {
+            transform: translateY(0);
+        }
+
+        /* Equation reference preview styles */
+        .eq-ref {
+            cursor: pointer;
+            color: var(--secondary);
+            font-weight: 500;
+            border-bottom: 1px dashed var(--secondary);
+            transition: all 0.2s ease;
+            position: relative;
+            display: inline;
+        }
+
+        .eq-ref:hover {
+            color: var(--accent);
+            border-bottom-color: var(--accent);
+        }
+
+        .eq-preview {
+            position: absolute;
+            bottom: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #ffffff;
+            border: 2px solid var(--border-color);
+            border-radius: 8px;
+            padding: 16px 20px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.2s ease, visibility 0.2s ease, transform 0.2s ease;
+            transform: translateX(-50%) translateY(8px);
+            margin-bottom: 10px;
+            white-space: nowrap;
+        }
+
+        .eq-preview::after {
+            content: '';
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            border: 8px solid transparent;
+            border-top-color: var(--border-color);
+        }
+
+        .eq-preview::before {
+            content: '';
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            border: 6px solid transparent;
+            border-top-color: #ffffff;
+            margin-top: -2px;
+            z-index: 1;
+        }
+
+        .eq-ref:hover .eq-preview {
+            opacity: 1;
+            visibility: visible;
+            transform: translateX(-50%) translateY(0);
+        }
+
+        /* Prevent overflow on mobile */
+        @media (max-width: 480px) {
+            .footnote-popover, .eq-preview {
+                left: 0;
+                transform: translateX(0);
+                max-width: 280px;
+            }
+            .footnote-popover::after, .footnote-popover::before,
+            .eq-preview::after, .eq-preview::before {
+                left: 20px;
+                transform: none;
+            }
+            .footnote-ref:hover .footnote-popover,
+            .eq-ref:hover .eq-preview {
+                transform: translateX(0) translateY(0);
+            }
+        }
+
+        /* Definition, Theorem, Remark boxes */
+        .math-block {
+            border: 2px solid var(--border-color);
+            border-radius: 8px;
+            padding: 1.5rem 2rem;
+            margin: 2rem 0;
+            background: var(--bg-light);
+            position: relative;
+        }
+
+        .math-block .math-block-title {
+            font-weight: 700;
+            font-size: 1.05rem;
+            margin-bottom: 0.5rem;
+            color: var(--text-primary);
+        }
+
+        .math-block p {
+            margin: 0.5rem 0;
+        }
+
+        .math-block ol {
+            margin: 0.5rem 0;
+            padding-left: 1.5rem;
+        }
+
+        .math-block ol li {
+            margin: 0.3rem 0;
+        }
+
+        .definition-block {
+            border-left: 5px solid var(--secondary);
+        }
+
+        .theorem-block {
+            border-left: 5px solid var(--accent);
+        }
+
+        .remark-block {
+            border-left: 5px solid var(--text-secondary);
+            background: #f5f5f5;
+        }
+
+        /* Responsive design */
+        @media (max-width: 768px) {
+            header h1 {
+                font-size: 1.8rem;
+            }
+
+            .article-card {
+                padding: 1.5rem;
+            }
+
+            article p {
+                font-size: 1rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 0 15px;
+            }
+
+            .article-card {
+                padding: 1.25rem;
+            }
+
+            header {
+                padding: 1.5rem 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>The 19th Problem: Part II</h1>
+    </header>
+
+    <main class="container">
+        <article class="article-card">
+
+            <h2>Introduction</h2>
+
+            <p>In part I, for \(n=2\) case, we relied on a "happy accident of geometry." But as we step into dimensions greater than 2, this geometric safety net vanishes, for instance we saw in \(n=3\) case the case chopping argument fails as the energy integral converges even for singular functions without violating the global energy bounds. Furthermore, the "algebraic slack" in the linearized equation allows the gradient map to stretch space infinitely in one direction while remaining valid.</p>
+
+            <p>We are thus left in a position where the geometry is too flexible to force regularity. To solve Hilbert's problem in higher dimensions, we must abandon the "shape" of the gradient and instead look at the "mass" of the gradient. We need to stop asking "what does it look like?" and start asking "how much energy does it carry?".</p>
+
+            <p>This requires a new set of tools. Before we can appreciate the final solution, we must establish the prerequisites of some analytical toolkit: Weak Derivatives, Sobolev Spaces, and the Caccioppoli Inequality.</p>
+
+            <h2>Weak Derivatives</h2>
+
+            <p>Before going into what weak derivatives are, we need two ideas that extend what we learned in our introductory real analysis or honors calculus class:</p>
+
+            <div class="math-block definition-block">
+                <div class="math-block-title">Definition (Locally Integrable)</div>
+                <p>When we work with weak derivatives, we don't need the whole function to be integrable over an open subset, \(\Omega\subseteq\mathbb{R}^{n}\). It's enough that for all compact interval \(K\), the integral \(\int_K |u(x)|\,dx\) exists. These functions are called <em>locally integrable</em> functions. We represent the set of such functions by \(L^1_{\text{loc}}(\Omega)\).</p>
+            </div>
+
+            <p>\(L^1\) just means the absolute value of the function has a finite integral.</p>
+
+            <div class="math-block definition-block">
+                <div class="math-block-title">Definition (Test Functions)</div>
+                <p>A function \(\phi: \mathbb{R}^n \to \mathbb{R}\) is a test function if:</p>
+                <ol>
+                    <li>Smoothness: \(\phi\) is infinitely differentiable, i.e., \(\phi \in C^\infty(\mathbb{R}^n)\).</li>
+                    <li>Compact Support: There exists a compact set \(K \subset \mathbb{R}^n\) such that \[ \phi(x)=0,~~~~~~\forall x \notin K. \]</li>
+                </ol>
+            </div>
+
+            <p>Note that in \(\mathbb{R}^n\), "compact" means the set is closed and bounded. We write the space of test functions as \(C_c^\infty(\Omega),\) where \(\Omega\) is an open subset of \(\mathbb{R}^n.\)</p>
+
+            <p>Before moving on, let us work with \(u(x) = |x|\) and suppose for some \(g(x)\) we want to find
+            \[
+            \int_{-\infty}^{\infty} (|x|~ g(x))' \, dx.
+            \]</p>
+
+            <p>Now, we have,
+            \[ \int_{-\infty}^{\infty} (|x|~g(x))' \, dx = \int_{-\infty}^{\infty} (|x|)'g(x) \, dx + \int_{-\infty}^{\infty} |x|g(x)' \, dx \]</p>
+
+            <p>The middle term seem to be problematic due to the presence of \((|x|)'\), and it definitely is. Does that mean problems of this kind are unsolvable? Fortunately, we are not completely out of luck; if \(g(x)\) is any test function \(\phi \in C_c^\infty(\mathbb{R})\), we immediately observe that</p>
+
+            <p>\[ [|x| \phi(x)]_{-\infty}^{\infty} = \int_{-\infty}^{\infty} (|x|)'\phi \, dx + \int_{-\infty}^{\infty} |x|\phi' \, dx \]<sup class="footnote-ref footnote-ref--below" data-footnote="1">1<span class="footnote-popover">By definition, \(\exists\) a compact set \(K \subset \mathbb{R}\) such that \(\phi(x) = 0 ~~ \forall x \notin K\). Since \(K\) is compact in \(\mathbb{R}\), it is bounded, so \(\exists R > 0\) such that \(K \subseteq [-R, R]\) and \(\phi(x) = 0\) for all \(|x| > R\). Now the boundary term is \(\left[ |x| \phi(x) \right]_{-\infty}^{\infty} = \lim_{a \to \infty} |a| \phi(a) - \lim_{b \to -\infty} |b| \phi(b).\) For \(a > R\), \(a \notin K\), so \(|a| \phi(a) = a \cdot 0 = 0\), hence \(\lim_{a \to \infty} |a| \phi(a) = 0\). For \(b < -R\), \(b \notin K\), so \(|b| \phi(b) = -b \cdot 0 = 0\), hence \(\lim_{b \to -\infty} |b| \phi(b) = 0\). Thus, the boundary term vanishes.</span></sup></p>
+
+            <p>\[
+            \int_{-\infty}^{\infty} (|x|)' \phi(x) \, dx = - \int_{-\infty}^{\infty} |x| \phi'(x) \, dx \tag{1}
+            \]</p>
+
+            <p>Now, let us try solving the right-hand side where our burden of having well-defined derivatives/smoothness transfers from \(|x|\) to our test function \(\phi(x)\), which, by definition, is smooth.</p>
+
+            <p>Now, the right-hand side of <span class="eq-ref" data-eq="1">Equation (1)<span class="eq-preview">\( \int_{-\infty}^{\infty} (|x|)' \phi(x) \, dx = - \int_{-\infty}^{\infty} |x| \phi'(x) \, dx \)</span></span> can be written as,
+            \[
+            =-\left(\int_{-\infty}^{0} (-x) \phi'(x) \, dx + \int_{0}^{\infty} x \phi'(x) \, dx\right).
+            \]</p>
+
+            <p>Now for \(x<0\),
+            \[
+            \int_{-\infty}^{0} (-x) \phi'(x) \, dx = \underbrace{[-x \phi(x)]_{-\infty}^{0}}_{=0} - \int_{-\infty}^{0} (-1) \phi(x) \, dx = \int_{-\infty}^{0} \phi(x) \, dx.
+            \]</p>
+
+            <p>Similarly, for \(x>0\),
+            \[
+            \int_{0}^{\infty} x \phi'(x) \, dx = \underbrace{[x \phi(x)]_{0}^{\infty}}_{=0} - \int_{0}^{\infty} 1 \cdot \phi(x) \, dx = -\int_{0}^{\infty} \phi(x) \, dx.
+            \]</p>
+
+            <p>Now,
+            \[
+            \int_{-\infty}^{0} \phi(x) \, dx - \int_{0}^{\infty} \phi(x) \, dx = -\left( \int_{-\infty}^{0} (-1)\phi(x) \, dx + \int_{0}^{\infty} (1)\phi(x) \, dx \right)=-\int_{-\infty}^{\infty} \operatorname{sgn}(x) \phi(x) \, dx.
+            \]</p>
+
+            <p>The single point \(x=0\) contributes nothing to the integral, so we don't need to define \(\operatorname{sgn}(0)\).</p>
+
+            <p>So, we found that
+            \[
+            \int_{-\infty}^{\infty} (|x|)' \phi(x) \, dx = - \int_{-\infty}^{\infty} |x| \phi'(x) \, dx=\int_{-\infty}^{\infty} \operatorname{sgn}(x) \phi(x) \, dx.
+            \]</p>
+
+            <p>Just looking at the left-most and right-most integrals we can see something interesting; it looks like \((|x|)'\) is equal to \(\operatorname{sgn}(x)\). Well, it is, but in a <em>weak</em> sense. As we already know that \((|x|)'\) does not exist everywhere so we cannot really say that \((|x|)'=\operatorname{sgn}(x),~~\forall x\in \mathbb{R}.\) So, what do we do? We name \(\operatorname{sgn}(x)\) as the <em>weak derivative.</em> These so-called <em>Weak Derivatives</em> are introduced so that there is a way to talk about "slope" as in our above example without breaking the rules of calculus. In physics and in variational calculus, we often deal with functions similar to \(|x|\) and the idea here is to shift the burden of smoothness from the function \(u\) (which might be rough) onto a "test function" \(\phi\). This motivates our definition for weak derivatives:</p>
+
+            <div class="math-block definition-block">
+                <div class="math-block-title">Definition (Weak Derivative in \(\mathbb{R}\))</div>
+                <p>Let \(u\) be a locally integrable function. We say a function \(v\) is the <em>weak derivative</em> of \(u\) if, for every test function \(\phi \in C_c^{\infty}(\Omega)\) where \(\Omega \subseteq \mathbb{R}\), the following equality holds:
+                \[
+                \int_{\Omega}u(x) \phi'(x) \, dx = - \int_{\Omega} v(x) \phi(x) \, dx
+                \]
+                If such a \(v\) exists, it is essentially unique, and we write \(u' = v\) in the weak sense.</p>
+            </div>
+
+            <div class="math-block definition-block">
+                <div class="math-block-title">Definition (Weak Derivative in \(\mathbb{R}^n\))</div>
+                <p>Let \(u \in L^1_{\text{loc}}(\Omega)\), where \(\Omega \subseteq \mathbb{R}^n\) is an open set and \(\alpha\) be a multi index<sup class="footnote-ref" data-footnote="2">2<span class="footnote-popover">An \(n\)-dimensional multi-index is a \(n\)-tuple of non-negative integers, \(\alpha=(\alpha_1, \ldots,\alpha_n)\) and \(|\alpha|=\alpha_1 +\ldots+\alpha_n.\) For example if \(\alpha = (2, 1)\), then \(|\alpha| = 3\) and we have \(D^\alpha u = \frac{\partial^3 u}{\partial x_1^2\partial x_2^1}\).</span></sup>. We say a locally integrable function \(v \in L^1_{\text{loc}}(\Omega)\) is the weak \(\alpha\)-derivative of \(u\) if, for every test function \(\phi \in C_c^\infty(\Omega)\), the following holds:
+                \[
+                \int_{\Omega} u(x) D^\alpha \phi(x) \, dx = (-1)^{|\alpha|} \int_{\Omega} v(x) \phi(x) \, dx
+                \]
+                If such a \(v\) exists, it is essentially unique, and we write \(D^\alpha u = v\) in the weak sense.</p>
+            </div>
+
+            <p>Now, let us do a specific example:
+            Let \(u(x_1, x_2) = |x_1|x_2\) in \(\mathbb{R}^2\). Let us find its weak partial derivative with respect to \(x_1\) which is \(\alpha = (1, 0)\), so \(D^\alpha \phi = \frac{\partial \phi}{\partial x_1}\) and \(|\alpha| = 1\).</p>
+
+            <p>Now by using Fubini's Theorem, we have:
+            \[ \int_{\mathbb{R}^2} u(x) D^\alpha \phi(x) \, dx = \int_{-\infty}^{\infty} x_2 \left( \int_{-\infty}^{\infty} |x_1| \frac{\partial \phi}{\partial x_1} \, dx_1 \right) \, dx_2 \]</p>
+
+            <p>The inner integral is exactly the 1D case we already did. Thus:
+            \[ \int_{-\infty}^{\infty} x_2 \left( - \int_{-\infty}^{\infty} \operatorname{sgn}(x_1) \phi(x_1, x_2) \, dx_1 \right) \, dx_2 \]
+            \[ = - \int_{\mathbb{R}^2} \big(\operatorname{sgn}(x_1)x_2\big) \phi(x) \, dx_1dx_2 \]</p>
+
+            <p>By comparing this to the right-hand side of our definition, \((-1)^{|\alpha|} \int v \phi \, dx\), we immediately see that the weak derivative is \(v(x_1, x_2) = \operatorname{sgn}(x_1)x_2\).</p>
+
+            <p>In our above examples, both \(|x_1|x_2\) and \(|x|\) have a weak derivative as it fails to be classically differentiable at a single point for \(|x|\), and the line \(x_1 = 0\) for \(|x_1|x_2\). Sets like these, where classical differentiation is undefined, have <em>measure zero</em><sup class="footnote-ref" data-footnote="3">3<span class="footnote-popover">Roughly speaking, a set of measure zero means the set is so small that it does not affect the integral value. For instance, any finite set of points in \(\mathbb{R}\) has measure zero and in \(\mathbb{R}^{2}\) any line has measure zero.</span></sup>, so the integral isn't affected and thus our definition stays intact. You might think that if a function is differentiable everywhere apart from a set of measure zero, then its classical derivative (where defined) is automatically its weak derivative. However, this is not the case, a counterexample is the Cantor function \(f: [0,1] \to [0,1]\), which is continuous, non-decreasing, and differentiable almost everywhere with \(f' = 0\) a.e. Yet, it does not have a weak derivative in \(L^1_{\text{loc}}\). If \(f' = 0\) were the weak derivative, then \(\int_0^1 f\phi'dx\) would have to equal \(0\) for every test function \(\phi\), but this is false since \(f\) increases from \(0\) to \(1\).</p>
+
+            <p>Overall the concept of weak derivatives allows us to do calculus on functions that would otherwise be "illegal."</p>
+
+            <h2>The Sobolev Spaces</h2>
+
+            <p>Now that we can differentiate rough functions (in the weak sense), we need a space to put them. We need a vector space of functions that have "finite energy", a space where we can measure the size of both a function and its derivatives.</p>
+
+            <h3>Measurable Functions</h3>
+
+            <p>Let us take a small digression to measurable functions as it is pretty fundamental to understand what we are doing.</p>
+
+            <p>As we already discussed we do not measure points because they have \(0\) measure, so we only measure subsets. We therefore define a family \(\mathcal{B}\) of subsets of \(\Omega\) that we can measure. <em>Measurable sets</em> are just any sets which belongs to \(\mathcal{B}\). These are the sets we can consistently assign a size to, built from rectangles (products of intervals) using countable unions, intersections, and complements</p>
+
+            <p>If we have function \(u: \Omega \to \mathbb{R}\), we want to transport this measure to \(\mathbb{R}\). To find measure of outcome set \(A \subset \mathbb{R}\), we must look at inverse image \(u^{-1}(A)\) in \(\Omega\). For this to work, \(u^{-1}(A)\) must be in \(\mathcal{B}\). Since we care about intervals \(I \subset \mathbb{R}\), we want \(u^{-1}(I)\) to be measurable. This is same as saying \(u^{-1}([-\infty, a))\)<sup class="footnote-ref" data-footnote="4">4<span class="footnote-popover">When we deal with stuff related to measure theory, we usually work in the extended real number system, \(\overline{\mathbb{R}}=\mathbb{R}\cup\{-\infty,+\infty\}\) as sometimes it is useful to allow sets that have infinite measure and integrals whose value is infinite.</span></sup> is measurable \(\forall a \in A\).</p>
+
+            <p>So intuitively, measurable function just guarantees inverse image of intervals are measurable, which allows us to transport measure and compute integral.</p>
+
+            <h3>The \(L^p\) Spaces</h3>
+
+            <p>First, we need a way to measure how big a function is. It is convenient to measure size using integrals rather than maximum values (which are too delicate; changing a function at a single point can ruin its supremum, but doesn't affect integrals because points have measure zero).</p>
+
+            <p>For \(1 \leq p < \infty\), we define the space \(L^p(\Omega), \text{where}~\Omega\) is an open subset in \(\mathbb{R}^n\), as the set of measurable functions such that
+            \[
+            \|u\|_{L^p} = \left( \int_\Omega |u|^p \, dx \right)^{1/p} < \infty.
+            \]
+            (When \(p=2\), this is like an infinite-dimensional version of the Euclidean length \(\sqrt{\sum u_i^2}\).)</p>
+
+            <div class="math-block remark-block">
+                <div class="math-block-title">Remark</div>
+                <p>Strictly speaking, \(L^p\) consists of <em>equivalence classes</em> of functions where two functions are considered the same if they differ only on a set of measure zero.</p>
+            </div>
+
+            <div class="math-block definition-block">
+                <div class="math-block-title">Definition (Sobolev Space)</div>
+                <p>The Sobolev space \(W^{1,p}(\Omega)\) contains every function \(u \in L^p(\Omega)\) whose first weak derivatives \(\frac{\partial u}{\partial x_1}, \dots, \frac{\partial u}{\partial x_n}\) also belong to \(L^p(\Omega)\). We measure functions in this space with the norm
+                \[
+                \|u\|_{W^{1,p}} = \left( \|u\|_{L^p}^p + \sum_{i=1}^n \left\|\frac{\partial u}{\partial x_i}\right\|_{L^p}^p \right)^{1/p}.
+                \]</p>
+            </div>
+
+            <p>More generally, one can define \(W^{k,p}(\Omega)\) by requiring weak derivatives up to order \(k\) to be in \(L^p\), but for our purposes \(k=1\) suffices. In-fact, \(W^{1,2}(\Omega)\) is important to us. It is often written as \(H^1\), which is a <em>Hilbert space</em>. The minimizer in Hilbert's \(19^{th}\) problem we are trying to study <em>initially</em> lives in \(H^1\). This space is also <em>complete</em><sup class="footnote-ref" data-footnote="5">5<span class="footnote-popover">When we say that a space is complete we mean that for a given cauchy sequence in the space, the limit is also in the space.</span></sup>, therefore once we prove the sequence of approximate minimizers is a Cauchy sequence, we can be sure that their limit, our desired minimizer, exists in the space itself.</p>
+
+            <p>A nice thing about <em>Hilbert space</em> is that the norm comes from an inner product:
+            \[
+            \langle u, v \rangle_{H^1} = \int_\Omega u v \, dx + \int_\Omega \nabla u \cdot \nabla v \, dx.
+            \]
+            Think of it like the dot product between <em>vectors</em> that you already know, we are doing the same thing here. As we are in a vector space and these functions are the elements of that vector space, so functions are vectors.</p>
+
+            <h3>Example: Are you sure?</h3>
+
+            <p>Consider \(\Omega = (0,1) \subset \mathbb{R}\). Let:</p>
+
+            <p>\[
+            u(x) = x \quad \text{and} \quad w(x) = \left|x - \frac{1}{2}\right|.
+            \]</p>
+
+            <p>Notice that the function \(w\) is not differentiable in the classical sense at \(x=\frac{1}{2}\) but we do have the weak derivative which is \(\operatorname{sgn}(x-\frac{1}{2})\). This weak derivative is a step function which is discontinuous, but certainly in \(L^2(0,1)\) since \(\int_0^1 (\operatorname{sgn}(x-\frac{1}{2}))^2 dx = 1\).</p>
+
+            <p>We now verify that both \(u\) and \(w\) live in \(H^1(0,1) = W^{1,2}(0,1)\):</p>
+
+            <p>For \(u\):
+            \[
+            \|u\|_{H^1}^2 = \int_0^1 u(x)^2 \, dx + \int_0^1 u'(x)^2 \, dx  = \frac{4}{3}.
+            \]</p>
+
+            <p>For \(w\):
+            \[
+            \|w\|_{H^1}^2 = \int_0^1 w(x)^2 \, dx + \int_0^1 w'(x)^2 \, dx = \int_0^1 \left|x - \frac{1}{2}\right|^2 \, dx + \int_0^1 (\operatorname{sgn}(x-\frac{1}{2}))^2  \, dx.
+            \]</p>
+
+            <p>The first integral is symmetric about \(x = \frac{1}{2}\), so
+            \[
+            \int_0^1 \left|x - \frac{1}{2}\right|^2 \, dx = 2 \int_{0}^{1/2} \left(\frac{1}{2} - x\right)^2 \, dx = \frac{1}{12}.
+            \]</p>
+
+            <p>The second integral is \(\int_0^1 (\operatorname{sgn}(x-\frac{1}{2}))^2 dx = 1\). Hence
+            \[
+            \|w\|_{H^1}^2 = \frac{13}{12}.
+            \]</p>
+
+            <p>Both norms are finite, so \(u, w \in H^1(0,1)\).</p>
+
+            <p>This example is mainly to show that the "rough" functions can live in \(H^1\) so we do not have to worry if the approximate minimizers themselves are rough or if their limit is rough.</p>
+
+            <p>A natural follow up is, how can we be sure that the minimizers are not rough functions which live outside \(H^1\)? as there exists rough functions which don't live in \(H^1\) for example consider the step function on \(\Omega = (0,1)\):
+            \[
+            h(x) =
+            \begin{cases}
+            0 & \text{if } x < \frac{1}{2}, \\
+            1 & \text{if } x > \frac{1}{2}.
+            \end{cases}
+            \]</p>
+
+            <p>For any test function \(\phi \in C_c^\infty(0,1)\),
+            \[
+            \int_0^1 h(x) \phi'(x) \, dx = \int_{\frac{1}{2}}^1 \phi'(x) \, dx = -\phi(\frac{1}{2})=- \int_{-\infty}^{\infty} v(x) \phi(x) \, dx
+            \]
+            \[
+            \int_0^1 \delta_{\frac{1}{2}}(x) \phi(x) \, dx =\phi(\frac{1}{2})=\int_{-\infty}^{\infty} v(x) \phi(x) \, dx
+            \]
+            where \(v(x)\) is the weak derivative.
+            Thus, the weak derivative in this case is the Dirac delta distribution, \(h' = \delta_{\frac{1}{2}}(x)\).</p>
+
+            <p>Suppose for contradiction, that \(h \in H^1(0,1)\) then \(\delta_{\frac{1}{2}} \in L^2(0,1)\). But \(\int_0^1 |\delta_{\frac{1}{2}}(x)|^2 \, dx\) is infinite, which is a contradiction and hence \(h \notin H^1(0,1)\).</p>
+
+            <p>In this case, notice that \(J(u)\) blows up which is not something we are looking at (if it blows up or is undefined, the problem of finding minimizer itself becomes meaningless). In general, if a rough function is outside the \(H^1\) space, then \(J(u)\) blows up or is undefined.</p>
+
+            <p>So to answer that question: the problem (the functional \(J(u)\)) itself ensures us that the rough functions which may encounter will certainly live in \(H^1\).</p>
+
+            <h2>Sobolev Inequality</h2>
+
+            <p>Another natural follow up question is: could an \(H^1\) function be really wild? Like, discontinuous everywhere? Unbounded? Oscillating infinitely many times? To answer that we utilize Sobolev inequality.</p>
+
+            <div class="math-block definition-block">
+                <div class="math-block-title">Definition (Sobolev Conjugate)</div>
+                <p>For \(1 \le p < n\), the number
+                \[
+                p^* = \frac{np}{n-p}
+                \]
+                is called the Sobolev conjugate of \(p\). Notice \(p^* > p\).</p>
+            </div>
+
+            <div class="math-block theorem-block">
+                <div class="math-block-title">Theorem (Sobolev Inequality)</div>
+                <p>Let \(\Omega \subset \mathbb{R}^n\) be bounded and open. For \(1 \le p < n\), there exists a constant \(C = C(p,n,\Omega)\) such that for every \(u \in W^{1,p}(\Omega)\),
+                \[
+                \|u\|_{L^{p^*}(\Omega)} \le C \|u\|_{W^{1,p}(\Omega)}. \tag{2}
+                \]</p>
+            </div>
+
+            <p>To get a sense of this inequality, let us first start with a familiar concept - The Fundamental Theorem of Calculus.
+            \[
+            u(x) = u(a) + \int_a^x u'(t) \, dt.
+            \]</p>
+
+            <p>If \(u' \in L^p(0,1)\), then from Hölder's inequality,
+            \[
+            |u(x) - u(a)| \le \left| \int_a^x u'(t) \, dt \right| \le \|u'\|_{L^p} |x-a|^{1/q}, ~~\text{where}~~ \frac{1}{p} + \frac{1}{q}= 1.
+            \]</p>
+
+            <p>What we have here is, we started with the information \(u' \in L^p(0,1)\) and then we ended with the fact that \(u \in L^\infty\) since \(u\) is Hölder continuous. Similarly, <span class="eq-ref" data-eq="2">Equation (2)<span class="eq-preview">\( \|u\|_{L^{p^*}(\Omega)} \le C \|u\|_{W^{1,p}(\Omega)} \)</span></span> says that if we start with \(\nabla u \in L^p\), then we end up with \(u \in L^{p^{*}}\) where \(p^{*}>p.\)</p>
+
+            <p>Take \(p=2\) (our \(H^1\) case). Then the Sobolev conjugate is
+            \[
+            2^* = \frac{2n}{n-2}.
+            \]</p>
+
+            <p>Let's check what this means in different dimensions:
+            For \(n=3\): \(2^* = \frac{6}{1} = 6\). So \(H^1 \hookrightarrow L^6\).
+            So in \(3\)-dimension, we start with \(\nabla u \in L^2\), then we end up with \(u \in L^{6}\).
+            Similarly in \(2\)-dimensions, \(H^1\) functions belong to \(L^q\) for every finite \(q\), but not necessarily \(L^\infty\).</p>
+
+            <p>To answer our original question: while an \(H^1\) function need not be bounded or continuous (especially in dimensions \(n \ge 2\)), the Sobolev inequality prevents it from being arbitrarily wild. It forces the function into a strictly better integrability class \(L^{p^*}\), which prevents situations like being discontinuous everywhere or oscillating without control.</p>
+
+            <h2>Caccioppoli Inequality</h2>
+
+            <p>We now know that our minimizer lives in \(H^1\), and the Sobolev inequality told us it actually lives in a better space than we thought. Now what? For that let us pause for a moment and again remember our main goal which is to see if we can make the minimizer \(u\) smooth.</p>
+
+            <p>A natural follow up question would be: we have better control over \(u\) itself. Can we turn that into better control over \(\nabla u\)? Because if \(\nabla u\) gets upgraded to a better space, then <span class="eq-ref" data-eq="2">Equation (2)<span class="eq-preview">\( \|u\|_{L^{p^*}(\Omega)} \le C \|u\|_{W^{1,p}(\Omega)} \)</span></span> applies again and \(u\) gets even better space to live in, and then \(\nabla u\) gets even better, and so on ultimately achieving \(u\) is in \(L^{\infty}\). This is also what we commonly call as "bootstrapping".</p>
+
+            <p>The Caccioppoli inequality is the first step to make this idea work.</p>
+
+            <div class="math-block theorem-block">
+                <div class="math-block-title">Theorem (Caccioppoli Inequality)</div>
+                <p>Let \(v\) be a solution to an elliptic equation of the form
+                \[
+                \sum_{i,j=1}^n \int_\Omega a_{ij}(x) \partial_i v \partial_j \phi \, dx = 0 \quad \text{for all } \phi \in C_c^\infty(\Omega),
+                \]
+                where the coefficients \(a_{ij}\) are bounded and elliptic (meaning \(\sum a_{ij} \xi_i \xi_j \ge \lambda |\xi|^2\) for some \(\lambda > 0\)). Then for any ball \(B_r \subset \Omega\),
+                \[
+                \int_{B_{\frac{r}{2}}} |\nabla v|^2 \, dx \le \frac{C}{r^2} \int_{B_r} v^2 \, dx, \tag{3}
+                \]
+                where \(C\) depends only on the ellipticity constants and dimension.</p>
+            </div>
+
+            <p>For us, \(v = \partial_k u\), meaning \(v\) is the \(k^{th}\) component of \(\nabla u\). Notice that we are bootstrapping \(v = \partial_k u\), not \(u\) itself. By improving the integrability of the gradient's gradient, we are indirectly improving the regularity of \(u\).</p>
+
+            <p>Now what <span class="eq-ref" data-eq="3">Equation (3)<span class="eq-preview">\( \int_{B_{\frac{r}{2}}} |\nabla v|^2 \, dx \le \frac{C}{r^2} \int_{B_r} v^2 \, dx \)</span></span> is basically saying is if we know how large \(v\) is on a ball \(B_r\), then on a smaller ball \(B_{\frac{r}{2}}\) we can control its gradient. More precisely, since \(v \in L^2\) (because \(\nabla u \in L^2\)), the right-hand side is finite. Thus, the left-hand side is finite, which means \(\nabla v\) exists as a weak derivative and is in \(L^2\).</p>
+
+            <p>But the Caccioppoli inequality alone only gives us \(\nabla v \in L^2\), which we already knew. To really get the bootstrap going, we need something more, a reverse Hölder inequality combined with Gehring's lemma:</p>
+
+            <p>\[
+            \left( \frac{1}{|B_{\frac{r}{2}}|} \int_{B_{\frac{r}{2}}} |\nabla v|^p \right)^{\frac{1}{p}} \le C \left( \frac{1}{|B_r|} \int_{B_r} |\nabla v|^2 \right)^{\frac{1}{2}}
+            \]</p>
+
+            <p>with \(p=2+\epsilon\) for some \(\epsilon>0\) and \(v\) is as described above in the Caccioppoli Inequality. Now, this says that \(\nabla v\) is in \(L^{p}\). Now from <span class="eq-ref" data-eq="2">Equation (2)<span class="eq-preview">\( \|u\|_{L^{p^*}(\Omega)} \le C \|u\|_{W^{1,p}(\Omega)} \)</span></span>, we get \(v\) is in \(L^{p^{*}}\). As \(v = \partial_k u\), so it is pretty clear as how this improvement is for \(u\) also all the way till \(L^{\infty}\). Once \(\nabla u \in L^\infty\), the gradient is essentially bounded, but not yet continuous.</p>
+
+            <h2>Next step</h2>
+
+            <p>Now that we have all the required tools and know that \(\nabla u \in L^\infty\), we will move on to analyzing Hilbert's \(19^{th}\) problem for \(n\)-dimensional case, where we will be using De Giorgi's Theorem and Schauder estimates to see if we can prove the analyticity of the minimizer.</p>
+
+        </article>
+    </main>
+
+    <a href="blog2.pdf" target="_blank" class="pdf-button" aria-label="Download PDF version" title="Download PDF version">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+            <polyline points="14 2 14 8 20 8"></polyline>
+            <line x1="16" y1="13" x2="8" y2="13"></line>
+            <line x1="16" y1="17" x2="8" y2="17"></line>
+            <polyline points="10 9 9 9 8 9"></polyline>
+        </svg>
+        <span>PDF Version</span>
+    </a>
+
+    <button class="listen-button" id="listenBtn" aria-label="Listen to article" aria-pressed="false" role="button" tabindex="0" title="Listen to article (Accessibility feature - Press Enter or Space to activate)">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M11 5L6 9H2v6h4l5 4V5z"></path>
+            <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path>
+        </svg>
+        <span id="listenText">Listen</span>
+    </button>
+
+    <footer class="footer">
+        <p>&copy; 2026 Math 495 Blog.</p>
+    </footer>
+
+    <script>
+        // Text-to-Speech functionality
+        const listenBtn = document.getElementById('listenBtn');
+        const listenText = document.getElementById('listenText');
+        let isPlaying = false;
+        let utterance = null;
+        let fullText = '';
+        let currentPosition = 0;
+        let startTime = 0;
+        let isUserPaused = false;
+        let lastBoundaryTime = 0;
+        let lastBoundaryPosition = 0;
+        let lastWordBoundaryPosition = 0;
+        let lastWordBoundaryTime = 0;
+
+        function getArticleText() {
+            const article = document.querySelector('.article-card');
+            if (!article) return '';
+
+            // Get all text content from paragraphs
+            const paragraphs = article.querySelectorAll('p');
+            let text = '';
+
+            paragraphs.forEach(p => {
+                // Remove MathJax and get clean text
+                const pClone = p.cloneNode(true);
+                const mathElements = pClone.querySelectorAll('.MathJax, script, mjx-container');
+                mathElements.forEach(el => el.remove());
+
+                // Replace LaTeX notation with readable text
+                let pText = pClone.textContent || pClone.innerText || '';
+                // Remove LaTeX delimiters
+                pText = pText.replace(/\\\(/g, '').replace(/\\\)/g, '');
+                pText = pText.replace(/\$([^$]+)\$/g, '$1');
+                // Convert common math notation to readable text
+                pText = pText.replace(/\^(\d+)/g, ' to the power of $1');
+                pText = pText.replace(/\^\{([^}]+)\}/g, ' to the power of $1');
+                pText = pText.replace(/\\times/g, ' times ');
+                pText = pText.replace(/\\cdot/g, ' times ');
+                pText = pText.replace(/\\mathbf\{([^}]+)\}/g, '$1');
+                pText = pText.replace(/\\text\{([^}]+)\}/g, '$1');
+
+                text += pText.trim() + '. ';
+            });
+
+            // Get figure captions
+            const captions = article.querySelectorAll('figcaption');
+            captions.forEach(caption => {
+                text += caption.textContent + '. ';
+            });
+
+            return text.trim();
+        }
+
+        function getVoice() {
+            const voices = window.speechSynthesis.getVoices();
+
+            const siriVoices = voices.filter(v =>
+                v.name.toLowerCase().includes('siri') ||
+                v.name.includes('Siri')
+            );
+
+            if (siriVoices.length > 0) {
+                return siriVoices[0];
+            }
+
+            const preferredVoices = voices.filter(v =>
+                v.name.includes('Samantha') ||
+                v.name.includes('Karen') ||
+                v.name.includes('Victoria') ||
+                v.name.includes('Zira') ||
+                v.name.includes('Google') ||
+                v.name.includes('Microsoft') ||
+                v.name.includes('Enhanced') ||
+                v.name.includes('Premium')
+            );
+
+            if (preferredVoices.length > 0) {
+                return preferredVoices[0];
+            }
+
+            const englishVoices = voices.filter(v => v.lang.startsWith('en'));
+            return englishVoices.length > 0 ? englishVoices[0] : null;
+        }
+
+        function speakText(text, startPos = 0) {
+            if ('speechSynthesis' in window) {
+                window.speechSynthesis.cancel();
+
+                const textToSpeak = startPos > 0 ? text.substring(startPos) : text;
+
+                utterance = new SpeechSynthesisUtterance(textToSpeak);
+
+                const voices = window.speechSynthesis.getVoices();
+                const selectedVoice = getVoice();
+                if (selectedVoice) {
+                    utterance.voice = selectedVoice;
+                }
+
+                utterance.lang = 'en-US';
+                utterance.rate = 0.9;
+                utterance.pitch = 1;
+                utterance.volume = 1;
+
+                utterance.onstart = () => {
+                    isPlaying = true;
+                    listenBtn.classList.add('playing');
+                    listenText.textContent = 'Pause';
+                    listenBtn.setAttribute('aria-label', 'Pause listening');
+                    listenBtn.setAttribute('aria-pressed', 'true');
+                    startTime = Date.now();
+                    lastBoundaryTime = Date.now();
+                    lastBoundaryPosition = startPos;
+                    lastWordBoundaryTime = Date.now();
+                    lastWordBoundaryPosition = startPos;
+                };
+
+                utterance.onend = () => {
+                    isPlaying = false;
+                    currentPosition = 0;
+                    fullText = '';
+                    listenBtn.classList.remove('playing');
+                    listenText.textContent = 'Listen';
+                    listenBtn.setAttribute('aria-label', 'Listen to article');
+                    listenBtn.setAttribute('aria-pressed', 'false');
+                };
+
+                utterance.onerror = (event) => {
+                    if (!isUserPaused && event.error !== 'interrupted') {
+                        isPlaying = false;
+                        listenBtn.classList.remove('playing');
+                        listenText.textContent = 'Listen';
+                        listenBtn.setAttribute('aria-label', 'Listen to article');
+                        listenBtn.setAttribute('aria-pressed', 'false');
+                        alert('Speech synthesis error. Please try again.');
+                    }
+                    isUserPaused = false;
+                };
+
+                utterance.onboundary = (event) => {
+                    if (event.charIndex !== undefined && event.charIndex !== null) {
+                        const boundaryPos = startPos + event.charIndex;
+                        currentPosition = boundaryPos;
+                        lastBoundaryPosition = boundaryPos;
+                        lastBoundaryTime = Date.now();
+
+                        if (event.name === 'word') {
+                            lastWordBoundaryPosition = boundaryPos;
+                            lastWordBoundaryTime = Date.now();
+                        }
+                    }
+                };
+
+                window.speechSynthesis.speak(utterance);
+            } else {
+                alert('Your browser does not support text-to-speech. Please use a modern browser like Chrome, Edge, or Safari.');
+            }
+        }
+
+        function pauseSpeaking() {
+            if (window.speechSynthesis && isPlaying) {
+                isUserPaused = true;
+
+                if (lastWordBoundaryTime > 0) {
+                    const timeSinceLastWord = (Date.now() - lastWordBoundaryTime) / 1000;
+                    const charsPerSecond = 0.9 * 10;
+                    const additionalChars = Math.floor(timeSinceLastWord * charsPerSecond);
+
+                    currentPosition = lastWordBoundaryPosition + additionalChars;
+
+                    if (lastBoundaryPosition > 0 && currentPosition > lastBoundaryPosition) {
+                        currentPosition = lastBoundaryPosition;
+                    }
+                } else if (lastBoundaryTime > 0) {
+                    const timeSinceLastBoundary = (Date.now() - lastBoundaryTime) / 1000;
+                    const charsPerSecond = 0.9 * 10;
+                    const additionalChars = Math.floor(timeSinceLastBoundary * charsPerSecond);
+                    currentPosition = lastBoundaryPosition + additionalChars;
+                } else if (startTime > 0) {
+                    const elapsed = (Date.now() - startTime) / 1000;
+                    const charsPerSecond = 0.9 * 10;
+                    currentPosition = Math.floor(elapsed * charsPerSecond);
+                }
+
+                window.speechSynthesis.cancel();
+
+                isPlaying = false;
+                listenBtn.classList.remove('playing');
+                listenText.textContent = 'Resume';
+                listenBtn.setAttribute('aria-label', 'Resume listening');
+                listenBtn.setAttribute('aria-pressed', 'false');
+            }
+        }
+
+        function toggleListen() {
+            if (isPlaying) {
+                pauseSpeaking();
+            } else {
+                isUserPaused = false;
+
+                if (fullText && currentPosition > 0) {
+                    speakText(fullText, currentPosition);
+                } else {
+                    const articleText = getArticleText();
+                    if (articleText) {
+                        fullText = articleText;
+                        currentPosition = 0;
+                        speakText(fullText, 0);
+                    } else {
+                        alert('No article content found to read.');
+                    }
+                }
+            }
+        }
+
+        listenBtn.addEventListener('click', toggleListen);
+
+        listenBtn.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                toggleListen();
+            }
+        });
+
+        if ('speechSynthesis' in window) {
+            let voices = window.speechSynthesis.getVoices();
+            if (voices.length === 0) {
+                window.speechSynthesis.onvoiceschanged = () => {
+                    voices = window.speechSynthesis.getVoices();
+                };
+            }
+        }
+
+        window.addEventListener('beforeunload', () => {
+            if (window.speechSynthesis) {
+                window.speechSynthesis.cancel();
+            }
+        });
+    </script>
+</body>
+</html>

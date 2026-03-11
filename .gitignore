@@ -4,13 +4,16 @@ _site/
 .jekyll-cache/
 .jekyll-metadata
 
-# LaTeX generated files
+# LaTeX source and generated files
+*.tex
 *.aux
 *.log
 *.out
 *.synctex.gz
 *.fdb_latexmk
 *.fls
+*.bbl
+*.blg
 
 # TikZ source files in figures (code already in blog.tex)
 Math495/figures/*.tex

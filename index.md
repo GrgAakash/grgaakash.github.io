@@ -15,7 +15,7 @@ title: Home
     <div class="col-md-12">
         <h2>About Me</h2>
         <p>
-         Hello, I am a student at the University of Alabama in the Accelerated Master’s Program (AMP), working toward completing my B.S. in Mathematics by May 2026 and my M.A. in Mathematics by December 2026 (expected). I am also pursuing minor in Digital, Public, and Professional Writing. I am interested in Pure as well as Applied Math. Currently, I am working under the guidance of Professor Kyungyong Lee on topics related to q,t-Catalan polynomials, and with Professor Chuntian Wang on stochastic pairing dynamics. 
+         Hello, I am a student at the University of Alabama in the Accelerated Master’s Program (AMP), working toward completing my B.S. in Mathematics by May 2026 and my M.A. in Mathematics by December 2026 (expected). I am also pursuing minor in Digital, Public, and Professional Writing. I am interested in Pure as well as Applied Math. Currently, I am working under the guidance of Professor Kyungyong Lee on topics related to q,t-Catalan polynomials, and Professor Chuntian Wang on stochastic pairing dynamics. I am also just starting to explore the field of Geometric Measure Theory with Professor Simon Bortz.
         </p>
         <p>
         I also enjoy Astronomy and playing Soccer whenever I can. 

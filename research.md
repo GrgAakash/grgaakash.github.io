@@ -14,6 +14,12 @@ title: Research
                 </div>
                 <div class="card-body">
                     <div class="research-item mb-4">
+                        <h4>Parabolic Azzam-Tolsa Beta Numbers</h4>
+                        <p class="text-muted">Feb 2026 - Present</p>
+                        <p>Investigating a parabolic version of the Azzam-Tolsa beta number condition.</p>
+                        <p>Mentor: Professor Simon Bortz</p>
+                    </div>
+                    <div class="research-item mb-4">
                         <h4>Stochastic Pairing Dynamics</h4>
                         <p class="text-muted">Jan 2026 - Present</p>
                         <p>Investigating stochastic pairing dynamics through random walk and probabilistic transition models.</p>
@@ -90,6 +96,9 @@ title: Research
                     <h3>Conferences & Workshops</h3>
                 </div>
                 <div class="card-body">
+                    <div class="presentation-item mb-4">
+                        <p>March 2026: AMS Southeastern Sectional Meeting, <strong>Presenter</strong></p>
+                    </div>
                     <div class="presentation-item mb-4">
                         <p>May 2024: CUNY Undergraduate Research Day 2024, <strong>Presenter</strong></p>
                     </div>
