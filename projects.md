@@ -128,31 +128,10 @@ title: Projects
 
                     <div class="project-item mb-4">
                         <h4>
-                            <a href="#" class="math495-toggle" data-bs-toggle="collapse" data-bs-target="#math495Details">
-                                Math 495
-                                <i class="fas fa-chevron-down ms-2"></i>
+                            <a href="/Math495/garden/Math495/index" class="others-link">
+                                Notes
                             </a>
                         </h4>
-                        <div id="math495Details" class="collapse">
-                            <div class="sub-project-item" style="margin-left: 2rem; margin-top: 1rem;">
-                                <h5 style="color: #333; font-weight: 600;">Notes</h5>
-                                <p class="text-muted">2026</p>
-                                <p>Linked course notes with graph view, search, and wiki-style navigation.</p>
-                                <p><a href="/Math495/garden/Math495/index" class="btn btn-primary">Notes</a></p>
-                            </div>
-                            <div class="sub-project-item" style="margin-left: 2rem; margin-top: 1rem;">
-                                <h5 style="color: #333; font-weight: 600;">Blog 1: The 19th Problem</h5>
-                                <p class="text-muted">2026</p>
-                                <p>An expository blog post on Hilbert's 19th Problem exploring the regularity of solutions to variational problems. Written for students with Calculus 3 and Linear Algebra background.</p>
-                                <p><a href="/Math495/Blog1.html" target="_blank" class="btn btn-primary">Read Blog</a></p>
-                            </div>
-                            <div class="sub-project-item" style="margin-left: 2rem; margin-top: 1rem;">
-                                <h5 style="color: #333; font-weight: 600;">Blog 2: The 19th Problem: Part II — The Analytical Toolkit</h5>
-                                <p class="text-muted">2026</p>
-                                <p>Continues the exploration of Hilbert's 19th Problem, covering Weak Derivatives, Sobolev Spaces, and the Caccioppoli Inequality which are the analytical toolkit needed for the higher-dimensional case.</p>
-                                <p><a href="/Math495/blog2.html" target="_blank" class="btn btn-primary">Read Blog</a></p>
-                            </div>
-                        </div>
                     </div>
                 </div>
             </div>

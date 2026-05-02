@@ -14,21 +14,21 @@ title: Research
                 </div>
                 <div class="card-body">
                     <div class="research-item mb-4">
-                        <h4>Parabolic Azzam-Tolsa Beta Numbers</h4>
+                        <h4>Rectifiability</h4>
                         <p class="text-muted">Feb 2026 - Present</p>
-                        <p>Investigating a parabolic version of the Azzam-Tolsa beta number condition.</p>
+                        <p>Learning about rectifiability related stuff.</p>
                         <p>Mentor: Professor Simon Bortz</p>
                     </div>
                     <div class="research-item mb-4">
-                        <h4>Stochastic Pairing Dynamics</h4>
+                        <h4>LLM Distillation</h4>
                         <p class="text-muted">Jan 2026 - Present</p>
-                        <p>Investigating stochastic pairing dynamics through random walk and probabilistic transition models.</p>
-                        <p>Mentor: Professor Chuntian Wang</p>
+                        <p>Working on LLM distillation.</p>
+                        <p>Mentors: Professors Chuntian Wang and Jia Zhao</p>
                     </div>
                     <div class="research-item mb-4">
-                        <h4>Structural Properties of Flagpole Partitions</h4>
+                        <h4>Combinatorial Perspective of \(q,t\)-Catalan Symmetry</h4>
                         <p class="text-muted">Feb 2025 - Present</p>
-                        <p>Learned about \(q, t\) Catalan numbers, Dyck vectors, and their connection to integer partition structures. Working on finalizing the proof of conjecture on second-order tail initiators via explicit inverse mappings between flagpole partitions and flag types.</p>
+                        <p>Working on a subset of the combinatorial proof of the \(q,t\)-Catalan symmetry.</p>
                         <p>Mentor: Professor Kyungyong Lee</p>
                     </div>
                 </div>
