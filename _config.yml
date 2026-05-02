@@ -94,6 +94,8 @@ exclude:
   - README.md
   - LICENSE
   - .gitignore
+  # Quartz source lives in-repo but must not be published as raw Jekyll pages
+  - quartz
 
 include:
   - "SIHR Stochastic vs ODE/src"

@@ -1,0 +1,8 @@
+---
+title: Math 495
+description: Course notes and expository write-ups from Math 495 in Spring 2026.
+tags:
+  - math495
+---
+
+Intended for students with a background in an introductory analysis course or honors calculus. The emphasis here is more on exposition and idea-sharing than on technical completeness.

@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HLLL appendix verification tools (defc / flagpole / NU chains)</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1 class="text-3d-large">HLLL verification helpers</h1>
+            <p class="subtitle">In-browser equivalents of <code>Codes_QTCat/verification_scripts</code> (Python)</p>
+            <p style="margin-top:12px;font-size:0.95rem;">
+                <a href="QTNU_1and2_Jan9_2026.html">NU / ND explorer</a>
+                &nbsp;·&nbsp;
+                <a href="dyck_visualizer.html">Dyck visualizer</a>
+                &nbsp;·&nbsp;
+                <a href="https://github.com/GrgAakash/grgaakash.github.io/tree/main/Codes_QTCat/verification_scripts" target="_blank" rel="noopener">Python scripts on GitHub</a>
+            </p>
+        </header>
+
+        <main>
+            <section>
+                <h2 class="text-3d">What this mirrors</h2>
+                <p>These panels correspond to the command-line tools in <code>verification_scripts/</code>:</p>
+                <ul style="margin-left:1.25rem;margin-top:0.5rem;">
+                    <li><strong>Partition lookup</strong> — <code>verify_chains_hlll.py --partition …</code></li>
+                    <li><strong>Enumerate by deficit</strong> — <code>verify_chains_hlll.py --enumerate-defc K</code> (scan lengths <code>L</code> in a range you set)</li>
+                    <li><strong>Flagpole table</strong> — <code>flagpole_defc10.py</code> style enumeration for a chosen deficit <code>k</code></li>
+                    <li><strong>Global chain initials</strong> — forward + backward construction from <code>TI₂</code> as in <code>verify_chains_hlll.py</code> (default <code>k = 10</code>)</li>
+                </ul>
+                <p style="margin-top:0.75rem;font-size:0.9rem;">Heavy enumeration can take a few seconds in the browser. Results use the same reduced-DV statistics as the Python code (<code>defc = L(L−1)/2 − area − dinv</code>).</p>
+            </section>
+
+            <section>
+                <h2 class="text-3d">Partition lookup</h2>
+                <p>Comma-separated parts, e.g. <code>5,3,1,1</code>.</p>
+                <div class="input-group" style="margin-top:12px;">
+                    <input type="text" id="pl-input" placeholder="5,3,1,1" value="5,3,1,1" style="max-width:420px;">
+                    <button type="button" class="btn btn-primary" id="pl-run">Look up</button>
+                </div>
+                <pre id="pl-out" style="margin-top:16px;white-space:pre-wrap;word-break:break-all;"></pre>
+            </section>
+
+            <section>
+                <h2 class="text-3d">Enumerate partitions by deficit</h2>
+                <div class="input-group" style="display:flex;flex-wrap:wrap;gap:12px;align-items:flex-end;">
+                    <div>
+                        <label for="ed-k">K (defc)</label><br>
+                        <input type="number" id="ed-k" min="1" max="30" value="10" style="width:5rem;">
+                    </div>
+                    <div>
+                        <label for="ed-lmin">L min</label><br>
+                        <input type="number" id="ed-lmin" value="" placeholder="auto" style="width:5rem;">
+                    </div>
+                    <div>
+                        <label for="ed-lmax">L max</label><br>
+                        <input type="number" id="ed-lmax" value="" placeholder="auto" style="width:5rem;">
+                    </div>
+                    <div>
+                        <label for="ed-limit">Row limit</label><br>
+                        <input type="number" id="ed-limit" min="0" value="200" style="width:5rem;">
+                    </div>
+                    <button type="button" class="btn btn-primary" id="ed-run">List</button>
+                </div>
+                <pre id="ed-out" style="margin-top:16px;white-space:pre-wrap;"></pre>
+            </section>
+
+            <section>
+                <h2 class="text-3d">Flagpole rows</h2>
+                <div class="input-group" style="display:flex;flex-wrap:wrap;gap:12px;align-items:flex-end;">
+                    <div>
+                        <label for="fp-k">Deficit k</label><br>
+                        <input type="number" id="fp-k" min="1" max="20" value="10" style="width:5rem;">
+                    </div>
+                    <button type="button" class="btn btn-primary" id="fp-run">Build table</button>
+                </div>
+                <div id="fp-table-wrap" style="margin-top:16px;overflow-x:auto;"></div>
+            </section>
+
+            <section>
+                <h2 class="text-3d">Global chain initials (from TI₂)</h2>
+                <p>Uses NU₁-final enumeration for lengths <code>L = 5 … 13</code> (same window as the Python verifier for <code>k = 10</code>).</p>
+                <div class="input-group" style="display:flex;flex-wrap:wrap;gap:12px;align-items:flex-end;">
+                    <div>
+                        <label for="gc-k">Deficit k</label><br>
+                        <input type="number" id="gc-k" min="1" max="20" value="10" style="width:5rem;">
+                    </div>
+                    <div>
+                        <label for="gc-idx">Flagpole row #</label><br>
+                        <input type="number" id="gc-idx" min="1" value="1" style="width:5rem;">
+                    </div>
+                    <button type="button" class="btn btn-primary" id="gc-run">Show chain initials</button>
+                </div>
+                <pre id="gc-out" style="margin-top:16px;white-space:pre-wrap;"></pre>
+            </section>
+
+            <section>
+                <h2 class="text-3d">Python scripts (reference)</h2>
+                <p>Clone the site repo or open these paths locally:</p>
+                <ul style="margin-left:1.25rem;">
+                    <li><code>verification_scripts/flagpole_defc10.py</code> — flagpole enumeration, TAIL₂ appendix vectors</li>
+                    <li><code>verification_scripts/verify_chains_hlll.py</code> — full global initials, <code>--partition</code>, <code>--enumerate-defc</code></li>
+                    <li><code>verification_scripts/verify_all_chains.py</code> — all appendix chains vs <code>a,m,h</code> and TI₂ placement</li>
+                    <li><code>verification_scripts/compare_chains.py</code> / <code>compare_chains_hlll.py</code> — chain comparison helpers</li>
+                    <li><code>verification_scripts/crosscheck_pdf.py</code> — PDF-style crosscheck blocks</li>
+                </ul>
+            </section>
+        </main>
+    </div>
+
+    <script src="verification_hlll_core.js"></script>
+    <script>
+    (function () {
+        const H = window.HLLLVerification;
+
+        function parsePartition(str) {
+            const parts = str.split(/[,\\s]+/).map((s) => s.trim()).filter(Boolean).map((x) => parseInt(x, 10));
+            if (parts.some((n) => Number.isNaN(n))) throw new Error('Use integers only, comma-separated.');
+            return parts;
+        }
+
+        document.getElementById('pl-run').addEventListener('click', function () {
+            const el = document.getElementById('pl-out');
+            try {
+                const mu = parsePartition(document.getElementById('pl-input').value);
+                const r = H.partitionLookup(mu);
+                if (!r.ok) {
+                    el.textContent = r.error;
+                    return;
+                }
+                el.textContent =
+                    'mu = ' + JSON.stringify(r.mu) + '   compact: ' + r.compact + '\n' +
+                    'reduced Dyck vector (length ' + r.L + '): ' + JSON.stringify(r.v) + '\n' +
+                    'area = ' + r.area + ', dinv = ' + r.dinv + ', defc = ' + r.defc + '\n\n' +
+                    'In the HLLL appendix, C(compact) names a global chain for a fixed deficit k.\n' +
+                    'Listed tuples are NU₁-initial partitions in that chain; defc equals k along the chain,\n' +
+                    'not necessarily defc(mu) for the label mu.';
+            } catch (e) {
+                el.textContent = String(e.message || e);
+            }
+        });
+
+        document.getElementById('ed-run').addEventListener('click', function () {
+            const out = document.getElementById('ed-out');
+            out.textContent = 'Running…';
+            const k = parseInt(document.getElementById('ed-k').value, 10);
+            let lMin = parseInt(document.getElementById('ed-lmin').value, 10);
+            let lMax = parseInt(document.getElementById('ed-lmax').value, 10);
+            const limRaw = document.getElementById('ed-limit').value;
+            const limit = limRaw === '' || limRaw === '0' ? null : parseInt(limRaw, 10);
+            if (Number.isNaN(k) || k < 1) {
+                out.textContent = 'Invalid K.';
+                return;
+            }
+            if (Number.isNaN(lMin)) lMin = H.minLengthForDefc(k);
+            if (Number.isNaN(lMax)) lMax = Math.max(lMin + 8, 14);
+            if (lMax < lMin) {
+                out.textContent = 'L max must be >= L min.';
+                return;
+            }
+            setTimeout(function () {
+                const rows = H.allDistinctPartitionsOfDefc(k, lMin, lMax);
+                const total = rows.length;
+                let list = rows;
+                if (limit != null && limit > 0 && total > limit) {
+                    list = rows.slice(0, limit);
+                    out.textContent = 'Distinct partitions with defc = ' + k + ' (L in [' + lMin + ', ' + lMax + ']): ' + total + '\n(showing first ' + limit + ')\n\n';
+                } else {
+                    out.textContent = 'Distinct partitions with defc = ' + k + ' (L in [' + lMin + ', ' + lMax + ']): ' + total + '\n\n';
+                }
+                const lines = list.map(function (row, i) {
+                    const v = H.partitionToReducedDv(row.part);
+                    const dinv = H.computeDinv(v);
+                    const area = H.computeArea(v);
+                    return (i + 1).toString().padStart(5) + '  ' + JSON.stringify(row.part).padEnd(28) + '  ' +
+                        H.partToHlllStr(row.part).padEnd(18) + '  L=' + String(row.L).padStart(2) + '  dinv=' + String(dinv).padStart(4) + '  area=' + String(area).padStart(4);
+                });
+                out.textContent += lines.join('\n');
+            }, 0);
+        });
+
+        function renderFlagpoleTable(defc) {
+            const rows = H.flagpoleRowsForDefc(defc);
+            const wrap = document.getElementById('fp-table-wrap');
+            let html = '<table class="sequence-table" style="width:100%;border-collapse:collapse;"><thead><tr>' +
+                ['#', 'λ', 'a', 'ε', 'μ (compact)', 'TI₂ (compact)', 'L', 'dinv(TI₂)'].map(function (h) {
+                    return '<th style="text-align:left;border:1px solid #0d0d0d;padding:6px;">' + h + '</th>';
+                }).join('') + '</tr></thead><tbody>';
+            rows.forEach(function (r, i) {
+                const lamStr = r.lambda.length ? JSON.stringify(r.lambda) : '()';
+                html += '<tr>' +
+                    '<td style="border:1px solid #0d0d0d;padding:6px;">' + (i + 1) + '</td>' +
+                    '<td style="border:1px solid #0d0d0d;padding:6px;">' + lamStr + '</td>' +
+                    '<td style="border:1px solid #0d0d0d;padding:6px;">' + r.a + '</td>' +
+                    '<td style="border:1px solid #0d0d0d;padding:6px;">' + r.eps + '</td>' +
+                    '<td style="border:1px solid #0d0d0d;padding:6px;">' + H.partToHlllStr(r.mu) + '</td>' +
+                    '<td style="border:1px solid #0d0d0d;padding:6px;">' + H.partToHlllStr(r.ti2) + '</td>' +
+                    '<td style="border:1px solid #0d0d0d;padding:6px;">' + r.L + '</td>' +
+                    '<td style="border:1px solid #0d0d0d;padding:6px;">' + r.dinvTi2 + '</td>' +
+                    '</tr>';
+            });
+            html += '</tbody></table><p style="margin-top:8px;">Rows: ' + rows.length + '</p>';
+            wrap.innerHTML = html;
+            return rows;
+        }
+
+        let lastFlagpoleRows = [];
+
+        document.getElementById('fp-run').addEventListener('click', function () {
+            const k = parseInt(document.getElementById('fp-k').value, 10);
+            if (Number.isNaN(k) || k < 1) return;
+            document.getElementById('gc-k').value = String(k);
+            lastFlagpoleRows = renderFlagpoleTable(k);
+            const maxIdx = document.getElementById('gc-idx');
+            maxIdx.max = String(Math.max(1, lastFlagpoleRows.length));
+            if (parseInt(maxIdx.value, 10) > lastFlagpoleRows.length) maxIdx.value = '1';
+        });
+
+        document.getElementById('gc-run').addEventListener('click', function () {
+            const out = document.getElementById('gc-out');
+            const k = parseInt(document.getElementById('gc-k').value, 10);
+            const idx = parseInt(document.getElementById('gc-idx').value, 10);
+            if (Number.isNaN(k) || k < 1) {
+                out.textContent = 'Invalid k.';
+                return;
+            }
+            out.textContent = 'Computing NU₁-final pool and chain…';
+            setTimeout(function () {
+                const rows = H.flagpoleRowsForDefc(k);
+                if (!rows.length || idx < 1 || idx > rows.length) {
+                    out.textContent = rows.length
+                        ? ('Pick row # between 1 and ' + rows.length + '.')
+                        : 'No flagpole rows for this deficit.';
+                    return;
+                }
+                const fd = rows[idx - 1];
+                const allNu1Final = H.collectNu1FinalDefc(k, 5, 13);
+                const forward = H.buildFullChainInitials(fd.ti2);
+                const backward = H.findBackwardChain(fd.ti2, allNu1Final, k);
+                const full = backward.concat(forward);
+                const tiPart = H.reducedDvToPartition(fd.tiRdv);
+                let text = '';
+                text += 'Row #' + idx + ' of ' + rows.length + ' flagpole rows for defc = ' + k + '\n';
+                text += 'mu = ' + JSON.stringify(fd.mu) + '   compact: ' + H.partToHlllStr(fd.mu) + '\n';
+                text += 'lambda = ' + (fd.lambda.length ? JSON.stringify(fd.lambda) : '()') + ', a = ' + fd.a + ', eps = ' + fd.eps + '\n';
+                text += 'TI_2 = ' + JSON.stringify(fd.ti2) + '   [' + H.partToHlllStr(fd.ti2) + ']\n';
+                text += 'TI   = ' + JSON.stringify(tiPart) + '   [' + H.partToHlllStr(tiPart) + ']\n\n';
+                text += 'FULL GLOBAL CHAIN initials (' + full.length + ' rows, TI_2 at pos ' + backward.length + '):\n';
+                text += 'pos  HLLL                      dinv   area   L   notes\n';
+                text += '---  ------------------------  -----  -----  --  -----\n';
+                full.forEach(function (p, i) {
+                    const rdv = H.partitionToReducedDv(p);
+                    const dinv = H.computeDinv(rdv);
+                    const area = H.computeArea(rdv);
+                    const L = rdv.length;
+                    const notes = [];
+                    if (JSON.stringify(p) === JSON.stringify(fd.ti2)) notes.push('TI_2');
+                    if (JSON.stringify(p) === JSON.stringify(tiPart)) notes.push('TI');
+                    text += String(i).padStart(3) + '  ' + H.partToHlllStr(p).padEnd(24) + '  ' +
+                        String(dinv).padStart(5) + '  ' + String(area).padStart(5) + '  ' + String(L).padStart(2) + '  ' + notes.join(' ') + '\n';
+                });
+                text += '\nHLLL format:\nC_(' + H.partToHlllStr(fd.mu) + '): ' +
+                    full.map(function (p) { return '(' + H.partToHlllStr(p) + ')'; }).join(', ') + '.\n';
+                const aVals = full.map(function (p) { return H.computeDinv(H.partitionToReducedDv(p)); });
+                const hVals = full.map(function (p) { return H.partitionToReducedDv(p).length; });
+                text += 'a = (' + aVals.join(', ') + ')\n';
+                text += 'h = (' + hVals.join(', ') + ')\n';
+                out.textContent = text;
+                document.getElementById('gc-idx').max = String(rows.length);
+            }, 0);
+        });
+
+        document.getElementById('pl-run').click();
+        document.getElementById('fp-run').click();
+    })();
+    </script>
+</body>
+</html>
