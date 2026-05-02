@@ -114,21 +114,7 @@ title: Projects
 
                     <div class="project-item mb-4">
                         <h4>
-                            <a href="#" class="blog-toggle" data-bs-toggle="collapse" data-bs-target="#blogDetails">
-                                EN381
-                                <i class="fas fa-chevron-down ms-2"></i>
-                            </a>
-                        </h4>
-                        <div id="blogDetails" class="collapse">
-                            <p class="text-muted">2025</p>
-                            <p>A blog on abc conjecture and its present context (extremely non mathematical). This is my EN381 blog task.</p>
-                            <p><a href="EN381Blog/Scienceblog.html" target="_blank" class="btn btn-primary">Read Blog</a></p>
-                        </div>
-                    </div>
-
-                    <div class="project-item mb-4">
-                        <h4>
-                            <a href="/Math495/garden/Math495/index" class="others-link">
+                            <a href="/Math495/garden/index" class="others-link">
                                 Notes
                             </a>
                         </h4>
