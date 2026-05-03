@@ -5,4 +5,6 @@ tags:
   - math495
 ---
 
+Spring 2026
+
 Intended for students with a background in an introductory analysis course or honors calculus. The emphasis here is more on exposition and idea-sharing than on technical completeness.
