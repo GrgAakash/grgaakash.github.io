@@ -6,53 +6,53 @@
       <description>Last 10 notes on Notes</description>
       <generator>Quartz -- quartz.jzhao.xyz</generator>
       <item>
+    <title>The Battle for the abc Conjecture</title>
+    <link>https://grgaakash.github.io/Math495/garden/EN381/The-Battle-for-the-abc-Conjecture</link>
+    <guid>https://grgaakash.github.io/Math495/garden/EN381/The-Battle-for-the-abc-Conjecture</guid>
+    <description><![CDATA[ A science-writing note on the abc conjecture and the Mochizuki controversy. ]]></description>
+    <pubDate>Sat, 02 May 2026 08:31:27 GMT</pubDate>
+  </item><item>
     <title>EN381</title>
     <link>https://grgaakash.github.io/Math495/garden/EN381/</link>
     <guid>https://grgaakash.github.io/Math495/garden/EN381/</guid>
     <description><![CDATA[ Science writing notes. ]]></description>
-    <pubDate>Sat, 02 May 2026 08:21:13 GMT</pubDate>
+    <pubDate>Sat, 02 May 2026 08:31:27 GMT</pubDate>
   </item><item>
     <title>Home</title>
     <link>https://grgaakash.github.io/Math495/garden/</link>
     <guid>https://grgaakash.github.io/Math495/garden/</guid>
     <description><![CDATA[ Math 495 EN381. ]]></description>
-    <pubDate>Sat, 02 May 2026 08:18:27 GMT</pubDate>
-  </item><item>
-    <title>The Battle for the abc Conjecture</title>
-    <link>https://grgaakash.github.io/Math495/garden/EN381/The-Battle-for-the-abc-Conjecture</link>
-    <guid>https://grgaakash.github.io/Math495/garden/EN381/The-Battle-for-the-abc-Conjecture</guid>
-    <description><![CDATA[ A science-writing note on the abc conjecture and the Mochizuki controversy. ]]></description>
-    <pubDate>Sat, 02 May 2026 08:18:27 GMT</pubDate>
-  </item><item>
-    <title>The 19th Problem — Part II</title>
-    <link>https://grgaakash.github.io/Math495/garden/Math495/19th-Problem-Part-II</link>
-    <guid>https://grgaakash.github.io/Math495/garden/Math495/19th-Problem-Part-II</guid>
-    <description><![CDATA[ The analytical toolkit: weak derivatives, Sobolev spaces, and Caccioppoli. ]]></description>
-    <pubDate>Sat, 02 May 2026 02:27:14 GMT</pubDate>
-  </item><item>
-    <title>Hausdorff Dimension and Fractal Geometry</title>
-    <link>https://grgaakash.github.io/Math495/garden/Math495/Hausdorff-Dimension-and-Fractal-Geometry</link>
-    <guid>https://grgaakash.github.io/Math495/garden/Math495/Hausdorff-Dimension-and-Fractal-Geometry</guid>
-    <description><![CDATA[ Measuring the unmeasurable: outer measures, Hausdorff measure, and fractal dimension. ]]></description>
-    <pubDate>Sat, 02 May 2026 02:19:26 GMT</pubDate>
-  </item><item>
-    <title>The 19th Problem — Part III</title>
-    <link>https://grgaakash.github.io/Math495/garden/Math495/19th-Problem-Part-III</link>
-    <guid>https://grgaakash.github.io/Math495/garden/Math495/19th-Problem-Part-III</guid>
-    <description><![CDATA[ De Giorgi's theorem: Hölder continuity of minimizers in all dimensions. ]]></description>
-    <pubDate>Sat, 02 May 2026 02:19:21 GMT</pubDate>
-  </item><item>
-    <title>Math 495</title>
-    <link>https://grgaakash.github.io/Math495/garden/Math495/</link>
-    <guid>https://grgaakash.github.io/Math495/garden/Math495/</guid>
-    <description><![CDATA[ Course notes and expository write-ups from Math 495 in Spring 2026. ]]></description>
-    <pubDate>Sat, 02 May 2026 02:09:39 GMT</pubDate>
+    <pubDate>Sat, 02 May 2026 08:31:27 GMT</pubDate>
   </item><item>
     <title>The 19th Problem — Part I (2D)</title>
     <link>https://grgaakash.github.io/Math495/garden/Math495/19th-Problem-Part-I</link>
     <guid>https://grgaakash.github.io/Math495/garden/Math495/19th-Problem-Part-I</guid>
     <description><![CDATA[ Hilbert's 19th problem, 2D regularity, and why minimizers become smooth. ]]></description>
-    <pubDate>Sat, 02 May 2026 01:57:22 GMT</pubDate>
+    <pubDate>Sat, 02 May 2026 02:44:16 GMT</pubDate>
+  </item><item>
+    <title>The 19th Problem — Part II</title>
+    <link>https://grgaakash.github.io/Math495/garden/Math495/19th-Problem-Part-II</link>
+    <guid>https://grgaakash.github.io/Math495/garden/Math495/19th-Problem-Part-II</guid>
+    <description><![CDATA[ The analytical toolkit: weak derivatives, Sobolev spaces, and Caccioppoli. ]]></description>
+    <pubDate>Sat, 02 May 2026 02:44:16 GMT</pubDate>
+  </item><item>
+    <title>The 19th Problem — Part III</title>
+    <link>https://grgaakash.github.io/Math495/garden/Math495/19th-Problem-Part-III</link>
+    <guid>https://grgaakash.github.io/Math495/garden/Math495/19th-Problem-Part-III</guid>
+    <description><![CDATA[ De Giorgi's theorem: Hölder continuity of minimizers in all dimensions. ]]></description>
+    <pubDate>Sat, 02 May 2026 02:44:16 GMT</pubDate>
+  </item><item>
+    <title>Hausdorff Dimension and Fractal Geometry</title>
+    <link>https://grgaakash.github.io/Math495/garden/Math495/Hausdorff-Dimension-and-Fractal-Geometry</link>
+    <guid>https://grgaakash.github.io/Math495/garden/Math495/Hausdorff-Dimension-and-Fractal-Geometry</guid>
+    <description><![CDATA[ Measuring the unmeasurable: outer measures, Hausdorff measure, and fractal dimension. ]]></description>
+    <pubDate>Sat, 02 May 2026 02:44:16 GMT</pubDate>
+  </item><item>
+    <title>Math 495</title>
+    <link>https://grgaakash.github.io/Math495/garden/Math495/</link>
+    <guid>https://grgaakash.github.io/Math495/garden/Math495/</guid>
+    <description><![CDATA[ Course notes and expository write-ups from Math 495 in Spring 2026. ]]></description>
+    <pubDate>Sat, 02 May 2026 02:44:16 GMT</pubDate>
   </item>
     </channel>
   </rss>

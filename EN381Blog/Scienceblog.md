@@ -13,9 +13,23 @@ Now, here's what the abc conjecture says. When you have three coprime numbers wh
 
 What does "repeated small primes" mean? By "small primes," we mean primes like 2, 3, 5, 7 (small numbers). By "repeated," we mean the same prime appears many times as a factor. For example, \(2^{10} = 2 \times 2 \times 2 \times 2 \times 2 \times 2 \times 2 \times 2 \times 2 \times 2\) means the prime 2 is repeated 10 times. The number \(2^{10} \times 3^5\) means the prime 2 is repeated 10 times and the prime 3 is repeated 5 times.
 
-The key insight is this: if a and b are both made of the same small primes (like 2 and 3) raised to high powers, then c cannot also be small—it must be relatively large. 
+The key insight is this: if a and b are both made of from some small primes (like 2 and 3) raised to high powers, then c will usually bring in enough new primes factors that will make the radical of abc will be not too small compared with c. In fact, usually it is bigger but the interesting case is when it is actually less than c, abc conjecture says even when c is larger than rad(abc), it cannot get "too much" larger.
 
-For example, if \(a = 2^{10} = 1,024\) and \(b = 3^{10} = 59,049\), then \(c = 60,073\). Notice that a uses only the prime 2 (repeated 10 times), and b uses only the prime 3 (repeated 10 times). Even though we're only using the small primes 2 and 3, the result c is quite large. The abc conjecture says this pattern usually holds: when a and b are built from the same small primes raised to high powers, c tends to be large.
+For example here is the not so interesting case, if \(a = 2^{10} = 1,024\) and \(b = 3^{10} = 59,049\), then \(c = a+b = 60,073\). Now \(60,073 = 13 \times 4,621\). So \(\operatorname{rad}(abc) = \operatorname{rad}(2^{10} \cdot 3^{10} \cdot 60,073) = 2 \times 3 \times 13 \times 4,621 = 360,438\). Thus \(c\) brings in the new prime factors \(13\) and \(4,621\), making \(\operatorname{rad}(abc) = 360,438 > 60,073 = c\).
+
+Here is the interesting case: \(a=3\), \(b=125\), and \(c=128\).
+
+\(\operatorname{rad}(abc)=2 \times 3 \times 5=30 < c=128\).
+
+A natural follow up question is, how much is "too much"?
+In everyday terms, if instead of paying 30 dollars for a meal, I had to pay 128 dollars, I would definitely feel that is too much, but what about in the context of abc conjecture?
+ABC conjecture does not measure "too much" by the usual subtraction or ordinary ratio, it measures "too much" using powers.
+
+In the case of \(\operatorname{rad}(abc)=30\) and \(c=128\), we see \(30<128<30^{1.5}\), so in this sense, 128 definitely doesn't seem "too much" larger than \(\operatorname{rad}(abc)\). Therefore the notion of "too much" can be quantified by the exponent.
+
+To be more precise (not completely though), ABC conjecture says that for every positive number \(\varepsilon\), there are only finitely many coprime triples \(a+b=c\) such that \(c>\operatorname{rad}(abc)^{1+\varepsilon}\).
+
+The \(\varepsilon\) can be any positive number, but the conjecture is most interesting when \(\varepsilon\) is very small.
 
 Why does this matter for Fermat's Last Theorem? If the abc conjecture were true, it would immediately show that equations like a^n + b^n = c^n are impossible for n > 2, which would trivially prove Fermat's Last Theorem.
 
@@ -30,4 +44,3 @@ The huge complexity and unconventional nature of IUTT made it impossible for mos
 
 
 This perspective became the leading view among number theorists outside Mochizuki's narrow circle: the proof was incorrect, and the abc conjecture is still open. On the other hand, Mochizuki and his allies, including Kirti Joshi, wholly disagree, claiming that Scholze and Stix were simply not able to conceive the most elementary notions of IUTT, especially the significance of the new labels and species. Since that time Joshi has released his own series of papers in which he says he has fixed and completed Mochizuki's work, and claims that structurally IUTT is actually correct. Interestingly, despite Joshi coming to his defense, Mochizuki has reportedly been dismissive of Joshi's corrections by saying the work needed no fixing and was correct all along. Even though the main papers were formally published in 2021, the entire mathematical community has not bought into either side, and one of number theory's most important conjectures remains open.
-
