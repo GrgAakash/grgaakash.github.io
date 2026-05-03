@@ -14,16 +14,16 @@ title: Research
                 </div>
                 <div class="card-body">
                     <div class="research-item mb-4">
+                        <h4>LLM Distillation</h4>
+                        <p class="text-muted">March 2026 - Present</p>
+                        <p>Working on LLM distillation.</p>
+                        <p>Mentors: Professors Chuntian Wang and Jia Zhao</p>
+                    </div>
+                    <div class="research-item mb-4">
                         <h4>Rectifiability</h4>
                         <p class="text-muted">Feb 2026 - Present</p>
                         <p>Learning about rectifiability related stuff.</p>
                         <p>Mentor: Professor Simon Bortz</p>
-                    </div>
-                    <div class="research-item mb-4">
-                        <h4>LLM Distillation</h4>
-                        <p class="text-muted">Jan 2026 - Present</p>
-                        <p>Working on LLM distillation.</p>
-                        <p>Mentors: Professors Chuntian Wang and Jia Zhao</p>
                     </div>
                     <div class="research-item mb-4">
                         <h4>Combinatorial Perspective of \(q,t\)-Catalan Symmetry</h4>
