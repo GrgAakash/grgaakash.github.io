@@ -134,6 +134,7 @@ Let us take a small digression to measurable functions as it is pretty fundament
 As we already discussed we do not measure points because they have $0$ measure, so we only measure subsets. We therefore define a family $\mathcal{B}$ of subsets of $\Omega$ that we can measure. *Measurable sets* are just any sets which belongs to $\mathcal{B}$. These are the sets we can consistently assign a size to, built from rectangles (products of intervals) using countable unions, intersections, and complements
 If we have function $u: \Omega \to \mathbb{R}$, we want to transport this measure to $\mathbb{R}$. To find measure of outcome set $A \subset \mathbb{R}$, we must look at inverse image $u^{-1}(A)$ in $\Omega$. For this to work, $u^{-1}(A)$ must be in $\mathcal{B}$. Since we care about intervals $I \subset \mathbb{R}$, we want $u^{-1}(I)$ to be measurable. This is same as saying $u^{-1}([-\infty, a))$[^5] is measurable $\forall a \in A$.
 So intuitively, measurable function just guarantees inverse image of intervals are measurable, which allows us to transport measure and compute integral.
+
 ## The $L^p$ Spaces
 First, we need a way to measure how big a function is. It is convenient to measure size using integrals rather than maximum values (which are too delicate; changing a function at a single point can ruin its supremum, but doesn’t affect integrals because points have measure zero).
 
