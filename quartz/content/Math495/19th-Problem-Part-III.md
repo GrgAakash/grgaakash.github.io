@@ -1,5 +1,5 @@
 ---
-title: "The 19th Problem — Part III"
+title: "The 19th Problem - Part III"
 description: "De Giorgi's theorem: Hölder continuity of minimizers in all dimensions."
 tags:
   - math495
@@ -12,29 +12,27 @@ draft: false
 
 # Introduction
 
-Let's recap where we are. In [[Math495/19th-Problem-Part-I|Part I]], we solved Hilbert's $19^{th}$ problem in two dimensions. We had two methods: the "chopping argument," which used the energy cost of oscillation on boundary circles, and the quasiconformal argument, which forced the gradient map to have bounded distortion. Both gave us the same results of oscillation decay, and therefore Hölder continuity of $\nabla u$. We also discussed that the chopping argument fails in three and higher dimensions because the energy integral converges, so the gradient can "afford" to keep oscillating across planes forever without violating the [Caccioppoli bound](/Math495/19th-Problem-Part-II#Thm-Caccioppoli). The quasiconformal argument fails because one scalar equation is too weak, as there's too much algebraic slack.
+Let's recap where we are. In [[Math495/19th-Problem-Part-I|Part I]], we looked at Hilbert's $19^{th}$ problem in two dimensions where we analyzed two methods: the "chopping argument," which used the energy cost of oscillation on boundary circles, and the quasiconformal argument, which forced the gradient map to have bounded distortion. Both gave us the same results of oscillation decay, and eventually the Hölder continuity of $\nabla u$. We also discussed how in dimensions greater than two, the chopping argument fails because the energy integral converges, so the gradient can "afford" to keep oscillating across planes forever without violating the [Caccioppoli bound](/Math495/19th-Problem-Part-II#Thm-Caccioppoli). The quasiconformal argument falls apart due to "too much" algebraic slack it invites. Due to this failure, we moved from a geometrical argument to a more analytical argument.
 
-In [[Math495/19th-Problem-Part-II|Part II]], due to the failure in dimensions greater than two, we changed our approach from a geometrical argument to a more analytical argument. To that end, we built an analytical toolkit (weak derivatives, Sobolev spaces, the Sobolev inequality, the Caccioppoli inequality) and by the end of Part II, we had bootstrapped our way to $\nabla u \in L^\infty$. The gradient is bounded.
-
-But bounded is not the finish line. Recall the [vicious circle from Part I](/Math495/19th-Problem-Part-I#eq-linearized): to prove the solution is smooth, the classical theory (Schauder estimates) demands that the coefficients $a_{ij}(x) = F_{ij}(\nabla u(x))$ be smooth. And those coefficients are the gradient we're trying to prove smooth. The way to break this circle is to get just a *little* regularity for free, without assuming anything about the coefficients. If we can show $\nabla u \in C^\alpha$ for some $\alpha > 0$, then Schauder takes over and bootstraps us to $C^\infty$, and when $F$ is analytic, we eventually hope to get $C^\omega$.
-
+To that end, in [[Math495/19th-Problem-Part-II|Part II]], we introduced some necessary analytical toolkit and successfully bootstrapped our way to $\nabla u \in L^\infty$ (gradient is bounded) which was a good leap. However, just being bounded doesn't cut it. Recall the [vicious circle from Part I](/Math495/19th-Problem-Part-I#eq-linearized): to prove the solution is smooth, the classical theory (Schauder estimates) needs the coefficients $a_{ij}(x) = F_{ij}(\nabla u(x))$ be smooth and those coefficients are the gradient we're trying to prove smooth. So *how do we break this vicious circle is the main food for thought.*
+The way to break this circle is to get just a *little* regularity (($C^\alpha$ control of the gradient)) for free, without assuming anything about the coefficients. If we can show $\nabla u \in C^\alpha$ for some $\alpha > 0$, then Schauder takes over and bootstraps us to $C^\infty$, and when $F$ is analytic, we eventually hope to get $C^\omega$.
 *So the entire proof in $n$ dimensions reduces to one question: can we prove that $\nabla u$ is Hölder continuous, without assuming anything about the smoothness of the coefficients?*
 
 The answer is yes. The tool that does it is De Giorgi's Theorem, published in 1957. Let's dive right into this.
 
 # De Giorgi's Theorem
 
-Before we get to De Giorgi's theorem, let's set up the problem. We start with our [Euler-Lagrange equation from Part I](/Math495/19th-Problem-Part-I#eq-euler-lagrange):
+Before we get to De Giorgi's theorem, let's set up the problem. We start with something familiar, i.e. [Euler-Lagrange equation from Part I](/Math495/19th-Problem-Part-I#eq-euler-lagrange):
 
 $$\text{div}(\nabla F(\nabla u)) = F_{ij}(\nabla u) \, u_{ij} = 0,$$
 
-where $F$ is analytic, convex, and uniformly convex (meaning $D^2 F$ has eigenvalues between $\lambda$ and $\lambda^{-1}$).
+where $F$ is analytic and uniformly convex (meaning $D^2 F$ has eigenvalues between $\lambda$ and $\lambda^{-1}$).
 
-Here's a natural idea we already saw in [Part I](/Math495/19th-Problem-Part-I#eq-linearized): differentiate the whole equation with respect to $x_k$. If $u$ is smooth,[^1] we can move $\partial_k$ inside and get
+We use an idea that we already saw in [Part I](/Math495/19th-Problem-Part-I#eq-linearized) which is to differentiate the whole equation with respect to $x_k$. If $u$ is smooth,[^1] we can move $\partial_k$ inside and get
 
 $$\partial_i \big( F_{ij}(\nabla u) \, \partial_j (\partial_k u) \big) = 0, \quad k = 1, \ldots, n.$$
 
-Look at what just happened. Each component $v = \partial_k u$ of the gradient satisfies a *linear* equation in divergence form:
+Let us analyze what just happened. Each component $v = \partial_k u$ of the gradient satisfies a *linear* equation in divergence form:
 
 $$\partial_i \big( a_{ij}(x) \, \partial_j v \big) = 0,$$
 
@@ -46,7 +44,165 @@ But we don't yet know whether $\nabla u$ is continuous. So, the coefficients $a_
 > $$\|v\|_{C^\alpha(B_{\frac{1}{2}})} \leq C(n, \lambda) \, \|v\|_{L^\infty(B_1)}$$
 > for some $\alpha(n, \lambda) > 0$.
 
-This is De Giorgi's theorem. Once we have it, $v = \partial_k u \in C^\alpha$, so $\nabla u \in C^\alpha$, and the vicious circle is broken. Let's prove it.
+This is De Giorgi's theorem. Once we have it, $v = \partial_k u \in C^\alpha$, so $\nabla u \in C^\alpha$, and the vicious circle is broken. Now let's move towards the proof of it.
+
+## A Two-Variable Model of the Proof
+
+Before doing the proof in full generality, let us do the proof in two variables to get more used to the idea.
+
+Suppose $u=u(x,y)$ minimizes (One thing to note is: The existence of a minizer is itself something worth pondering more on. Here we just assume it exists)
+
+$$
+J(u)=\int F(u_x,u_y)\,dx\,dy.
+$$
+
+From Part I, the Euler-Lagrange equation is
+
+$$
+\frac{\partial}{\partial x}\left(F_{p_1}(\nabla u)\right)
++\frac{\partial}{\partial y}\left(F_{p_2}(\nabla u)\right)=0.
+$$
+
+Now take one derivative of $u$, for example
+
+$$
+v=u_x.
+$$
+
+As in Part I, differentiating the Euler-Lagrange equation with respect to $x$ gives a linear equation for $v$:
+
+$$
+\frac{\partial}{\partial x}\left(a_{11}v_x+a_{12}v_y\right)
++\frac{\partial}{\partial y}\left(a_{21}v_x+a_{22}v_y\right)=0,
+$$
+
+where
+
+$$
+A(x,y)=
+\begin{pmatrix}
+a_{11} & a_{12}\\
+a_{21} & a_{22}
+\end{pmatrix}
+=D^2F(\nabla u(x,y)).
+$$
+
+The entries $a_{ij}$ might be rough, because they depend on $\nabla u$. But uniform convexity says the matrix $A$ is never degenerate. In concrete terms, there are constants $0<\lambda<1$ such that
+
+$$
+\lambda(\xi_1^2+\xi_2^2)
+\leq
+a_{11}\xi_1^2+2a_{12}\xi_1\xi_2+a_{22}\xi_2^2
+\leq
+\lambda^{-1}(\xi_1^2+\xi_2^2)
+$$
+
+for every vector $\xi=(\xi_1,\xi_2)$. So the equation may have rough coefficients, but it is still elliptic.
+
+Now imagine that, after subtracting a constant and dividing by another constant, we have normalized $v$ so that
+
+$$
+-1\leq v\leq 1
+$$
+
+on a disk. The goal is to prove that when we zoom into a smaller disk, the range of $v$ gets shorter. That is oscillation decay.
+
+Here is how the De Giorgi proof sees this.
+
+Pick a height $\kappa$, say $\kappa=\frac{1}{2}$, and look only at the part of $v$ above that height:
+
+$$
+v_\kappa=(v-\kappa)_+.
+$$
+
+This means
+
+$$
+v_\kappa=
+\begin{cases}
+v-\kappa, & v>\kappa,\\
+0, & v\leq \kappa.
+\end{cases}
+$$
+
+So $v_\kappa$ ignores everything below the level $\kappa$ and measures only the part of $v$ sticking above that level.
+
+Now let us multiply by a cutoff function $\psi$. Think of $\psi$ as a smooth window meaning it equals $1$ on the smaller disk we care about and goes to $0$ before the boundary of a larger disk. The Caccioppoli inequality says (roughly speaking)
+
+$$
+\int |\nabla(v_\kappa\psi)|^2
+\leq
+C\int v_\kappa^2|\nabla\psi|^2.
+$$
+
+This is the first key step. It says that the energy of the part of $v$ above height $\kappa$ is controlled by how much of that part exists on the larger disk. Then Sobolev says that gradient control improves integrability. Simply speaking if a function has a controlled gradient energy, then it cannot concentrate too sharply on a tiny set. So Caccioppoli plus Sobolev says:
+
+If the set where $v>\kappa$ is already small, then the part of $v$ above the next higher level is even smaller.
+
+For example, compare two heights
+
+$$
+\tau=\frac{1}{2},
+\qquad
+\kappa=\frac{3}{4}.
+$$
+
+If very little of the disk lies above $\tau$, then even less can lie above $\kappa$. Repeating this with the levels
+
+$$
+\frac{1}{2},\quad \frac{3}{4},\quad \frac{7}{8},\quad \frac{15}{16},\quad \ldots
+$$
+
+forces the high-level sets to disappear in the smaller disk. To keep it simple, if $v$ is not large on much of the bigger disk, then it cannot suddenly become almost $1$ in the middle.
+This is the $L^2\to L^\infty$ step.
+
+The oscillation step uses the same idea from both sides. Suppose $v$ ranges between $-1$ and $1$ on the big disk. Then at least half of the disk satisfies either
+
+$$
+v\leq 0
+$$
+
+or
+
+$$
+v\geq 0.
+$$
+
+If $v\leq 0$ on a big piece, then the positive part of $v$ has trouble climbing all the way up to $1$ in the smaller disk. The estimate forces
+
+$$
+\sup_{B_{\frac{1}{2}}} v\leq 1-\epsilon.
+$$
+
+If instead $v\geq 0$ on a big piece, apply the same argument to $-v$. Then
+
+$$
+\inf_{B_{\frac{1}{2}}} v\geq -1+\epsilon.
+$$
+
+Either way, the range of values shrinks:
+
+$$
+\operatorname{osc}_{B_{\frac{1}{2}}} v
+\leq
+(1-\epsilon)\operatorname{osc}_{B_1} v.
+$$
+
+Then we repeat this on smaller and smaller disks:
+
+$$
+B_1,\quad B_{\frac{1}{2}},\quad B_{\frac{1}{4}},\quad B_{\frac{1}{8}},\quad \ldots
+$$
+
+Each zoom reduces the oscillation by a certain factor. That repeated shrinking is exactly what becomes Hölder continuity.
+
+So the proof has three moves:
+
+1. Use truncations like $(v-\kappa)_+$ to focus only on high values.
+2. Use Caccioppoli plus Sobolev to show high-value sets shrink as the height rises.
+3. Use that shrinking at every scale to force oscillation decay.
+
+The formal proof below is the same argument, but written in a form that works in every dimension and for rough coefficient matrices.
 
 ## The $L^2 \to L^\infty$ Estimate
 
@@ -61,6 +217,7 @@ Recall that a solution satisfies $\partial_i(a_{ij} \partial_j v) = 0$, which is
 The first ingredient of De Giorgi's proof says something intuitive: sub-solutions can't have interior upward spikes. If a sub-solution is small in an $L^2$ sense, it must be small pointwise in the interior.
 
 <span id="thm-l2-linfty"></span>
+
 > [!abstract] Theorem 1 ($L^2 \to L^\infty$ Estimate)
 > Assume that $\partial_i(a_{ij}(x) \partial_j v) \geq 0$ in $B_2 \subset \mathbb{R}^n$. Then
 > $$\sup_{B_1} v \leq C(n, \lambda) \, \|v_+\|_{L^2(B_2)},$$
@@ -111,8 +268,8 @@ $$\sup_{B_1} v \leq C(n, \lambda) \, \|v_+\|_{L^2(B_2)}.$$
 The $L^2 \to L^\infty$ estimate tells us sub-solutions can't spike. That's useful, but we need the *oscillation* of a solution to shrink as we zoom in. This shrinking is what gives Hölder continuity.
 
 In [[Math495/19th-Problem-Part-I|Part I]], we got oscillation decay from the chopping argument. Here we'll get it by a completely different method, one that works in every dimension.
-
 <span id="prop-oscillation-decay"></span>
+
 > [!abstract] Proposition 2 (Oscillation Decay)
 > Assume $\partial_i(a_{ij}(x) \partial_j v) \geq 0$ in $B_1 \subset \mathbb{R}^n$. For any $\delta > 0$, there exists $\epsilon(n, \lambda, \delta) > 0$ such that if
 > $$|\{v_+ = 0\} \cap B_1| \geq \delta \, |B_1|,$$
@@ -123,7 +280,7 @@ In [[Math495/19th-Problem-Part-I|Part I]], we got oscillation decay from the cho
 
 This is a *quantitative* maximum principle. The classical version, which we used in [Part I](/Math495/19th-Problem-Part-I), says sub-solutions can't have interior maxima. Proposition 2 is stronger: they can't even get *close* to the maximum deep inside, and the gap depends only on $n$, $\lambda$, and $\delta$, not on any smoothness of the coefficients.
 
-Imagine a sub-solution $v$ in $B_1$ with $\sup_{B_1} v_+ = 1$, and suppose the set where $v \leq 0$ takes up at least a $\delta$-fraction of the ball. The function needs to climb from $0$ to nearly $1$ somewhere. But $H^1$ functions can't do this for free; they have to "pay" in gradient energy for every level set they cross. And Caccioppoli caps the total energy budget. So, if the function starts at zero on a $\delta$-fraction of the ball, it simply can't afford to reach the full height deep in the interior. Something has to give, and what gives is the maximum.
+Imagine a sub-solution $v$ in $B_1$ with $\sup_{B_1} v_+ = 1$, and suppose the set where $v \leq 0$ takes up at least a $\delta$-fraction of the ball. For $v$ to stay close to $1$ on the smaller ball $B_{\frac{1}{2}}$, it would have to climb from $0$ to nearly $1$ somewhere. But $H^1$ functions cannot do this for free, since they have to "pay" in gradient energy for every level set they cross. On the other hand, Caccioppoli puts a cap on the total energy budget. So if the function is zero on a sizable part of the ball, it cannot stay close to its maximum value $1$ throughout the smaller ball $B_{\frac{1}{2}}$. Something has to give, and what gives is the maximum.
 
 ### The proof
 
@@ -133,7 +290,7 @@ Define the distribution function
 
 $$W(s) := \frac{|\{v \leq s\} \cap B_1|}{|B_1|}, \quad s \in [0, 1].$$
 
-This $W$ is nondecreasing. Our hypothesis says $W(0) \geq \delta > 0$, and we want to show it reaches $1$ (or close to it) well before $s$ reaches $1$.
+This $W$ is nondecreasing. Our hypothesis says $W(0) \geq \delta > 0$, and we want to show it reaches $1$ (or close to it) before $s$ reaches $1$.
 
 For $0 \leq s < t \leq 1$, define
 
@@ -171,7 +328,7 @@ If $v$ solves $\partial_i(a_{ij} \partial_j v) = 0$, then both $v$ and $-v$ are 
 
 $$\text{osc}_{B_{\frac{1}{2}}} \, v \leq \left(1 - \frac{\epsilon}{2}\right) \, \text{osc}_{B_1} \, v.$$
 
-Now, the beautiful thing is that this decay works at *every scale*. If $v$ solves the equation in a ball of radius $r$, we can rescale by defining $\tilde{v}(x) = v(rx)$, which solves the same type of equation in $B_1$ (with rescaled coefficients that still have the same ellipticity bounds). So the oscillation decay applies to any ball, not just $B_1$:
+Now, the nice thing is that this decay works at *every scale*. If $v$ solves the equation in a ball of radius $r$, we can rescale by defining $\tilde{v}(x) = v(rx)$, which solves the same type of equation in $B_1$. So the oscillation decay applies to any ball, not just $B_1$:
 
 $$\text{osc}_{B_{\frac{r}{2}}} \, v \leq (1 - \epsilon) \, \text{osc}_{B_r} \, v.$$
 
@@ -183,17 +340,17 @@ Setting $r = 2^{-k}$: <span id="eq-osc-power"></span>
 
 $$\text{osc}_{B_r} \, v \leq r^{\alpha} \, \text{osc}_{B_1} \, v, \quad \text{where } \alpha = \frac{\log\!\left(\frac{1}{1-\epsilon}\right)}{\log 2} > 0.$$
 
-Compare this to [Part I](/Math495/19th-Problem-Part-I#eq-holder): there we had the same kind of estimate, $\omega(r) \leq C r^\alpha$. We get the same conclusion (oscillation decays as a power of the radius) but by a completely different route. In Part I it came from the geometry of 2D. Here it comes from the interplay of Caccioppoli and Sobolev, which works in *every* dimension.
+When we compare this to [Part I](/Math495/19th-Problem-Part-I#eq-holder), we see that there we had the same kind of estimate, $\omega(r) \leq C r^\alpha$. We got the same conclusion (oscillation decays as a power of the radius) but by a completely different approach. In Part I it came from the geometry of 2D whereas here it comes from the interplay of Caccioppoli and Sobolev, which works in *every* dimension.
 
 This power-law decay is exactly Hölder continuity:
 
 $$\|v\|_{C^\alpha(B_{\frac{1}{2}})} \leq C(n, \lambda) \, \|v\|_{L^\infty(B_1)}.$$
 
-That's De Giorgi's theorem. The key estimate is proven.
+And that is it. This is the De Giorgi's theorem which proves the key estimate.
 
 # Putting It Together
 
-We've now proved all three steps of De Giorgi's theorem: the $L^2 \to L^\infty$ estimate, the oscillation decay, and Hölder continuity. So how does the full proof of Hilbert's problem come together? Here's the complete chain:
+We've now proved all three steps of De Giorgi's theorem: the $L^2 \to L^\infty$ estimate, the oscillation decay, and Hölder continuity. *So have we solved the Hilbert's 19^{th} problem?* Not quite, we still have some work to do. Let us look at the chain below which will clear things for us:
 
 | | Step | Tool |
 |---|---|---|
@@ -203,7 +360,7 @@ We've now proved all three steps of De Giorgi's theorem: the $L^2 \to L^\infty$ 
 | 4 | $u \in C^{2,\alpha} \to C^{3,\alpha} \to C^{4,\alpha} \to \cdots \to u \in C^\infty$ | Schauder estimates[^6] |
 | 5 | $u \in C^\omega$ (the minimizer is real analytic) | $F$ is analytic $\Rightarrow$ $u$ is analytic |
 
-The only steps we haven't discussed in detail are the last two. The Schauder estimates work like this: once De Giorgi gives us $\nabla u \in C^\alpha$, the coefficients $F_{ij}(\nabla u)$ are $C^\alpha$ too, so Schauder gives $u \in C^{2,\alpha}$. But now $\nabla u \in C^{1,\alpha}$, so the coefficients are $C^{1,\alpha}$. Schauder again: $u \in C^{3,\alpha}$. Each round we gain a derivative, and this cycle never stops. Since $u \in C^{k,\alpha}$ for every $k$, we get $u \in C^\infty$. The final step from $C^\infty$ to $C^\omega$ uses the fact that $F$ itself is analytic: one can carefully estimate the growth of higher derivatives $\|D^k u\|_{L^\infty} \leq C^k k!$, which is exactly the condition that guarantees the Taylor series of $u$ converges. And that's it. Hilbert's $19^{th}$ problem is solved, in all dimensions.
+The only steps we haven't discussed much are the last two. We won't go into much detail about Schauder estimates but to give a brief overview of how Schauder comes into play: once De Giorgi gives us $\nabla u \in C^\alpha$, the coefficients $F_{ij}(\nabla u)$ are $C^\alpha$ too, so Schauder gives $u \in C^{2,\alpha}$. But now $\nabla u \in C^{1,\alpha}$, so the coefficients are $C^{1,\alpha}$. We use Schauder again and get $u \in C^{3,\alpha}$. Each iteration we gain more smoothness, and this never stops. Since $u \in C^{k,\alpha}$ for every $k$, we get $u \in C^\infty$. The final step from $C^\infty$ to $C^\omega$ uses the fact that $F$ itself is analytic. One can carefully estimate the growth of higher derivatives $\|D^k u\|_{L^\infty} \leq C^k k!$, which is exactly the condition that guarantees the Taylor series of $u$ converges. And that ladies and gentlemen is how we deal with Hilbert's $19^{th}$ problem, in all dimensions.
 
 [^1]: To emphasize ideas, we'll assume $u$ is smooth and derive estimates that don't depend on this assumption. These are called *a priori* ("before the fact") estimates. The rigorous extension to weak solutions uses standard approximation arguments, but the ideas are the same.
 

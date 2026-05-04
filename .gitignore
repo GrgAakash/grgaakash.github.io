@@ -15,6 +15,13 @@ _site/
 *.bbl
 *.blg
 
+# Intermediate Math495 PDFs generated while compiling source TeX.
+# Keep Math495/blog*.pdf tracked because the website links to those.
+Math495/1.pdf
+Math495/2.pdf
+Math495/3.pdf
+Math495/4.pdf
+
 # TikZ source files in figures (code already in blog.tex)
 Math495/figures/*.tex
 

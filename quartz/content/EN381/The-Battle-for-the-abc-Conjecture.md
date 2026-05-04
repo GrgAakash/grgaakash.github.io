@@ -35,7 +35,7 @@ Now, here's what the abc conjecture says. When you have three coprime numbers wh
 
 What does "repeated small primes" mean? By "small primes," we mean primes like 2, 3, 5, 7 (small numbers). By "repeated," we mean the same prime appears many times as a factor. For example, $2^{10} = 2 \times 2 \times 2 \times 2 \times 2 \times 2 \times 2 \times 2 \times 2 \times 2$ means the prime 2 is repeated 10 times. The number $2^{10} \times 3^5$ means the prime 2 is repeated 10 times and the prime 3 is repeated 5 times.
 
-The key insight is this: if a and b are both made of from some small primes (like 2 and 3) raised to high powers, then c will usually bring in enough new primes factors that will make the radical of abc will be not too small compared with c. In fact, usually it is bigger but the interesting case is when it is actually less than c, abc conjecture says even when c is larger than rad(abc), it cannot get "too much" larger.
+The key insight is this: if a and b are both made from small primes (like 2 and 3) raised to high powers, then c will usually bring in enough new prime factors to keep the radical of abc from being too small compared with c. In fact, the radical is usually bigger than c. The interesting cases are when it is smaller, and the abc conjecture says that even then, c cannot get "too much" larger than rad(abc).
 
 For example here is the not so interesting case, if $a = 2^{10} = 1,024$ and $b = 3^{10} = 59,049$, then $c = a+b = 60,073$. Now $60,073 = 13 \times 4,621$. So $\operatorname{rad}(abc) = \operatorname{rad}(2^{10} \cdot 3^{10} \cdot 60,073) = 2 \times 3 \times 13 \times 4,621 = 360,438$. Thus $c$ brings in the new prime factors $13$ and $4,621$, making $\operatorname{rad}(abc) = 360,438 > 60,073 = c$.
 

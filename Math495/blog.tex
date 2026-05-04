@@ -1,403 +1,738 @@
-\documentclass[11pt]{scrartcl}
-\usepackage[utf8]{inputenc}
-\usepackage{amsmath,amsfonts,amssymb,amsrefs,mathtools,amsthm}
-\usepackage{enumerate}
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+\documentclass[
+]{article}
+\usepackage{xcolor}
+\usepackage{amsmath,amssymb}
+\setcounter{secnumdepth}{-\maxdimen} % remove section numbering
+\usepackage{iftex}
+\ifPDFTeX
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math} % this also loads fontspec
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+\usepackage{lmodern}
+\ifPDFTeX\else
+  % xetex/luatex font selection
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
 \usepackage{graphicx}
-\usepackage{multicol}
-\usepackage[autostyle, english = american]{csquotes}
-\MakeOuterQuote{"}
-\usepackage[all]{xy}
-\usepackage{tikz}
-\usetikzlibrary{snakes,patterns}
-\usetikzlibrary{decorations.pathreplacing,calligraphy}
-\usepackage{caption}
-\usepackage{cancel}
+\makeatletter
+\newsavebox\pandoc@box
+\newcommand*\pandocbounded[1]{% scales image to fit in text height/width
+  \sbox\pandoc@box{#1}%
+  \Gscale@div\@tempa{\textheight}{\dimexpr\ht\pandoc@box+\dp\pandoc@box\relax}%
+  \Gscale@div\@tempb{\linewidth}{\wd\pandoc@box}%
+  \ifdim\@tempb\p@<\@tempa\p@\let\@tempa\@tempb\fi% select the smaller of both
+  \ifdim\@tempa\p@<\p@\scalebox{\@tempa}{\usebox\pandoc@box}%
+  \else\usebox{\pandoc@box}%
+  \fi%
+}
+% Set default figure placement to htbp
+\def\fps@figure{htbp}
+\makeatother
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\usepackage{bookmark}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\urlstyle{same}
+\hypersetup{
+  pdftitle={The 19th Problem - Part I (2D)},
+  pdfauthor={A Leisurely Excursion},
+  hidelinks,
+  pdfcreator={LaTeX via pandoc}}
 
-\usepackage[bookmarksnumbered, colorlinks, plainpages]{hyperref}
-\hypersetup{colorlinks=true,linkcolor=red, anchorcolor=green, citecolor=cyan, urlcolor=blue, filecolor=magenta, pdftoolbar=true}
-\usepackage[capitalise]{cleveref}
-
-\newtheorem*{definition}{Definition}
-\newtheorem{theorem}{Theorem}
-\newtheorem{lemma}[theorem]{Lemma}
-\newtheorem{proposition}[theorem]{Proposition}
-\newtheorem{remark}[theorem]{Remark}
-\newtheorem{corollary}[theorem]{Corollary}
-\newtheorem{example}[theorem]{Example}
-\newtheorem{problem}[theorem]{Problem}
-
-\DeclareMathOperator{\atan2}{atan2}
-\DeclareMathOperator{\Div}{div}
-
-\title{The 19th Problem}
-
+\title{The 19th Problem - Part I (2D)}
 \author{A Leisurely Excursion}
-
 \date{}
 
 \begin{document}
 \maketitle
 
-Have you ever wondered why soap bubbles are spherical, or why soap films look like they are pulling themselves into the shape of the least possible area, or why the light moving through glass of varying density bends and curves to find the fastest route, not the straightest one.
-\begin{figure}[h]
-    \centering
-    \includegraphics[width=0.5\textwidth]{SoapFilm.jpeg}
-    \caption{A soap film on a wire frame.}
+Have you ever wondered why soap bubbles are spherical, or why soap films
+look like they are pulling themselves into the shape of the least
+possible area, or why the light moving through glass of varying density
+bends and curves to find the fastest route, not the straightest one.
+
+\begin{figure}
+\centering
+\pandocbounded{\includegraphics[keepaspectratio,alt={A soap film on a wire frame.}]{quartz/content/Math495/media/SoapFilm.jpeg}}
+\caption{A soap film on a wire frame.}
 \end{figure}
 
-In each case, nature is quietly solving an optimization problem. Something is being minimized, whether it is the area or the time. One thing to note is that even if the wire frame itself (the boundary) has sharp, jagged corners, the soap film suspended inside is perfectly smooth. It is definitely interesting to ponder on why the film develops no gaps, tears, or defects.\\
+\emph{A soap film on a wire frame.}
 
-\textit{Why should this be true? And more importantly: must it always be true?}\\
+In each case, nature is quietly solving an optimization problem.
+Something is being minimized, whether it is the area or the time.
 
-Before answering this, let's rewind to the dawn of the $20^{th}$ century. In the International Congress of Mathematicians held at Paris in August 1900, the German Mathematician David Hilbert proposed $23$ problems, most of which would prove to be very influential in the coming century. \footnote{He actually had a list of $24$ problems but he chose to publish only $23$.} 
-\begin{figure}[h]
-    \centering
-    \includegraphics[width=0.5\textwidth]{Hilbert .jpg}
-    \caption{David Hilbert (1862–1943)}
+One thing to note is that even if the wire frame itself, the boundary,
+has sharp, jagged corners, the soap film suspended inside is perfectly
+smooth. It is definitely interesting to ponder on why the film develops
+no gaps, tears, or defects.
+
+\emph{Why should this be true? And more importantly: must it always be
+true?}
+
+Before answering this, let's rewind to the dawn of the \(20^{th}\)
+century. In the International Congress of Mathematicians held at Paris
+in August 1900, the German Mathematician David Hilbert proposed \(23\)
+problems, most of which would prove to be very influential in the coming
+century. \footnote{He actually had a list of \(24\) problems but he
+  chose to publish only \(23\).}
+
+\begin{figure}
+\centering
+\pandocbounded{\includegraphics[keepaspectratio,alt={David Hilbert (1862--1943)}]{quartz/content/Math495/media/Hilbert.jpg}}
+\caption{David Hilbert (1862--1943)}
 \end{figure}
 
+\emph{David Hilbert (1862--1943)}
 
+While many of his problems arose due to the urge to understand the
+foundational bedrock of Mathematics like the continuum hypothesis, a few
+were inspired by physics. Belonging to the latter category is the topic
+of our blog, which is the \(19^{th}\) problem.
 
-While many of his problems arose due to the urge to understand the foundational bedrock of Mathematics like the continuum hypothesis, a few were inspired by physics. Belonging to the latter category is the topic of our blog, which is the $19^{th}$ problem. Hilbert was fascinated by the observation that physical principles, usually cast as variational problems (like the principle of least action), seemed to produce solutions of remarkable smoothness.\\
+Hilbert was fascinated by the observation that physical principles,
+usually cast as variational problems like the principle of least action,
+seemed to produce solutions of remarkable smoothness.
 
-These are but special cases of a universal variational principle. Hilbert observed that such analytic solutions arise from minimizing functional integrals of the form:
-\begin{equation}\label{eq:functional}
+These are but special cases of a universal variational principle.
+Hilbert observed that such analytic solutions arise from minimizing
+functional integrals of the form:
+
+\[
 J(u) = \int_{B_1} F(\nabla u) \, dx,
-\end{equation}
-where the function \( F \) (often called the Lagrangian) is analytic and \textit{strictly convex}. In the language of linear algebra, convexity here means the Hessian matrix of \( F \) is positive definite (specifically, \(\det(D^2 F) > 0\)).\\
+\] where the function \(F\) (often called the Lagrangian) is analytic
+and \emph{strictly convex}. In the language of linear algebra, convexity
+here means the Hessian matrix of \(F\) is positive definite
+(specifically, \(\det(D^2 F) > 0\)).
 
-\textit{The question is this: If the energy function \( F \) is analytic, does it follow that the minimizing configuration \( u \) is also analytic?}\\
+\emph{The question is this: If the energy function \(F\) is analytic,
+does it follow that the minimizing configuration \(u\) is also
+analytic?}
 
+Intuitively, the answer seemed to be yes. To prove it, we translate the
+minimization problem into an equation. We know from single-variable
+calculus that if \(f(x)\) has a minimum at \(x_0\), then
+\(f'(x_0) = 0\). We apply the same logic here.
 
-Intuitively, the answer seemed to be yes. To prove it, we translate the minimization problem into an equation. We know from single-variable calculus that if \( f(x) \) has a minimum at \( x_0 \), then \( f'(x_0) = 0 \). We apply the same logic here.\\
+Suppose \(u(x)\) is the true solution. Imagine we distort this solution
+by adding a small ``perturbation'' \(\phi(x)\), scaled by a tiny number
+\(\epsilon\): \[u_\epsilon(x) = u(x) + \epsilon \phi(x).\]
 
-Suppose \( u(x) \) is the true solution. Imagine we distort this solution by adding a small "perturbation" \( \phi(x) \), scaled by a tiny number \( \epsilon \):
-\[
-u_\epsilon(x) = u(x) + \epsilon \phi(x).
-\]
+Since \(u\) is a minimizer, the derivative of the energy with respect to
+\(\epsilon\) must be zero at \(\epsilon = 0\):
+\[\frac{d}{d\epsilon} J(u + \epsilon \phi) \bigg|_{\epsilon=0} = 0.\]
 
-Since \( u \) is a minimizer, the derivative of the energy with respect to \( \epsilon \) must be zero at \( \epsilon = 0 \):
-\[
-\frac{d}{d\epsilon} J(u + \epsilon \phi) \bigg|_{\epsilon=0} = 0.
-\]
-\begin{figure}[h]
+\begin{figure}
 \centering
-\begin{tikzpicture}[scale=1.5]
-    % Axes
-    \draw[->] (0,0) -- (4,0) node[right] {$x$};
-    \draw[->] (0,0) -- (0,2.5) node[above] {$y$};
-
-    % Domain boundaries
-    \draw[dashed] (0.5,0) -- (0.5,2);
-    \draw[dashed] (3.5,0) -- (3.5,2);
-    \node[below] at (0.5,0) {$a$};
-    \node[below] at (3.5,0) {$b$};
-
-    % True Solution u(x) 
-    \draw[thick, black] plot [smooth, tension=1] coordinates {(0.5,1) (2,0.5) (3.5,1.5)};
-    \node[below] at (2,0.5) {$u(x)$};
-
-    % Perturbed Solution
-    \draw[thick, dashed, red] plot [smooth, tension=1] coordinates {(0.5,1) (1.2, 0.8) (2,0.8) (2.8, 1.2) (3.5,1.5)};
-    \node[red, above] at (2,0.8) {$u(x) + \epsilon\phi(x)$};
-
-    % Annotation
-    \draw[<->] (2, 0.52) -- (2, 0.78);
-    \node[right, scale=0.8] at (2, 0.65) {$\epsilon\phi$};
-
-\end{tikzpicture}
-\caption{}
+\pandocbounded{\includegraphics[keepaspectratio,alt={Figure}]{quartz/content/Math495/media/tikz-export/a1-tikz-1.png}}
+\caption{Figure}
 \end{figure}
 
-Calculating this (using the Chain Rule inside the integral) and integrating by parts gives the celebrated Euler-Lagrange equation:
-\begin{equation}\label{eq:euler-lagrange}
+Let us carry out the computation slowly in two variables first, since
+that is the easiest place to see the pattern. Write
+
+\[
+\nabla u = (u_x,u_y),
+\]
+
+so the energy becomes
+
+\[
+J(u)=\int_{B_1} F(u_x,u_y)\,dx\,dy.
+\]
+
+Think of \(F\) as a rule that assigns an energy cost to the slope of
+\(u\).
+
+Now perturb \(u\) by replacing it with \(u+\epsilon\phi\), where
+\(\phi\) is smooth and vanishes on \(\partial B_1\). Since \(u\) is a
+minimizer, the function \(\epsilon \mapsto J(u+\epsilon\phi)\) must have
+derivative \(0\) at \(\epsilon=0\):
+
+\[
+\left.\frac{d}{d\epsilon}\right|_{\epsilon=0} J(u+\epsilon\phi)=0.
+\]
+
+Because
+
+\[
+\nabla(u+\epsilon\phi)=(u_x+\epsilon\phi_x,\;u_y+\epsilon\phi_y),
+\]
+
+we get
+
+\[
+J(u+\epsilon\phi)=\int_{B_1} F(u_x+\epsilon\phi_x,\;u_y+\epsilon\phi_y)\,dx\,dy.
+\]
+
+Differentiate with respect to \(\epsilon\). By the Chain Rule,
+
+\[
+\frac{d}{d\epsilon}F(u_x+\epsilon\phi_x,\;u_y+\epsilon\phi_y)
+=F_{p_1}(u_x+\epsilon\phi_x,\;u_y+\epsilon\phi_y)\phi_x
++F_{p_2}(u_x+\epsilon\phi_x,\;u_y+\epsilon\phi_y)\phi_y.
+\]
+
+Setting \(\epsilon=0\) gives
+
+\[
+0=\int_{B_1}\left[F_{p_1}(\nabla u)\phi_x+F_{p_2}(\nabla u)\phi_y\right]\,dx\,dy.
+\]
+
+Now integrate by parts in each term. Since \(\phi=0\) on
+\(\partial B_1\), the boundary terms vanish:\footnote{The
+  higher-dimensional integration by parts formula is
+  \(\int_\Omega f\,\partial_{x_i} g\,dx = -\int_\Omega (\partial_{x_i} f)\,g\,dx + \int_{\partial\Omega} fg\,\nu_i\,d\sigma\),
+  where \(\nu_i\) is the \(i\)-th component of the outward normal. Since
+  \(\phi = 0\) on \(\partial B_1\), the surface term vanishes.}
+
+\[
+\int_{B_1} F_{p_1}(\nabla u)\phi_x\,dx\,dy
+=-\int_{B_1}\frac{\partial}{\partial x}\!\left(F_{p_1}(\nabla u)\right)\phi\,dx\,dy,
+\]
+
+and similarly
+
+\[
+\int_{B_1} F_{p_2}(\nabla u)\phi_y\,dx\,dy
+=-\int_{B_1}\frac{\partial}{\partial y}\!\left(F_{p_2}(\nabla u)\right)\phi\,dx\,dy.
+\]
+
+So
+
+\[
+0=-\int_{B_1}\left[
+\frac{\partial}{\partial x}\!\left(F_{p_1}(\nabla u)\right)
++\frac{\partial}{\partial y}\!\left(F_{p_2}(\nabla u)\right)
+\right]\phi\,dx\,dy.
+\]
+
+Because this must hold for every test function \(\phi\), the quantity in
+brackets must be zero. That gives the Euler-Lagrange equation:
+
+\[
+\frac{\partial}{\partial x}\!\left(F_{p_1}(\nabla u)\right)
++\frac{\partial}{\partial y}\!\left(F_{p_2}(\nabla u)\right)=0.
+\]
+
+In compact vector notation, this is
+
+\[
 \operatorname{Div}(\nabla F(\nabla u)) = 0.
-\end{equation}
-
-Now, we expand this. Applying the Chain Rule to the term \( \nabla F(\nabla u) \), we get:
-\begin{equation}\label{eq:euler-lagrange-expanded}
-\sum_{i,j=1}^n F_{ij}(\nabla u)\, u_{ij} = 0,
-\end{equation}
-where \( F_{ij} \) are entries of the Hessian of \( F \), and \( u_{ij} \) are the second partial derivatives of \( u \).
-
-Here comes the trouble. If we differentiate \cref{eq:euler-lagrange-expanded} with respect to \( x_k \), letting \( v = u_{x_k} \), we obtain a linear elliptic equation for the partial derivatives of \( u \):
-\begin{equation}\label{eq:linearized}
-\sum_{i,j=1}^n \frac{\partial}{\partial x_i} \Big( a_{ij}(x) \frac{\partial v}{\partial x_j} \Big) = 0, \quad \text{where } a_{ij}(x) = F_{ij}(\nabla u(x)).
-\end{equation}
-
-
-\begin{figure}[h]
-    \centering
-    \includegraphics[width=0.5\textwidth]{Charles_Morrey_Jr.jpeg}
-    \caption{Charles Morrey Jr. (1907–1984)}
-\end{figure}
-
-
-
-However, the coefficients
-\(
-a_{ij}(x) = F_{ij}(\nabla u(x))
-\)
-of this new linearized equation \cref{eq:linearized} depend intrinsically on the unknown gradient.
-If we assume only that \( u \) has bounded slope so that the gradient \( \nabla u \) is bounded but not known to be
-continuous, then these coefficients are bounded, but they may be discontinuous.
-We are thus caught in a vicious circle: to prove the coefficients are smooth, we
-need the solution's gradient to be smooth; but to prove the solution is smooth,
-the classical theory demands the coefficients be smooth. This ``gap'' between
-having a bounded slope versus a continuous slope was what Morrey later called the
-``sad state of affairs'' that hindered progress for decades.
-\\
-The solution was finally achieved by bridging this gap. Let us illustrate the strategy in 2D, using geometric intuition.\\
-
-You are likely familiar with the gradient $\nabla u$ as a vector field pointing in the direction of steepest increase. But for this problem, we need a shift in perspective. Imagine mapping every point $x$ in our domain not to its height $u(x)$, but to its slope vector $\nabla u(x)$.
-This creates a ``gradient map'' from the physical domain into a ``plane of slopes.''\\
-
-\textit{The core question of regularity is simply: Is this map continuous? Or can the slope jump abruptly from one value to another, creating a sharp crease or kink in our soap film?}
-
-\begin{figure}[h]
-    \centering
-    \begin{tikzpicture}[scale=1.1]
-        % --- LEFT: PHYSICAL DOMAIN  ---
-        \begin{scope}[shift={(-3.5,0)}]
-            % Axes
-            \draw[->, gray] (-2,0) -- (2,0) node[right, black] {$x_1$};
-            \draw[->, gray] (0,-2) -- (0,2) node[above, black] {$x_2$};
-
-            % Domain
-            \filldraw[fill=blue!10, draw=blue, thick] (0,0) circle (1.2);
-            \node at (0, -1.6) {\textbf{Physical Domain}};
-            \node[font=\footnotesize, gray] at (0, -1.9) {(Where you are)};
-
-            % A specific point x
-            \filldraw[blue] (0.5, 0.5) circle (2pt) node[above right] {$x$};
-        \end{scope}
-
-        % --- MAPPING ARROW ---
-        \draw[->, thick, shorten >= 5pt, shorten <= 5pt] (-1.5, 0.8) to[bend left=25] node[midway, above] {\Large $\nabla u$} node[midway, below, font=\small, align=center] {The Gradient\\Map} (1.5, 0.8);
-
-        % --- RIGHT: PLANE OF SLOPES (Gradient Space) ---
-        \begin{scope}[shift={(3.5,0)}]
-            % Axes (p1, p2 represents slopes)
-            \draw[->, gray] (-2,0) -- (2,0) node[right, black] {$p_1 = u_{x_1}$};
-            \draw[->, gray] (0,-2) -- (0,2) node[above, black] {$p_2 = u_{x_2}$};
-
-            % The Image (Distorted Blob)
-            \filldraw[fill=red!10, draw=red, thick] plot [smooth cycle] coordinates {(0.2,0.2) (1.2,0.5) (1.5,-0.5) (0.5,-1.2) (-0.8,-0.5) (-0.5, 0.8)};
-
-            \node at (0, -1.6) {\textbf{Plane of Slopes}};
-            \node[font=\footnotesize, gray] at (0, -1.9) {(How steep it is)};
-
-            % The Mapped Point p = Grad u(x)
-            \filldraw[red] (0.8, -0.2) circle (2pt) node[right] {$\nabla u(x)$};
-
-            % Annotation explaining the coordinates
-            \node[align=left, font=\footnotesize, red!80!black] at (1.8, 1.5) {Each point here\\is a \textit{slope vector}.};
-        \end{scope}
-    \end{tikzpicture}
-    \caption{\textbf{The Gradient Map.} This map takes a location $x$ in the physical domain (left) and sends it to its corresponding slope vector $\nabla u(x)$ in the plane of slopes (right). If the solution is smooth, the red "blob" of slopes will be connected. If the solution has a crease, this blob will be torn apart.}
-    \label{fig:gradient_map}
-\end{figure}
-
-Imagine the image of the gradient map \( \nabla u \) as a region (a "blob") in the plane. Fix a direction \( e \) (a unit vector) and consider the strip in the gradient plane between two parallel lines perpendicular to \( e \), defined by values \( a < b \).
-\\
-
-Let 
-\(
-v(x) = \nabla u(x) \cdot e
-\)
-be the corresponding directional derivative. If the gradient image \( \nabla u(B_r) \) crosses this strip, it means \( v \) takes values both below \( a \) and above \( b \) within the ball \( B_r \).
-
-
-
-
-\begin{figure}[h]
-\centering
-
-\begin{tikzpicture}[scale=1.2, >=stealth]
-
-    %========================
-    % Left Panel: Domain
-    %========================
-    \draw[->] (-1.6,0) -- (1.6,0) node[right] {$x_1$};
-    \draw[->] (0,-1.6) -- (0,1.6) node[above] {$x_2$};
-
-    \draw[thick, fill=gray!10] (0,0) circle (1);
-    \node at (0.2,0.3) {$B_r$};
-
-    \node[below] at (0,-1.9) {\textbf{Domain}};
-
-    % Arrow
-    \draw[->, thick]
-        (1.8,0.4)
-        to[bend left=15]
-        node[midway, above] {$\nabla u$}
-        (4.2,0.4);
-
-    \begin{scope}[shift={(6,0)}]
-
-        \draw[->] (-1.6,0) -- (1.6,0) node[right] {$p_1$};
-        \draw[->] (0,-1.6) -- (0,1.6) node[above] {$p_2$};
-
-        \draw[thick, fill=red!10]
-        plot[smooth cycle, tension=0.7] coordinates {
-            (-0.9,-1.1)
-            (0.6,-0.8)
-            (1.1,0)
-            (0.6,1.2)
-            (-0.6,0.9)
-            (-1.1,0.2)
-        };
-
-        \node at (1.2,1.1) {$\nabla u(B_r)$};
-        \draw[->] (0.8,1.0) -- (0.4,0.6);
-
-        \draw[dashed, blue, thick]
-            (-1.6,-0.5) -- (1.6,-0.5)
-            node[right] {$p\cdot e = a$};
-
-        \draw[dashed, blue, thick]
-            (-1.6,0.5) -- (1.6,0.5)
-            node[right] {$p\cdot e = b$};
-
-        \node[below] at (0,-1.9) {\textbf{Gradient Image}};
-    \end{scope}
-
-\end{tikzpicture}
-
-\caption{Chopping at the gradient image with lines}
-\end{figure}
-
-
-
-
-
-Here we use the Maximum Principle. The Maximum Principle is a powerful property of elliptic equations. You've seen a special case already: Laplace's equation 
-\(
-\nabla^2 u = 0.
-\)
-Its solutions (harmonic functions) obey the Mean Value Property and the Maximum Principle: the maximum and minimum occur on the boundary. Our linearized equation \cref{eq:linearized} is a generalization of Laplace's equation with variable coefficients \(a_{ij}(x)\). The principle still holds: the oscillation of \(v\) inside a ball is controlled by its oscillation on the boundary-like how the temperature at the center of a room is bounded by the temperatures on the walls.
-
-
-
-In simple terms, for elliptic equations, the values inside a domain are controlled by the values on the boundary (much like temperature in a room is controlled by the walls). By this principle, if \( v \) oscillates inside \( B_r \), it must oscillate at least as much on the boundary circle \( \partial B_r \). 
-This allows us to restrict our attention to the boundary.
-
-To see if this oscillation can persist as \( r \to 0 \), we quantify its "energy cost" using a geometric estimate:
-\begin{equation}\label{eq:courant-lebesgue}
-(\operatorname{osc}_{\partial B_r} v)^2 \le \frac{\pi}{\ln(1/2r)} \int_{B_{1/2}} |\nabla v|^2 \, dx.
-\end{equation}
-\footnote{ $\omega(r) := \operatorname{osc}_{\partial B_r} v$}
-
-Suppose, for contradiction, that the oscillation stays large. Specifically, assume that on all circles \( \partial B_r \), the oscillation is bounded below by a constant \( \delta > 0 \).
-
-Summing these oscillations, due to the term \( \ln(1/r) \) , the required energy must diverge (recall the harmonic series):
-\[
-\text{Energy} \sim \int \frac{1}{r} \, dr \to \infty.
 \]
 
-However, we know there exists a finite upper bound. The differential equation itself provides a "natural" energy bound (Caccioppoli inequality):
-\begin{equation}\label{eq:caccioppoli}
-\int_{B_{1/2}} |\nabla v|^2 \, dx \le C \int_{B_1} v^2 \, dx < \infty.
-\end{equation}
+This is the same formula you would write in \(n\) variables:
 
-This is a contradiction: \cref{eq:courant-lebesgue} requires infinite energy, but \cref{eq:caccioppoli} bounds it finitely.
+\[
+\sum_{i=1}^n \frac{\partial}{\partial x_i}\!\left(\frac{\partial F}{\partial p_i}(\nabla u)\right)=0.
+\]
 
-Therefore, for sufficiently small \( r \), the gradient image \( \nabla u(B_r) \) cannot cross the strip. It must lie entirely on one side. By "chopping" with strips in various directions, we force the gradient image to localize to a single point as \( r \to 0 \). Thus, \( \nabla u \) is continuous.\\
+Now let us expand the equation one step further. Since
+\(F_{p_1}(u_x,u_y)\) depends on \(x\) through both \(u_x\) and \(u_y\),
+the Chain Rule gives
 
-In 3D, we analogously attempt to trap the gradient using parallel planes. If the gradient persists in crossing these planes, it again implies a singularity with characteristic scale $|\nabla v| \sim \frac{\delta}{r}$. However, the geometric measure of the boundary (surface area) now scales as $r^2$.
+\[
+\frac{\partial}{\partial x}F_{p_1}(u_x,u_y)
+=F_{p_1p_1}(u_x,u_y)u_{xx}+F_{p_1p_2}(u_x,u_y)u_{xy}.
+\]
 
-The energy integral in 3D becomes:
+Likewise,
 
-$$\text{Energy}_{3D} = \int_{0}^{1} \left( \int_{\partial B_r} |\nabla v|^2 \, d\sigma \right) dr.$$
+\[
+\frac{\partial}{\partial y}F_{p_2}(u_x,u_y)
+=F_{p_2p_1}(u_x,u_y)u_{xy}+F_{p_2p_2}(u_x,u_y)u_{yy}.
+\]
 
-Substituting the 3D scaling factor ($d\sigma \sim 4\pi r^2$) gives us:
+Adding the two pieces together, we obtain
 
-$$\text{Energy}_{3D} \sim \int_{0}^{1} \left( \frac{\delta}{r} \right)^2 \cdot (4\pi r^2) \, dr \sim 4\pi \delta^2 \int_{0}^{1} 1 \, dr = 4\pi \delta^2 < \infty.$$
+\[
+F_{p_1p_1}(\nabla u)u_{xx}
++2F_{p_1p_2}(\nabla u)u_{xy}
++F_{p_2p_2}(\nabla u)u_{yy}=0,
+\]
 
-There is no contradiction. The integral converges, meaning the energy cost of a persistent singularity is finite. The gradient can effectively "afford" to keep oscillating across the planes forever without violating the global energy bounds established by the Caccioppoli inequality.\\
+using the symmetry \(F_{p_1p_2}=F_{p_2p_1}\). In higher dimensions, this
+becomes the same matrix pattern:
 
-While the ``chopping'' argument above relies on energy estimates, there is a second, completely different reason why 2D solutions are smooth. This second method relies on  on a "happy accident of geometry", a special feature that disappears in higher dimensions. The linearized equation implies that the gradient map
-\(
-\nabla u: \mathbb{R}^2 \to \mathbb{R}^2
-\)
-behaves like a linear transformation with bounded distortion. Recall from linear algebra that a matrix \( A \) maps the unit circle to an ellipse. The "distortion" is determined by the condition number (the ratio of eigenvalues):
-\begin{equation}\label{eq:distortion}
-K = \frac{|\lambda_{\max}|}{|\lambda_{\min}|}.
-\end{equation}
+\[
+\sum_{i,j=1}^n F_{ij}(\nabla u)\,u_{ij}=0,
+\]
 
+where \(F_{ij}\) is the \((i,j)\) entry of the Hessian of \(F\) and
+\(u_{ij}=\frac{\partial^2 u}{\partial x_i\partial x_j}\).
 
+\emph{What does this look like for a specific \(F\)?}
 
-\begin{figure}[h]
+Take the simplest example,
+
+\[
+F(p)=|p|^2=p_1^2+\cdots+p_n^2.
+\]
+
+Then
+
+\[
+J(u)=\int_{B_1}|\nabla u|^2\,dx
+\]
+
+is the Dirichlet energy, measuring the total ``effort'' of the function.
+In two variables, the Euler-Lagrange equation becomes
+
+\[
+\frac{\partial}{\partial x}(2u_x)+\frac{\partial}{\partial y}(2u_y)=0,
+\]
+
+which is exactly
+
+\[
+2u_{xx}+2u_{yy}=0.
+\]
+
+Dividing by \(2\), we get
+
+\[
+\Delta u=0.
+\]
+
+So the minimizer satisfies Laplace's equation. Harmonic functions have
+been known to be infinitely smooth since the 19th century, so there is
+no mystery here. The key reason is that the second derivatives of \(F\)
+are constant, so the coefficients of the PDE do not depend on
+\(\nabla u\) at all.
+
+The trouble starts when \(F\) is genuinely nonlinear. Then the second
+derivatives of \(F\) are no longer constant: they depend on the unknown
+slope \(\nabla u\) itself.
+
+Now comes the key step. Let
+
+\[
+v=u_x.
+\]
+
+We want to know what equation this derivative satisfies. Start from the
+Euler-Lagrange equation:
+
+\[
+\frac{\partial}{\partial x}\!\left(F_{p_1}(\nabla u)\right)
++\frac{\partial}{\partial y}\!\left(F_{p_2}(\nabla u)\right)=0.
+\]
+
+Differentiate the whole equation with respect to \(x\):
+
+\[
+\frac{\partial}{\partial x}\!\left[
+\frac{\partial}{\partial x}\!\left(F_{p_1}(\nabla u)\right)
++\frac{\partial}{\partial y}\!\left(F_{p_2}(\nabla u)\right)
+\right]=0.
+\]
+
+Since \(v=u_x\), we have \(v_x=u_{xx}\) and \(v_y=u_{xy}\). Applying the
+Chain Rule again,
+
+\[
+\frac{\partial}{\partial x}F_{p_1}(\nabla u)
+=F_{p_1p_1}(\nabla u)v_x+F_{p_1p_2}(\nabla u)v_y,
+\]
+
+and
+
+\[
+\frac{\partial}{\partial x}F_{p_2}(\nabla u)
+=F_{p_2p_1}(\nabla u)v_x+F_{p_2p_2}(\nabla u)v_y.
+\]
+
+Substituting these into the differentiated equation shows that \(v\)
+satisfies
+
+\[
+\frac{\partial}{\partial x}\!\left(
+F_{p_1p_1}(\nabla u)v_x+F_{p_1p_2}(\nabla u)v_y
+\right)
++\frac{\partial}{\partial y}\!\left(
+F_{p_2p_1}(\nabla u)v_x+F_{p_2p_2}(\nabla u)v_y
+\right)=0.
+\]
+
+This is linear in the new unknown \(v\). In matrix form,
+
+\[
+\operatorname{Div}(A(x)\nabla v)=0,
+\qquad
+A(x)=D^2F(\nabla u(x)).
+\]
+
+In \(n\) variables, the same pattern is
+
+\[
+\sum_{i,j=1}^n \frac{\partial}{\partial x_i}\Big(a_{ij}(x)\frac{\partial v}{\partial x_j}\Big)=0,
+\qquad
+a_{ij}(x)=F_{ij}(\nabla u(x)).
+\]
+
+So each partial derivative of the minimizer satisfies a linear elliptic
+equation whose coefficients are determined by the Hessian of \(F\)
+evaluated at \(\nabla u\).
+
+\begin{figure}
 \centering
-\begin{tikzpicture}[scale=1.3, >=stealth]
-
-    % ---Unit Circle ---
-    \begin{scope}
-        \draw[->] (-1.5,0) -- (1.5,0);
-        \draw[->] (0,-1.5) -- (0,1.5);
-        \draw[thick, fill=blue!5] (0,0) circle (1cm);
-        \node at (0,-2) {Unit Circle};
-    \end{scope}
-
-    % --- Transformation Arrow ---
-    \draw[->, ultra thick] (2,0.2) to[bend left=25] node[midway, above] {$A$} (4,0.2);
-
-    % --- Ellipse ---
-    \begin{scope}[shift={(6,0)}]
-        \draw[->] (-2.2,0) -- (2.2,0);
-        \draw[->] (0,-1.7) -- (0,1.7);
-        
-        \draw[thick, fill=red!5, rotate=30] (0,0) ellipse (1.5cm and 0.7cm);
-        
-        % Semi-major axis
-        \draw[thick, red, rotate=30] (0,0) -- (1.5,0);
-        \node[red, above right=2pt] at (0.5,0) {$\sigma_{\max}$};
-        
-        % Semi-minor axis
-        \draw[thick, blue, rotate=30] (0,0) -- (0,0.7);
-        \node[blue, right=2pt] at (-1,0) {$\sigma_{\min}$};
-        
-        \node at (0,-2) {Image under $A$};
-    \end{scope}
-
-    % --- Bottom Text ---
-    \node at (3.5, -3.2)
-        {Distortion $K = \dfrac{\sigma_{\max}}{\sigma_{\min}}$};
-
-\end{tikzpicture}
-
-\caption{Action of a linear map on the unit circle and the induced distortion.}
+\pandocbounded{\includegraphics[keepaspectratio,alt={Charles Morrey Jr.~(1907--1984)}]{quartz/content/Math495/media/Charles_Morrey_Jr.jpeg}}
+\caption{Charles Morrey Jr.~(1907--1984)}
 \end{figure}
 
-You might wonder: \textit{Why is this distortion $K$ bounded?}\\
+\emph{Charles Morrey Jr.~(1907--1984)}
 
-In 2D, the linearized equation $\sum a_{ij}v_{ij} = 0$ acts as a tight "lock" on the eigenvalues $\mu_1, \mu_2$ of the Hessian matrix $D^2u$. Since the coefficient matrix $a_{ij}$ is positive definite, for the weighted sum of eigenvalues to be zero, $\mu_1$ and $\mu_2$ must have opposite signs. More importantly, the uniform ellipticity constants $[\lambda, \lambda^{-1}]$ force their magnitudes to be comparable:$$|\mu_1| \approx |\mu_2|.$$Because they are "locked" together, one eigenvalue cannot grow large without the other growing continuously with it. This ensures that their ratio $K = \frac{|\mu_{\text{max}}|}{|\mu_{\text{min}}|}$ stays finite. Geometrically, this means the gradient map is \textit{quasiconformal}: it transforms infinitesimal circles into ellipses of bounded eccentricity, a property known to strictly enforce continuity.\\
+However, the coefficients \(a_{ij}(x) = F_{ij}(\nabla u(x))\) of this
+new linearized equation depend intrinsically on the unknown gradient. If
+we assume only that \(u\) has bounded slope so that the gradient
+\(\nabla u\) is bounded but not known to be continuous, then these
+coefficients are bounded, but they may be discontinuous.
 
- In higher dimensions, this "safety net" vanishes. Let's take 3D as an example, we still have a single scalar equation $\sum a_{ij}v_{ij} = 0$, but now it must constrain three eigenvalues $\mu_1, \mu_2, \mu_3$. This single constraint is too weak to lock them together. Imagine a scenario where one eigenvalue is massive, and the other two are small and negative. The equation can still be satisfied, but the distortion ratio may blow up. This allows the map to stretch space infinitely in one direction while remaining a valid solution to the equation. Consequently, the gradient map in 3D loses the quasiconformal property, and the geometric guarantee of regularity is lost.\\
+We are thus caught in a vicious circle: to prove the coefficients are
+smooth, we need the solution's gradient to be smooth; but to prove the
+solution is smooth, the classical theory demands the coefficients be
+smooth. This ``gap'' between having a bounded slope versus a continuous
+slope was what Morrey later called the ``sad state of affairs'' that
+hindered progress for decades.
 
+The solution was finally achieved by bridging this gap. Let us
+illustrate the strategy in 2D, using geometric intuition.
 
-How does preventing a circle from stretching into a thin ellipse guarantee that the solution is smooth? The link is provided by Mori's Theorem. The theorem states that any map with bounded distortion $K$ (a $K$-quasiconformal map) is automatically Hölder continuous with an exponent $\alpha$ determined by the dimension and the distortion. Specifically, for dimension $n \ge 2$:$$\alpha = K^{\frac{1}{1-n}}.$$In our specific 2D, this exponent simplifies elegantly:$$\alpha = K^{\frac{1}{1-2}} = K^{-1} = \frac{1}{K}.$$This provides a direct translation from geometry to analysis: if the distortion $K$ is finite, the Hölder exponent $\alpha$ is positive. Intuitively, this means that because the map cannot stretch space infinitely, it cannot "tear" values apart. Points that are close in the domain are forced to map to values that are close in the range.\\
+You are likely familiar with the gradient \(\nabla u\) as a vector field
+pointing in the direction of steepest increase. But for this problem, we
+need a shift in perspective. Imagine mapping every point \(x\) in our
+domain not to its height \(u(x)\), but to its slope vector
+\(\nabla u(x)\). This creates a ``gradient map'' from the physical
+domain into a ``plane of slopes.'' \emph{The core question of regularity
+is simply: Is this map continuous? Or can the slope jump abruptly from
+one value to another, creating a sharp crease or kink in our soap film?}
 
+\begin{figure}
+\centering
+\pandocbounded{\includegraphics[keepaspectratio,alt={The Gradient Map. This map takes a location x in the physical domain (left) and sends it to its corresponding slope vect}]{quartz/content/Math495/media/tikz-export/a1-tikz-2.png}}
+\caption{The Gradient Map. This map takes a location x in the physical
+domain (left) and sends it to its corresponding slope vect}
+\end{figure}
 
-% Here is the link to Mori's theorem: https://www.ams.org/journals/tran/2011-363-11/S0002-9947-2011-05281-5/S0002-9947-2011-05281-5.pdf
+\emph{The Gradient Map. This map takes a location x in the physical
+domain (left) and sends it to its corresponding slope vector
+\(\nabla u\)(x) in the plane of slopes (right). If the solution is
+smooth, the red ``blob'' of slopes will be connected. If the solution
+has a crease, this blob will be torn apart.}
 
-Mathematically, both the "chopping" argument and the "bounded distortion" argument enforce the same decay estimate. If we shrink the radius by a factor $\delta$, the oscillation drops by a fixed fraction:
-\begin{equation}\label{eq:recurrence}
+Imagine the image of the gradient map \(\nabla u\) as a region, a
+``blob,'' in the plane. Fix a direction \(e\) (a unit vector) and
+consider the strip in the gradient plane between two parallel lines
+perpendicular to \(e\), defined by values \(a < b\).
+
+Let \(v(x) = \nabla u(x) \cdot e\) be the corresponding directional
+derivative. If the gradient image \(\nabla u(B_r)\) crosses this strip,
+it means \(v\) takes values both below \(a\) and above \(b\) within the
+ball \(B_r\).
+
+\begin{figure}
+\centering
+\pandocbounded{\includegraphics[keepaspectratio,alt={Chopping the gradient image with parallel strips in many directions forces \textbackslash nabla u(Br) to lie entirely on one side of each st}]{quartz/content/Math495/media/tikz-export/a1-tikz-3.png}}
+\caption{Chopping the gradient image with parallel strips in many
+directions forces \(\nabla u\)(Br) to lie entirely on one side of each
+st}
+\end{figure}
+
+\emph{Chopping the gradient image with parallel strips in many
+directions is one way to imagine the goal: as r tends to 0, the image
+should squeeze toward a single point. That is the geometric picture
+behind continuity of \(\nabla u\).}
+
+Here we use the Maximum Principle. The Maximum Principle is a powerful
+property of elliptic equations. You've seen a special case already:
+Laplace's equation \(\nabla^2 u = 0.\) Its solutions (harmonic
+functions) obey the Mean Value Property and the Maximum Principle: the
+maximum and minimum occur on the boundary. The linearized equation for
+\(v\) is a generalization of Laplace's equation with variable
+coefficients \(a_{ij}(x)\). The principle still holds: the oscillation
+of \(v\) inside a ball is controlled by its oscillation on the boundary,
+like how the temperature at the center of a room is bounded by the
+temperatures on the walls.
+
+In simple terms, for elliptic equations, the values inside a domain are
+controlled by the values on the boundary (much like temperature in a
+room is controlled by the walls). By this principle, if \(v\) oscillates
+inside \(B_r\), it must oscillate at least as much on the boundary
+circle \(\partial B_r\). This allows us to restrict our attention to the
+boundary.
+
+Now we ask a simple question:
+
+\emph{If a function keeps jumping by a fixed amount \(\delta\) near a
+point, how much energy must its gradient spend?}
+
+Suppose \(v\) changes by a noticeable amount \(\delta>0\) on smaller and
+smaller scales near the origin. To change by size \(\delta\) across a
+distance comparable to \(r\), its gradient should have size roughly
+
+\[
+|\nabla v|\sim \frac{\delta}{r}.
+\]
+
+This is just the basic calculus idea
+
+\[
+\text{slope}\approx \frac{\text{change in height}}{\text{change in distance}}.
+\]
+
+The relevant energy is
+
+\[
+\int |\nabla v|^2.
+\]
+
+In two dimensions, the polar-coordinate area element is
+
+\[
+dA=r\,dr\,d\theta.
+\]
+
+So if \(|\nabla v|\sim \frac{\delta}{r}\), then
+
+\[
+|\nabla v|^2\sim \frac{\delta^2}{r^2}.
+\]
+
+Therefore the energy near the origin behaves like
+
+\[
+\int_0^1\int_0^{2\pi}\frac{\delta^2}{r^2}\,r\,d\theta\,dr.
+\]
+
+Simplifying,
+
+\[
+\int_0^1\int_0^{2\pi}\frac{\delta^2}{r}\,d\theta\,dr
+=2\pi\delta^2\int_0^1\frac{1}{r}\,dr.
+\]
+
+But
+
+\[
+\int_0^1\frac{1}{r}\,dr=\infty.
+\]
+
+So in two dimensions, maintaining a fixed oscillation \(\delta\) all the
+way down to a point costs infinite energy.
+
+Weak solutions, however, have finite energy. In this setting, that
+finiteness comes from the Caccioppoli inequality, which we prove from
+scratch in Part II. For now we state it as a fact:\footnote{The
+  Caccioppoli inequality is derived in Part II from the elliptic
+  structure of the equation together with a cutoff function argument.
+  Here we need only its conclusion: gradient energy on a smaller ball is
+  controlled by the \(L^2\) norm of \(v\) on a larger ball.}
+
+\[
+\int_{B_{\frac{1}{2}}} |\nabla v|^2 \, dx \le C \int_{B_1} v^2 \, dx < \infty.
+\]
+
+So persistent oscillation asks for infinite energy, while Caccioppoli
+says the available energy is finite. This scaling computation does not
+by itself prove continuity, but it explains the mechanism behind the
+two-dimensional argument: persistent oscillation is too expensive.
+
+A more careful version of the same idea gives the Courant-Lebesgue
+estimate:
+
+\[
+\left(\operatorname{osc}_{\partial B_r} v\right)^2 \le \frac{\pi}{\ln\!\left(\frac{1}{2r}\right)} \int_{B_{\frac{1}{2}}} |\nabla v|^2 \, dx.
+\]
+
+As \(r\) tends to \(0\), the factor
+\(\frac{1}{\ln\!\left(\frac{1}{2r}\right)}\) goes to zero. So finite
+energy forces the boundary oscillation to shrink as we zoom in.
+
+That is the basic reason two dimensions are special.
+
+What changes in three dimensions? The same slope estimate is still
+
+\[
+|\nabla v|\sim \frac{\delta}{r}.
+\]
+
+But now the volume element in spherical coordinates is
+
+\[
+dV=r^2\sin\theta\,dr\,d\theta\,d\varphi.
+\]
+
+Ignoring the angular constants, the important factor is \(r^2\,dr\). So
+the energy near the origin behaves like
+
+\[
+\int_0^1 \frac{\delta^2}{r^2}\,r^2\,dr.
+\]
+
+The \(r^2\) from the volume element cancels the \(\frac{1}{r^2}\) from
+\(|\nabla v|^2\):
+
+\[
+\int_0^1 \delta^2\,dr=\delta^2<\infty.
+\]
+
+So in three dimensions, the same point-scale oscillation does not
+automatically cost infinite energy. A function can behave much worse
+near a point while still having finite energy.
+
+This is why the two-dimensional proof strategy does not automatically
+generalize to three dimensions.
+
+The same comparison in general dimension is useful. In \(n\) dimensions,
+the volume element behaves like
+
+\[
+r^{n-1}\,dr.
+\]
+
+So the same estimate becomes
+
+\[
+\int_0^1\left(\frac{\delta}{r}\right)^2r^{n-1}\,dr
+=\delta^2\int_0^1 r^{n-3}\,dr.
+\]
+
+Now compare:
+
+\[
+n=2:\qquad \delta^2\int_0^1 r^{-1}\,dr=\infty.
+\]
+
+But
+
+\[
+n=3:\qquad \delta^2\int_0^1 1\,dr<\infty.
+\]
+
+So \(n=2\) is the borderline case where this kind of point singularity
+is too expensive. In \(n=3\), the same energy argument no longer rules
+out bad behavior.
+
+While the ``chopping'' argument above relies on energy estimates, there
+is a second, completely different reason why 2D solutions are smooth.
+This second method relies on a ``happy accident of geometry,'' a special
+feature that disappears in higher dimensions.
+
+The linearized equation implies that the gradient map sends points in
+\(\mathbb{R}^2\) to slope vectors in \(\mathbb{R}^2\), and behaves like
+a linear transformation with bounded distortion. Recall from linear
+algebra that a matrix \(A\) maps the unit circle to an ellipse. The
+``distortion'' is determined by the condition number, the ratio of
+eigenvalues:
+
+\[
+K = \frac{|\lambda_{\max}|}{|\lambda_{\min}|}.
+\]
+
+\begin{figure}
+\centering
+\pandocbounded{\includegraphics[keepaspectratio,alt={Action of a linear map on the unit circle and the induced distortion.}]{quartz/content/Math495/media/tikz-export/a1-tikz-4.png}}
+\caption{Action of a linear map on the unit circle and the induced
+distortion.}
+\end{figure}
+
+\emph{Action of a linear map on the unit circle and the induced
+distortion.}
+
+You might wonder: \emph{Why is this distortion \(K\) bounded?}
+
+In 2D, the linearized equation \(\sum a_{ij}v_{ij} = 0\) acts as a tight
+``lock'' on the eigenvalues \(\mu_1, \mu_2\) of the Hessian matrix
+\(D^2u\). Since the coefficient matrix \(a_{ij}\) is positive definite,
+for the weighted sum of eigenvalues to be zero, \(\mu_1\) and \(\mu_2\)
+must have opposite signs.
+
+More importantly, the uniform ellipticity constants
+\([\lambda, \lambda^{-1}]\) force their magnitudes to be comparable:
+\[|\mu_1| \approx |\mu_2|.\] Because they are ``locked'' together, one
+eigenvalue cannot grow large without the other growing continuously with
+it. This ensures that their ratio
+\(K = \frac{|\mu_{\text{max}}|}{|\mu_{\text{min}}|}\) stays finite.
+Geometrically, this means the gradient map is \emph{quasiconformal}: it
+transforms infinitesimal circles into ellipses of bounded eccentricity,
+a property known to strictly enforce continuity.
+
+In higher dimensions, this ``safety net'' vanishes. Let's take 3D as an
+example, we still have a single scalar equation
+\(\sum a_{ij}v_{ij} = 0\), but now it must constrain three eigenvalues
+\(\mu_1, \mu_2, \mu_3\). This single constraint is too weak to lock them
+together. Imagine a scenario where one eigenvalue is massive, and the
+other two are small and negative. The equation can still be satisfied,
+but the distortion ratio may blow up.
+
+This allows the map to stretch space infinitely in one direction while
+remaining a valid solution to the equation. Consequently, the gradient
+map in 3D loses the quasiconformal property, and the geometric guarantee
+of regularity is lost.
+
+How does preventing a circle from stretching into a thin ellipse
+guarantee that the solution is smooth? The link is provided by Mori's
+Theorem. The theorem states that any map with bounded distortion \(K\)
+(a \(K\)-quasiconformal map) is automatically Hölder continuous with an
+exponent \(\alpha\) determined by the dimension and the distortion.
+Specifically, for dimension \(n \ge 2\): \[\alpha = K^{\frac{1}{1-n}}.\]
+
+In our specific 2D, this exponent simplifies elegantly:
+\[\alpha = K^{\frac{1}{1-2}} = K^{-1} = \frac{1}{K}.\] This provides a
+direct translation from geometry to analysis: if the distortion \(K\) is
+finite, the Hölder exponent \(\alpha\) is positive. Intuitively, this
+means that because the map cannot stretch space infinitely, it cannot
+``tear'' values apart. Points that are close in the domain are forced to
+map to values that are close in the range. Mathematically, both the
+``chopping'' argument and the ``bounded distortion'' argument enforce
+the same decay estimate. If we shrink the radius by a factor \(\delta\),
+the oscillation drops by a fixed fraction:
+
+\[
 \omega(\delta r) \le \frac{1}{2} \omega(r) \implies \omega(\delta^k) \le 2^{-k} \omega(1).
-\end{equation}
+\]
 
 This implies that the oscillation decays as a power of the radius:
-\begin{equation}\label{eq:holder}
+
+\[
 \omega(r) \le C r^\alpha.
-\end{equation}
+\]
 
-\Cref{eq:holder} guarantees that the gradient $\nabla u$ is continuous with a controlled rate of convergence (Hölder continuity). Thus, in the planar case, the specific geometry of 2D forces regularity. The wild oscillations are controlled by the very cost of their existence.\\
+This estimate guarantees that the gradient \(\nabla u\) is continuous
+with a controlled rate of convergence (Hölder continuity). Thus, in the
+planar case, the specific geometry of 2D forces regularity. The wild
+oscillations are controlled by the very cost of their existence.
 
-
-
-
-
+In two dimensions, geometry does the heavy lifting. But the same
+geometric arguments fail in three and higher dimensions, for the reasons
+we saw above. In Part II, we abandon the geometric approach entirely and
+build an analytical toolkit that works in every dimension: weak
+derivatives, Sobolev spaces, and the Sobolev and Caccioppoli
+inequalities --- including a full proof of the Caccioppoli bound we used
+above.
 
 \end{document}
-
-

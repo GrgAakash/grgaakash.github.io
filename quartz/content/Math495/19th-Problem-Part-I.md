@@ -1,5 +1,5 @@
 ---
-title: "The 19th Problem — Part I (2D)"
+title: "The 19th Problem - Part I (2D)"
 description: "Hilbert's 19th problem, 2D regularity, and why minimizers become smooth."
 tags:
   - math495
@@ -55,38 +55,224 @@ Since $u$ is a minimizer, the derivative of the energy with respect to $\epsilon
 
 
 
-Let us carry out the computation. We need $\frac{d}{d\epsilon}\big|_{\epsilon = 0} J(u + \epsilon\phi)$. Pulling the derivative inside the integral and applying the Chain Rule to $F$: $$\frac{d}{d\epsilon}\bigg|_{\epsilon=0} \int_{B_1} F(\nabla u + \epsilon \nabla\phi)\,dx
-= \int_{B_1} \sum_{i=1}^n \frac{\partial F}{\partial p_i}(\nabla u) \cdot \frac{\partial \phi}{\partial x_i}\,dx.$$ Now integrate by parts in each term. Since $\phi$ vanishes on $\partial B_1$, the boundary contributions disappear:[^2] $$= -\int_{B_1} \sum_{i=1}^n \frac{\partial}{\partial x_i}\!\left(\frac{\partial F}{\partial p_i}(\nabla u)\right) \phi\,dx.$$ For this to vanish for every test function $\phi$, the integrand itself must be zero. That gives the Euler-Lagrange equation: <span id="eq-euler-lagrange"></span>
+Let us carry out the computation slowly in two variables first, since that is the easiest place to see the pattern. Write
+
+$$
+\nabla u = (u_x,u_y),
+$$
+
+so the energy becomes
+
+$$
+J(u)=\int_{B_1} F(u_x,u_y)\,dx\,dy.
+$$
+
+Think of $F$ as a rule that assigns an energy cost to the slope of $u$.
+
+Now perturb $u$ by replacing it with $u+\epsilon\phi$, where $\phi$ is smooth and vanishes on $\partial B_1$. Since $u$ is a minimizer, the function $\epsilon \mapsto J(u+\epsilon\phi)$ must have derivative $0$ at $\epsilon=0$:
+
+$$
+\left.\frac{d}{d\epsilon}\right|_{\epsilon=0} J(u+\epsilon\phi)=0.
+$$
+
+Because
+
+$$
+\nabla(u+\epsilon\phi)=(u_x+\epsilon\phi_x,\;u_y+\epsilon\phi_y),
+$$
+
+we get
+
+$$
+J(u+\epsilon\phi)=\int_{B_1} F(u_x+\epsilon\phi_x,\;u_y+\epsilon\phi_y)\,dx\,dy.
+$$
+
+Differentiate with respect to $\epsilon$. By the Chain Rule,
+
+$$
+\frac{d}{d\epsilon}F(u_x+\epsilon\phi_x,\;u_y+\epsilon\phi_y)
+=F_{p_1}(u_x+\epsilon\phi_x,\;u_y+\epsilon\phi_y)\phi_x
++F_{p_2}(u_x+\epsilon\phi_x,\;u_y+\epsilon\phi_y)\phi_y.
+$$
+
+Setting $\epsilon=0$ gives
+
+$$
+0=\int_{B_1}\left[F_{p_1}(\nabla u)\phi_x+F_{p_2}(\nabla u)\phi_y\right]\,dx\,dy.
+$$
+
+Now integrate by parts in each term. Since $\phi=0$ on $\partial B_1$, the boundary terms vanish:[^2]
+
+$$
+\int_{B_1} F_{p_1}(\nabla u)\phi_x\,dx\,dy
+=-\int_{B_1}\frac{\partial}{\partial x}\!\left(F_{p_1}(\nabla u)\right)\phi\,dx\,dy,
+$$
+
+and similarly
+
+$$
+\int_{B_1} F_{p_2}(\nabla u)\phi_y\,dx\,dy
+=-\int_{B_1}\frac{\partial}{\partial y}\!\left(F_{p_2}(\nabla u)\right)\phi\,dx\,dy.
+$$
+
+So
+
+$$
+0=-\int_{B_1}\left[
+\frac{\partial}{\partial x}\!\left(F_{p_1}(\nabla u)\right)
++\frac{\partial}{\partial y}\!\left(F_{p_2}(\nabla u)\right)
+\right]\phi\,dx\,dy.
+$$
+
+Because this must hold for every test function $\phi$, the quantity in brackets must be zero. That gives the Euler-Lagrange equation: <span id="eq-euler-lagrange"></span>
+
+$$
+\frac{\partial}{\partial x}\!\left(F_{p_1}(\nabla u)\right)
++\frac{\partial}{\partial y}\!\left(F_{p_2}(\nabla u)\right)=0.
+$$
+
+In compact vector notation, this is
 
 $$
 \operatorname{Div}(\nabla F(\nabla u)) = 0.
 $$
 
-
-One more Chain Rule expands the left side. Since $\frac{\partial F}{\partial p_i}(\nabla u(x))$ depends on $x$ through $\nabla u$: $$\frac{\partial}{\partial x_i}\!\left(\frac{\partial F}{\partial p_i}(\nabla u)\right)
-= \sum_{j=1}^n \frac{\partial^2 F}{\partial p_i \partial p_j}(\nabla u)\cdot u_{x_i x_j}
-= \sum_{j=1}^n F_{ij}(\nabla u)\, u_{ij}.$$ Summing over $i$: <span id="eq-euler-lagrange-expanded"></span>
+This is the same formula you would write in $n$ variables:
 
 $$
-\sum_{i,j=1}^n F_{ij}(\nabla u)\, u_{ij} = 0,
+\sum_{i=1}^n \frac{\partial}{\partial x_i}\!\left(\frac{\partial F}{\partial p_i}(\nabla u)\right)=0.
 $$
- where $F_{ij}$ is the $(i,j)$ entry of the Hessian of $F$ and $u_{ij} = \frac{\partial^2 u}{\partial x_i \partial x_j}$.
+
+Now let us expand the equation one step further. Since $F_{p_1}(u_x,u_y)$ depends on $x$ through both $u_x$ and $u_y$, the Chain Rule gives
+
+$$
+\frac{\partial}{\partial x}F_{p_1}(u_x,u_y)
+=F_{p_1p_1}(u_x,u_y)u_{xx}+F_{p_1p_2}(u_x,u_y)u_{xy}.
+$$
+
+Likewise,
+
+$$
+\frac{\partial}{\partial y}F_{p_2}(u_x,u_y)
+=F_{p_2p_1}(u_x,u_y)u_{xy}+F_{p_2p_2}(u_x,u_y)u_{yy}.
+$$
+
+Adding the two pieces together, we obtain <span id="eq-euler-lagrange-expanded"></span>
+
+$$
+F_{p_1p_1}(\nabla u)u_{xx}
++2F_{p_1p_2}(\nabla u)u_{xy}
++F_{p_2p_2}(\nabla u)u_{yy}=0,
+$$
+
+using the symmetry $F_{p_1p_2}=F_{p_2p_1}$. In higher dimensions, this becomes the same matrix pattern:
+
+$$
+\sum_{i,j=1}^n F_{ij}(\nabla u)\,u_{ij}=0,
+$$
+
+where $F_{ij}$ is the $(i,j)$ entry of the Hessian of $F$ and $u_{ij}=\frac{\partial^2 u}{\partial x_i\partial x_j}$.
+
 *What does this look like for a specific $F$?*
 
-Take $F(p) = |p|^2 = p_1^2 + \cdots + p_n^2$, so $J(u) = \int_{B_1}|\nabla u|^2\,dx$ is the Dirichlet energy, measuring the total "effort" of the function. Then $\frac{\partial F}{\partial p_i} = 2p_i$, and [→](#eq-euler-lagrange) becomes: $$\operatorname{Div}(2\nabla u) = 2\Delta u = 0.$$
-
-The minimizer satisfies Laplace’s equation. Harmonic functions have been known to be infinitely smooth since the 19th century, so there is no mystery here. The Hessian is just $F_{ij} = 2\delta_{ij}$, a constant, so the coefficients $a_{ij}(x)$ do not depend on $\nabla u$ at all.
-
-The trouble starts when $F$ is genuinely nonlinear: then $F_{ij}(\nabla u(x))$ varies across the domain and can be discontinuous.
-
-Here comes the trouble. To see why, differentiate [→](#eq-euler-lagrange) with respect to $x_k$ and let $v = \partial_k u$. Writing the Euler-Lagrange equation as $\partial_i(F_i(\nabla u)) = 0$ where $F_i = \frac{\partial F}{\partial p_i}$, differentiating in $x_k$ gives: $$\partial_i\!\left(\partial_k F_i(\nabla u)\right) = 0.$$
-
-Applying the Chain Rule to $\partial_k F_i(\nabla u) = \sum_j F_{ij}(\nabla u)\,\partial_j(\partial_k u) = \sum_j F_{ij}(\nabla u)\,\partial_j v$ yields a linear equation for $v$: <span id="eq-linearized"></span>
+Take the simplest example,
 
 $$
-\sum_{i,j=1}^n \frac{\partial}{\partial x_i} \Big( a_{ij}(x) \frac{\partial v}{\partial x_j} \Big) = 0, \quad \text{where } a_{ij}(x) = F_{ij}(\nabla u(x)).
+F(p)=|p|^2=p_1^2+\cdots+p_n^2.
 $$
- Each partial derivative $v = \partial_k u$ of the minimizer satisfies a linear elliptic equation with coefficients $a_{ij}(x) = F_{ij}(\nabla u(x))$.
+
+Then
+
+$$
+J(u)=\int_{B_1}|\nabla u|^2\,dx
+$$
+
+is the Dirichlet energy, measuring the total "effort" of the function. In two variables, the Euler-Lagrange equation becomes
+
+$$
+\frac{\partial}{\partial x}(2u_x)+\frac{\partial}{\partial y}(2u_y)=0,
+$$
+
+which is exactly
+
+$$
+2u_{xx}+2u_{yy}=0.
+$$
+
+Dividing by $2$, we get
+
+$$
+\Delta u=0.
+$$
+
+So the minimizer satisfies Laplace’s equation. Harmonic functions have been known to be infinitely smooth since the 19th century, so there is no mystery here. The key reason is that the second derivatives of $F$ are constant, so the coefficients of the PDE do not depend on $\nabla u$ at all.
+
+The trouble starts when $F$ is genuinely nonlinear. Then the second derivatives of $F$ are no longer constant: they depend on the unknown slope $\nabla u$ itself.
+
+Now comes the key step. Let
+
+$$
+v=u_x.
+$$
+
+We want to know what equation this derivative satisfies. Start from the Euler-Lagrange equation:
+
+$$
+\frac{\partial}{\partial x}\!\left(F_{p_1}(\nabla u)\right)
++\frac{\partial}{\partial y}\!\left(F_{p_2}(\nabla u)\right)=0.
+$$
+
+Differentiate the whole equation with respect to $x$:
+
+$$
+\frac{\partial}{\partial x}\!\left[
+\frac{\partial}{\partial x}\!\left(F_{p_1}(\nabla u)\right)
++\frac{\partial}{\partial y}\!\left(F_{p_2}(\nabla u)\right)
+\right]=0.
+$$
+
+Since $v=u_x$, we have $v_x=u_{xx}$ and $v_y=u_{xy}$. Applying the Chain Rule again,
+
+$$
+\frac{\partial}{\partial x}F_{p_1}(\nabla u)
+=F_{p_1p_1}(\nabla u)v_x+F_{p_1p_2}(\nabla u)v_y,
+$$
+
+and
+
+$$
+\frac{\partial}{\partial x}F_{p_2}(\nabla u)
+=F_{p_2p_1}(\nabla u)v_x+F_{p_2p_2}(\nabla u)v_y.
+$$
+
+Substituting these into the differentiated equation shows that $v$ satisfies <span id="eq-linearized"></span>
+
+$$
+\frac{\partial}{\partial x}\!\left(
+F_{p_1p_1}(\nabla u)v_x+F_{p_1p_2}(\nabla u)v_y
+\right)
++\frac{\partial}{\partial y}\!\left(
+F_{p_2p_1}(\nabla u)v_x+F_{p_2p_2}(\nabla u)v_y
+\right)=0.
+$$
+
+This is linear in the new unknown $v$. In matrix form,
+
+$$
+\operatorname{Div}(A(x)\nabla v)=0,
+\qquad
+A(x)=D^2F(\nabla u(x)).
+$$
+
+In $n$ variables, the same pattern is
+
+$$
+\sum_{i,j=1}^n \frac{\partial}{\partial x_i}\Big(a_{ij}(x)\frac{\partial v}{\partial x_j}\Big)=0,
+\qquad
+a_{ij}(x)=F_{ij}(\nabla u(x)).
+$$
+
+So each partial derivative of the minimizer satisfies a linear elliptic equation whose coefficients are determined by the Hessian of $F$ evaluated at $\nabla u$.
 
 ![Charles Morrey Jr. (1907–1984)](Math495/media/Charles_Morrey_Jr.jpeg)
 
@@ -94,7 +280,7 @@ $$
 
 
 
-However, the coefficients $a_{ij}(x) = F_{ij}(\nabla u(x))$ of this new linearized equation [→](#eq-linearized) depend intrinsically on the unknown gradient. If we assume only that $u$ has bounded slope so that the gradient $\nabla u$ is bounded but not known to be continuous, then these coefficients are bounded, but they may be discontinuous.
+However, the coefficients $a_{ij}(x) = F_{ij}(\nabla u(x))$ of this new linearized equation depend intrinsically on the unknown gradient. If we assume only that $u$ has bounded slope so that the gradient $\nabla u$ is bounded but not known to be continuous, then these coefficients are bounded, but they may be discontinuous.
 
 We are thus caught in a vicious circle: to prove the coefficients are smooth, we need the solution’s gradient to be smooth; but to prove the solution is smooth, the classical theory demands the coefficients be smooth. This “gap” between having a bounded slope versus a continuous slope was what Morrey later called the “sad state of affairs” that hindered progress for decades.
 
@@ -115,51 +301,145 @@ Let $v(x) = \nabla u(x) \cdot e$ be the corresponding directional derivative. If
 
 ![Chopping the gradient image with parallel strips in many directions forces ∇u(Br) to lie entirely on one side of each st](Math495/media/tikz-export/a1-tikz-3.png)
 
-*Chopping the gradient image with parallel strips in many directions forces ∇u(Br) to lie entirely on one side of each strip as r → 0. The image is squeezed toward a single point, which is exactly what continuity of ∇u means.*
+*Chopping the gradient image with parallel strips in many directions is one way to imagine the goal: as r tends to 0, the image should squeeze toward a single point. That is the geometric picture behind continuity of ∇u.*
 
 
 
-Here we use the Maximum Principle. The Maximum Principle is a powerful property of elliptic equations. You’ve seen a special case already: Laplace’s equation $\nabla^2 u = 0.$ Its solutions (harmonic functions) obey the Mean Value Property and the Maximum Principle: the maximum and minimum occur on the boundary. Our linearized equation [→](#eq-linearized) is a generalization of Laplace’s equation with variable coefficients $a_{ij}(x)$. The principle still holds: the oscillation of $v$ inside a ball is controlled by its oscillation on the boundary-like how the temperature at the center of a room is bounded by the temperatures on the walls.
+Here we use the Maximum Principle. The Maximum Principle is a powerful property of elliptic equations. You’ve seen a special case already: Laplace’s equation $\nabla^2 u = 0.$ Its solutions (harmonic functions) obey the Mean Value Property and the Maximum Principle: the maximum and minimum occur on the boundary. The linearized equation for $v$ is a generalization of Laplace’s equation with variable coefficients $a_{ij}(x)$. The principle still holds: the oscillation of $v$ inside a ball is controlled by its oscillation on the boundary, like how the temperature at the center of a room is bounded by the temperatures on the walls.
 
 In simple terms, for elliptic equations, the values inside a domain are controlled by the values on the boundary (much like temperature in a room is controlled by the walls). By this principle, if $v$ oscillates inside $B_r$, it must oscillate at least as much on the boundary circle $\partial B_r$. This allows us to restrict our attention to the boundary.
 
-To see whether this oscillation can persist as $r \to 0$, we measure its energy cost. Work in polar coordinates $(r, \theta)$ centered at the point in question. On the circle $\partial B_r$, the value of $v$ traces a path as $\theta$ runs from $0$ to $2\pi$. By the Fundamental Theorem of Calculus: $$\operatorname{osc}_{\partial B_r} v \le \int_0^{2\pi} \left|\frac{\partial v}{\partial \theta}\right| d\theta.$$
+Now we ask a simple question:
 
-By Cauchy-Schwarz, and using the geometric fact that $|\partial_\theta v| \le r|\nabla v|$: $$\left(\operatorname{osc}_{\partial B_r} v\right)^2 \le 2\pi r^2 \int_0^{2\pi} |\nabla v|^2\,d\theta.$$
+*If a function keeps jumping by a fixed amount $\delta$ near a point, how much energy must its gradient spend?*
 
-So the squared oscillation on $\partial B_r$ is controlled by the gradient energy on that circle. Now if the oscillation were at least $\delta > 0$ on every circle $\partial B_r$ for $r \in \left(\rho, \frac{1}{2}\right)$, then $r\int_0^{2\pi}|\nabla v|^2 d\theta \gtrsim \frac{\delta^2}{r}$ for each such $r$. Integrating over all those radii: $$\int_{B_{\frac{1}{2}}} |\nabla v|^2\,dx
-= \int_0^{\frac{1}{2}}\!\left(r\int_0^{2\pi}|\nabla v|^2\,d\theta\right)dr
-\gtrsim \delta^2 \int_\rho^{\frac{1}{2}} \frac{dr}{r}
-= \delta^2\ln\!\left(\frac{1}{2\rho}\right).$$ As $\rho \to 0$, the right side blows up. Persistent oscillation on every circle forces the total gradient energy to be infinite. Rearranged as a usable bound, this is the Courant-Lebesgue lemma: <span id="eq-courant-lebesgue"></span>
+Suppose $v$ changes by a noticeable amount $\delta>0$ on smaller and smaller scales near the origin. To change by size $\delta$ across a distance comparable to $r$, its gradient should have size roughly
 
 $$
-\left(\operatorname{osc}_{\partial B_r} v\right)^2 \le \frac{\pi}{\ln\!\left(\frac{1}{2r}\right)} \int_{B_{\frac{1}{2}}} |\nabla v|^2 \, dx.
+|\nabla v|\sim \frac{\delta}{r}.
 $$
- As $r \to 0$, the factor $\frac{1}{\ln\!\left(\frac{1}{2r}\right)}$ goes to zero. So if the total gradient energy on the right is finite, the oscillation must shrink to zero as we zoom in. That is continuity at the center.
 
-Now the argument closes quickly. Suppose, for contradiction, the oscillation stays at least $\delta > 0$ on every circle $\partial B_r$. Then [→](#eq-courant-lebesgue) forces: $$\int_{B_{\frac{1}{2}}} |\nabla v|^2\,dx \ge \frac{\delta^2\ln\!\left(\frac{1}{2r}\right)}{\pi} \to \infty \quad\text{as }r \to 0.$$
+This is just the basic calculus idea
 
-But the left side is a fixed finite number. This finiteness is the content of the Caccioppoli inequality, which we prove from scratch in [[Math495/19th-Problem-Part-II|Part II]]. For now we state it as a fact:[^3] <span id="eq-caccioppoli"></span>
+$$
+\text{slope}\approx \frac{\text{change in height}}{\text{change in distance}}.
+$$
+
+The relevant energy is
+
+$$
+\int |\nabla v|^2.
+$$
+
+In two dimensions, the polar-coordinate area element is
+
+$$
+dA=r\,dr\,d\theta.
+$$
+
+So if $|\nabla v|\sim \frac{\delta}{r}$, then
+
+$$
+|\nabla v|^2\sim \frac{\delta^2}{r^2}.
+$$
+
+Therefore the energy near the origin behaves like
+
+$$
+\int_0^1\int_0^{2\pi}\frac{\delta^2}{r^2}\,r\,d\theta\,dr.
+$$
+
+Simplifying,
+
+$$
+\int_0^1\int_0^{2\pi}\frac{\delta^2}{r}\,d\theta\,dr
+=2\pi\delta^2\int_0^1\frac{1}{r}\,dr.
+$$
+
+But
+
+$$
+\int_0^1\frac{1}{r}\,dr=\infty.
+$$
+
+So in two dimensions, maintaining a fixed oscillation $\delta$ all the way down to a point costs infinite energy.
+
+Weak solutions, however, have finite energy. In this setting, that finiteness comes from the Caccioppoli inequality, which we prove from scratch in [[Math495/19th-Problem-Part-II|Part II]]. For now we state it as a fact:[^3] <span id="eq-caccioppoli"></span>
 
 $$
 \int_{B_{\frac{1}{2}}} |\nabla v|^2 \, dx \le C \int_{B_1} v^2 \, dx < \infty.
 $$
 
-Persistent oscillation needs infinite energy. Caccioppoli says the energy is finite. Contradiction.
+So persistent oscillation asks for infinite energy, while Caccioppoli says the available energy is finite. This scaling computation does not by itself prove continuity, but it explains the mechanism behind the two-dimensional argument: persistent oscillation is too expensive.
 
-Therefore, for sufficiently small $r$, the gradient image $\nabla u(B_r)$ cannot cross the strip. It must lie entirely on one side. By "chopping" with strips in various directions, we force the gradient image to localize to a single point as $r \to 0$. Thus, $\nabla u$ is continuous.
+A more careful version of the same idea gives the Courant-Lebesgue estimate: <span id="eq-courant-lebesgue"></span>
 
-In 3D, we analogously attempt to trap the gradient using parallel planes. If the gradient persists in crossing these planes, it again implies a singularity with characteristic scale $|\nabla v| \sim \frac{\delta}{r}$. However, the geometric measure of the boundary, surface area, now scales as $r^2$.
+$$
+\left(\operatorname{osc}_{\partial B_r} v\right)^2 \le \frac{\pi}{\ln\!\left(\frac{1}{2r}\right)} \int_{B_{\frac{1}{2}}} |\nabla v|^2 \, dx.
+$$
 
-The energy integral in 3D becomes:
+As $r$ tends to $0$, the factor $\frac{1}{\ln\!\left(\frac{1}{2r}\right)}$ goes to zero. So finite energy forces the boundary oscillation to shrink as we zoom in.
 
-$$\text{Energy}_{3D} = \int_{0}^{1} \left( \int_{\partial B_r} |\nabla v|^2 \, d\sigma \right) dr.$$ Substituting the 3D scaling factor ($d\sigma \sim 4\pi r^2$): $$\text{Energy}_{3D} \sim \int_{0}^{1} \left( \frac{\delta}{r} \right)^2 \cdot (4\pi r^2) \, dr \sim 4\pi \delta^2 \int_{0}^{1} 1 \, dr = 4\pi \delta^2 < \infty.$$
+That is the basic reason two dimensions are special.
 
-There is no contradiction. The integral converges, meaning the energy cost of a persistent singularity is finite. The gradient can "afford" to keep oscillating across the planes forever without violating the global energy bounds.
+What changes in three dimensions? The same slope estimate is still
+
+$$
+|\nabla v|\sim \frac{\delta}{r}.
+$$
+
+But now the volume element in spherical coordinates is
+
+$$
+dV=r^2\sin\theta\,dr\,d\theta\,d\varphi.
+$$
+
+Ignoring the angular constants, the important factor is $r^2\,dr$. So the energy near the origin behaves like
+
+$$
+\int_0^1 \frac{\delta^2}{r^2}\,r^2\,dr.
+$$
+
+The $r^2$ from the volume element cancels the $\frac{1}{r^2}$ from $|\nabla v|^2$:
+
+$$
+\int_0^1 \delta^2\,dr=\delta^2<\infty.
+$$
+
+So in three dimensions, the same point-scale oscillation does not automatically cost infinite energy. A function can behave much worse near a point while still having finite energy.
+
+This is why the two-dimensional proof strategy does not automatically generalize to three dimensions.
+
+The same comparison in general dimension is useful. In $n$ dimensions, the volume element behaves like
+
+$$
+r^{n-1}\,dr.
+$$
+
+So the same estimate becomes
+
+$$
+\int_0^1\left(\frac{\delta}{r}\right)^2r^{n-1}\,dr
+=\delta^2\int_0^1 r^{n-3}\,dr.
+$$
+
+Now compare:
+
+$$
+n=2:\qquad \delta^2\int_0^1 r^{-1}\,dr=\infty.
+$$
+
+But
+
+$$
+n=3:\qquad \delta^2\int_0^1 1\,dr<\infty.
+$$
+
+So $n=2$ is the borderline case where this kind of point singularity is too expensive. In $n=3$, the same energy argument no longer rules out bad behavior.
 
 While the “chopping” argument above relies on energy estimates, there is a second, completely different reason why 2D solutions are smooth. This second method relies on a "happy accident of geometry," a special feature that disappears in higher dimensions.
 
-The linearized equation implies that the gradient map $\nabla u: \mathbb{R}^2 \to \mathbb{R}^2$ behaves like a linear transformation with bounded distortion. Recall from linear algebra that a matrix $A$ maps the unit circle to an ellipse. The "distortion" is determined by the condition number, the ratio of eigenvalues: <span id="eq-distortion"></span>
+The linearized equation implies that the gradient map sends points in $\mathbb{R}^2$ to slope vectors in $\mathbb{R}^2$, and behaves like a linear transformation with bounded distortion. Recall from linear algebra that a matrix $A$ maps the unit circle to an ellipse. The "distortion" is determined by the condition number, the ratio of eigenvalues: <span id="eq-distortion"></span>
 
 $$
 K = \frac{|\lambda_{\max}|}{|\lambda_{\min}|}.
@@ -199,7 +479,7 @@ $$
 $$
 
 
-[→](#eq-holder) guarantees that the gradient $\nabla u$ is continuous with a controlled rate of convergence (Hölder continuity). Thus, in the planar case, the specific geometry of 2D forces regularity. The wild oscillations are controlled by the very cost of their existence.
+This estimate guarantees that the gradient $\nabla u$ is continuous with a controlled rate of convergence (Hölder continuity). Thus, in the planar case, the specific geometry of 2D forces regularity. The wild oscillations are controlled by the very cost of their existence.
 
 In two dimensions, geometry does the heavy lifting. But the same geometric arguments fail in three and higher dimensions, for the reasons we saw above. In Part II, we abandon the geometric approach entirely and build an analytical toolkit that works in every dimension: weak derivatives, Sobolev spaces, and the Sobolev and Caccioppoli inequalities — including a full proof of the Caccioppoli bound we used above.
 

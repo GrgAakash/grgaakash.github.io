@@ -1,5 +1,5 @@
 ---
-title: "The 19th Problem — Part II"
+title: "The 19th Problem - Part II"
 description: "The analytical toolkit: weak derivatives, Sobolev spaces, and Caccioppoli."
 tags:
   - math495
@@ -33,7 +33,7 @@ $L^1$ just means the absolute value of the function has a finite integral.
 > 2.  *Compact Support: There exists a compact set $K \subset \mathbb{R}^n$ such that
 >
 >     $$\phi(x)=0,~~~~~~\forall x \notin K.$$
-
+<span id="eq-weak-deriv-abs"></span>
 Note that in $\mathbb{R}^n$, “compact” means the set is closed and bounded. We write the space of test functions as $C_c^\infty(\Omega),$ where $\Omega$ is an open subset of $\mathbb{R}^n.$
 
 Before moving on, let us work with $u(x) = |x|$ and suppose for some $g(x)$ we want to find
@@ -55,7 +55,7 @@ $$
 $$
 [^1]
 
-<span id="eq-weak-deriv-abs"></span>
+
 
 $$
 \int_{-\infty}^{\infty} (|x|)' \phi(x) \, dx = - \int_{-\infty}^{\infty} |x| \phi'(x) \, dx
@@ -234,13 +234,11 @@ Another natural follow up question is: could an $H^1$ function be really wild? L
 > $$p^* = \frac{np}{n-p}$$
 >
 > is called the Sobolev conjugate of $p$. Notice $p^* > p$.
-
 <span id="Thm-Sobolev-Ineq"></span>
 > [!abstract] Theorem 1 (Sobolev Inequality)
 > Let $\Omega \subset \mathbb{R}^n$ be bounded and open. For $1 \le p < n$, there exists a constant $C = C(p,n,\Omega)$ such that for every $u \in W^{1,p}(\Omega)$,
 >
 > $$\|u\|_{L^{p^*}(\Omega)} \le C \|u\|_{W^{1,p}(\Omega)}.$$
-
 To get a sense of this inequality, let us first start with a familiar concept — the Fundamental Theorem of Calculus:
 
 $$
@@ -263,6 +261,8 @@ $$
 Let’s check what this means in different dimensions: For $n=3$: $2^* = \frac{6}{1} = 6$. So $H^1 \hookrightarrow L^6$. So in $3$-dimension, we start with $\nabla u \in L^2$, then we end up with $u \in L^{6}$. Similarly in $2$-dimensions, $H^1$ functions belong to $L^q$ for every finite $q$, but not necessarily $L^\infty$.
 To answer our original question: while an $H^1$ function need not be bounded or continuous (especially in dimensions $n \ge 2$), the Sobolev inequality prevents it from being arbitrarily wild. It forces the function into a strictly better integrability class $L^{p^*}$, which prevents situations like being discontinuous everywhere or oscillating without control.
 
+<span id="Thm-ReversePoincare"></span>
+
 # Reverse Poincaré Inequality
 Before we can state the Caccioppoli inequality, we need one more tool. Recall that the Sobolev inequality controls the function by its gradient. The Poincaré inequality is a related classical result in the same spirit:
 
@@ -274,7 +274,7 @@ Before we can state the Caccioppoli inequality, we need one more tool. Recall th
 Intuitively, if $u$ vanishes on the boundary and $\nabla u$ is small, then $u$ cannot stray far from zero. The gradient controls the function.
 Now can we go in the reverse direction? Can we control the gradient by the function? For a generic $H^1$ function this is impossible: adding a large constant to $u$ changes nothing about $\nabla u$, yet makes $\int u^2$ arbitrarily large. However, for functions satisfying an elliptic equation, the equation prevents this. A solution cannot be large without its gradient also being large somewhere nearby. This is the content of the reverse Poincaré inequality:
 
-<span id="Thm-ReversePoincare"></span>
+
 > [!abstract] Theorem 3 (Reverse Poincaré Inequality)
 > Let $u \in H^1(\Omega)$ be a weak solution to an elliptic equation[^7] in $\Omega$. Then for concentric balls $B_{\frac{r}{2}} \subset B_r \subset \Omega$,
 >
@@ -289,6 +289,7 @@ We now know that our minimizer lives in $H^1$, and the Sobolev inequality told u
 The Caccioppoli inequality makes this precise.
 
 <span id="Thm-Caccioppoli"></span>
+
 > [!abstract] Theorem 4 (Caccioppoli Inequality)
 > Let $v$ be a solution to an elliptic equation of the form
 >

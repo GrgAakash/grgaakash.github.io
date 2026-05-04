@@ -55,7 +55,6 @@ Now, as $\delta$ decreases, we are forcing the covers to use smaller and smaller
 > [!note] Definition 3 (Hausdorff Measure)
 > The *$s$-dimensional Hausdorff measure* of $E$ is $$\mathcal{H}^s(E) = \lim_{\delta \to 0} \mathcal{H}^s_\delta(E) = \sup_{\delta > 0}
 >     \mathcal{H}^s_\delta(E).$$
-
 One can verify that $\mathcal{H}^s$ is indeed an outer measure on $\mathbb{R}^n$, and that Borel sets[^4] are Carathéodory measurable with respect to it. So we have a genuine measure on a very large class of sets.
 
 Let’s check this against things we already know. When $s = n$ and $E \subseteq
@@ -82,6 +81,7 @@ Here’s the key calculation. If a $d$-dimensional set needs $\sim \delta^{-d}$ 
 Here’s where things get interesting. What happens to $\mathcal{H}^s(E)$ as $s$ varies?
 
 <span id="thm-threshold"></span>
+
 > [!abstract] Theorem 1
 > If $\mathcal{H}^s(E) < \infty$, then $\mathcal{H}^t(E) = 0$ for all $t > s$.
 
@@ -122,6 +122,8 @@ Recall how $C$ is built. Let $C_0 = [0,1]$. To get $C_1$, remove the middle thir
 
 Figure [3](#fig-cantor-stages) shows the first few stages of this construction alongside the natural $\delta_k$-cover at each level.
 
+
+
 <span id="fig-cantor-stages"></span>
 
 ![The Cantor set construction as a sequence of $\delta_k$-covers.](Math495/media/tikz-export/a4-tikz-3.png)
@@ -145,6 +147,8 @@ So, $\mathcal{H}^s(C) \in [1, \infty)$ for $s = \log 2 / \log 3$, and $\dim_H(C)
 A natural follow-up is: *is there a faster way to compute Hausdorff dimension, without going through the measure directly?*
 
 For self-similar sets like the Cantor set, the answer is yes. The Cantor set is the union of two scaled copies of itself, each scaled by a factor of $1/3$: $$C = \frac{1}{3}C \cup \left(\frac{2}{3} + \frac{1}{3}C\right).$$ More generally, a self-similar set satisfying the *open set condition*[^7] is made up of $N$ copies scaled by a common ratio $r$. For such sets, the Hausdorff dimension is the unique solution $s$ to the equation $$N \cdot r^s = 1,\quad \text{i.e.,}\quad s = \frac{\log N}{\log(\frac{1}{r})}.$$ For the Cantor set, $N = 2$ and $r =\frac{1}{3}$, giving $s = \frac{ \log 2}{ \log 3}$, confirming what we computed directly. For the Sierpiński triangle ($N = 3$, $r = \frac{1}{2}$), we get $s = \frac{\log 3}{\log 2} \approx 1.58$. It’s more than one-dimensional but less than two-dimensional, which feels right since it fills part of the plane but has area zero.
+
+
 
 <span id="fig-sierpinski"></span>
 
@@ -170,6 +174,8 @@ For self-similar sets like the Cantor set, the answer is yes. The Cantor set is 
 We should check that Hausdorff dimension at least agrees with what we already know for nice sets. For any set $E \subseteq \mathbb{R}^n$, $$\dim_T(E) \leq \dim_H(E) \leq n,$$ where $\dim_T$ denotes the topological dimension.[^8] So Hausdorff dimension never goes below topological dimension. A space that’s one-dimensional in the topological sense can’t have Hausdorff dimension less than $1$. However, Hausdorff dimension can exceed topological dimension. The Cantor set has topological dimension $0$ (it’s totally disconnected, with no connected subsets other than points) but Hausdorff dimension $\frac{ \log 2}{ \log 3} > 0$. Space-filling curves have topological dimension $1$ but Hausdorff dimension $2$, because they genuinely trace out area even though they’re the image of an interval.
 
 Another classical example is the Koch snowflake boundary. Topologically it is still a curve, so its topological dimension is $1$, but its self-similarity gives $$\dim_H(\partial K) = \frac{\log 4}{\log 3} \approx 1.26.$$ So it sits strictly between an ordinary curve and a genuine surface.
+
+
 
 <span id="fig-koch"></span>
 
