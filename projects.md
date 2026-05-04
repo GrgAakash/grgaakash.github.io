@@ -114,7 +114,7 @@ title: Projects
 
                     <div class="project-item mb-4">
                         <h4>
-                            <a href="/Math495/garden/index" class="others-link">
+                            <a href="/Math495/garden/index" target="_blank" rel="noopener noreferrer" class="others-link">
                                 Notes
                             </a>
                         </h4>
