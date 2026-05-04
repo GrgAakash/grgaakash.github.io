@@ -1,70 +1,49 @@
-% Options for packages loaded elsewhere
-\PassOptionsToPackage{unicode}{hyperref}
-\PassOptionsToPackage{hyphens}{url}
-\documentclass[
-]{article}
-\usepackage{xcolor}
-\usepackage{amsmath,amssymb}
-\setcounter{secnumdepth}{-\maxdimen} % remove section numbering
-\usepackage{iftex}
-\ifPDFTeX
-  \usepackage[T1]{fontenc}
-  \usepackage[utf8]{inputenc}
-  \usepackage{textcomp} % provide euro and other symbols
-\else % if luatex or xetex
-  \usepackage{unicode-math} % this also loads fontspec
-  \defaultfontfeatures{Scale=MatchLowercase}
-  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
-\fi
-\usepackage{lmodern}
-\ifPDFTeX\else
-  % xetex/luatex font selection
-\fi
-% Use upquote if available, for straight quotes in verbatim environments
-\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
-\IfFileExists{microtype.sty}{% use microtype if available
-  \usepackage[]{microtype}
-  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
-}{}
-\makeatletter
-\@ifundefined{KOMAClassName}{% if non-KOMA class
-  \IfFileExists{parskip.sty}{%
-    \usepackage{parskip}
-  }{% else
-    \setlength{\parindent}{0pt}
-    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
-}{% if KOMA class
-  \KOMAoptions{parskip=half}}
-\makeatother
+\documentclass[11pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amsfonts,amssymb,amsrefs,mathtools,amsthm}
+\usepackage{enumerate}
 \usepackage{graphicx}
-\makeatletter
-\newsavebox\pandoc@box
-\newcommand*\pandocbounded[1]{% scales image to fit in text height/width
-  \sbox\pandoc@box{#1}%
-  \Gscale@div\@tempa{\textheight}{\dimexpr\ht\pandoc@box+\dp\pandoc@box\relax}%
-  \Gscale@div\@tempb{\linewidth}{\wd\pandoc@box}%
-  \ifdim\@tempb\p@<\@tempa\p@\let\@tempa\@tempb\fi% select the smaller of both
-  \ifdim\@tempa\p@<\p@\scalebox{\@tempa}{\usebox\pandoc@box}%
-  \else\usebox{\pandoc@box}%
-  \fi%
-}
-% Set default figure placement to htbp
-\def\fps@figure{htbp}
-\makeatother
-\setlength{\emergencystretch}{3em} % prevent overfull lines
-\providecommand{\tightlist}{%
-  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
-\usepackage{bookmark}
-\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
-\urlstyle{same}
-\hypersetup{
-  pdftitle={The 19th Problem - Part I (2D)},
-  pdfauthor={A Leisurely Excursion},
-  hidelinks,
-  pdfcreator={LaTeX via pandoc}}
+\usepackage{float}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{booktabs,longtable,array}
+\usepackage{xcolor}
+\usepackage{textcomp}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta, positioning, calc, decorations.pathreplacing, snakes, patterns, calligraphy}
+\usepackage[autostyle, english = american]{csquotes}
+\MakeOuterQuote{"}
+\usepackage[bookmarksnumbered, colorlinks, plainpages]{hyperref}
+\hypersetup{colorlinks=true,linkcolor=blue!50!black, anchorcolor=green, citecolor=blue!50!black, urlcolor=blue!50!black, filecolor=magenta, pdftoolbar=true, pdfauthor={Aakash Gurung}}
+\usepackage[capitalise]{cleveref}
 
-\title{The 19th Problem - Part I (2D)}
-\author{A Leisurely Excursion}
+\makeatletter
+\def\maxwidth{\ifdim\Gin@nat@width>0.88\linewidth 0.88\linewidth\else\Gin@nat@width\fi}
+\def\maxheight{\ifdim\Gin@nat@height>0.72\textheight 0.72\textheight\else\Gin@nat@height\fi}
+\makeatother
+\setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
+\newcommand*\pandocbounded[1]{#1}
+\providecommand{\tightlist}{\setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{0.85\baselineskip plus 2pt minus 1pt}
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{definition}{Definition}
+\newtheorem{remark}{Remark}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{example}[theorem]{Example}
+\newtheorem{problem}[theorem]{Problem}
+\newcounter{none}
+
+\DeclareMathOperator{\atan2}{atan2}
+\DeclareMathOperator{\Div}{div}
+
+\title{\textbf{The $19^{th}$ Problem: Part I (2D)} \\ \large A Leisurely Excursion \\ \vspace{0.3cm} \normalsize Aakash Gurung}
+\author{}
 \date{}
 
 \begin{document}
@@ -75,13 +54,11 @@ look like they are pulling themselves into the shape of the least
 possible area, or why the light moving through glass of varying density
 bends and curves to find the fastest route, not the straightest one.
 
-\begin{figure}
+\begin{figure}[H]
 \centering
-\pandocbounded{\includegraphics[keepaspectratio,alt={A soap film on a wire frame.}]{quartz/content/Math495/media/SoapFilm.jpeg}}
+\pandocbounded{\includegraphics[keepaspectratio]{quartz/content/Math495/media/SoapFilm.jpeg}}
 \caption{A soap film on a wire frame.}
 \end{figure}
-
-\emph{A soap film on a wire frame.}
 
 In each case, nature is quietly solving an optimization problem.
 Something is being minimized, whether it is the area or the time.
@@ -101,13 +78,11 @@ problems, most of which would prove to be very influential in the coming
 century. \footnote{He actually had a list of \(24\) problems but he
   chose to publish only \(23\).}
 
-\begin{figure}
+\begin{figure}[H]
 \centering
-\pandocbounded{\includegraphics[keepaspectratio,alt={David Hilbert (1862--1943)}]{quartz/content/Math495/media/Hilbert.jpg}}
-\caption{David Hilbert (1862--1943)}
+\pandocbounded{\includegraphics[keepaspectratio]{quartz/content/Math495/media/Hilbert.jpg}}
+\caption{David Hilbert (1862-1943)}
 \end{figure}
-
-\emph{David Hilbert (1862--1943)}
 
 While many of his problems arose due to the urge to understand the
 foundational bedrock of Mathematics like the continuum hypothesis, a few
@@ -120,7 +95,7 @@ seemed to produce solutions of remarkable smoothness.
 
 These are but special cases of a universal variational principle.
 Hilbert observed that such analytic solutions arise from minimizing
-functional integrals of the form:
+functional integrals of the form: \hypertarget{eq-functional}{}\label{eq-functional}
 
 \[
 J(u) = \int_{B_1} F(\nabla u) \, dx,
@@ -146,10 +121,9 @@ Since \(u\) is a minimizer, the derivative of the energy with respect to
 \(\epsilon\) must be zero at \(\epsilon = 0\):
 \[\frac{d}{d\epsilon} J(u + \epsilon \phi) \bigg|_{\epsilon=0} = 0.\]
 
-\begin{figure}
+\begin{figure}[H]
 \centering
-\pandocbounded{\includegraphics[keepaspectratio,alt={Figure}]{quartz/content/Math495/media/tikz-export/a1-tikz-1.png}}
-\caption{Figure}
+\pandocbounded{\includegraphics[keepaspectratio]{quartz/content/Math495/media/tikz-export/a1-tikz-1.png}}
 \end{figure}
 
 Let us carry out the computation slowly in two variables first, since
@@ -233,6 +207,7 @@ So
 
 Because this must hold for every test function \(\phi\), the quantity in
 brackets must be zero. That gives the Euler-Lagrange equation:
+\hypertarget{eq-euler-lagrange}{}\label{eq-euler-lagrange}
 
 \[
 \frac{\partial}{\partial x}\!\left(F_{p_1}(\nabla u)\right)
@@ -268,6 +243,7 @@ Likewise,
 \]
 
 Adding the two pieces together, we obtain
+\hypertarget{eq-euler-lagrange-expanded}{}\label{eq-euler-lagrange-expanded}
 
 \[
 F_{p_1p_1}(\nabla u)u_{xx}
@@ -367,7 +343,7 @@ and
 \]
 
 Substituting these into the differentiated equation shows that \(v\)
-satisfies
+satisfies \hypertarget{eq-linearized}{}\label{eq-linearized}
 
 \[
 \frac{\partial}{\partial x}\!\left(
@@ -398,13 +374,11 @@ So each partial derivative of the minimizer satisfies a linear elliptic
 equation whose coefficients are determined by the Hessian of \(F\)
 evaluated at \(\nabla u\).
 
-\begin{figure}
+\begin{figure}[H]
 \centering
-\pandocbounded{\includegraphics[keepaspectratio,alt={Charles Morrey Jr.~(1907--1984)}]{quartz/content/Math495/media/Charles_Morrey_Jr.jpeg}}
-\caption{Charles Morrey Jr.~(1907--1984)}
+\pandocbounded{\includegraphics[keepaspectratio]{quartz/content/Math495/media/Charles_Morrey_Jr.jpeg}}
+\caption{Charles Morrey Jr.~(1907-1984)}
 \end{figure}
-
-\emph{Charles Morrey Jr.~(1907--1984)}
 
 However, the coefficients \(a_{ij}(x) = F_{ij}(\nabla u(x))\) of this
 new linearized equation depend intrinsically on the unknown gradient. If
@@ -431,18 +405,11 @@ domain into a ``plane of slopes.'' \emph{The core question of regularity
 is simply: Is this map continuous? Or can the slope jump abruptly from
 one value to another, creating a sharp crease or kink in our soap film?}
 
-\begin{figure}
+\begin{figure}[H]
 \centering
-\pandocbounded{\includegraphics[keepaspectratio,alt={The Gradient Map. This map takes a location x in the physical domain (left) and sends it to its corresponding slope vect}]{quartz/content/Math495/media/tikz-export/a1-tikz-2.png}}
-\caption{The Gradient Map. This map takes a location x in the physical
-domain (left) and sends it to its corresponding slope vect}
+\pandocbounded{\includegraphics[keepaspectratio]{quartz/content/Math495/media/tikz-export/a1-tikz-2.png}}
+\caption{The Gradient Map. This map takes a location x in the physical domain (left) and sends it to its corresponding slope vector \(\nabla u(x)\) in the plane of slopes (right). If the solution is smooth, the red ``blob'' of slopes will be connected. If the solution has a crease, this blob will be torn apart.}
 \end{figure}
-
-\emph{The Gradient Map. This map takes a location x in the physical
-domain (left) and sends it to its corresponding slope vector
-\(\nabla u\)(x) in the plane of slopes (right). If the solution is
-smooth, the red ``blob'' of slopes will be connected. If the solution
-has a crease, this blob will be torn apart.}
 
 Imagine the image of the gradient map \(\nabla u\) as a region, a
 ``blob,'' in the plane. Fix a direction \(e\) (a unit vector) and
@@ -454,18 +421,11 @@ derivative. If the gradient image \(\nabla u(B_r)\) crosses this strip,
 it means \(v\) takes values both below \(a\) and above \(b\) within the
 ball \(B_r\).
 
-\begin{figure}
+\begin{figure}[H]
 \centering
-\pandocbounded{\includegraphics[keepaspectratio,alt={Chopping the gradient image with parallel strips in many directions forces \textbackslash nabla u(Br) to lie entirely on one side of each st}]{quartz/content/Math495/media/tikz-export/a1-tikz-3.png}}
-\caption{Chopping the gradient image with parallel strips in many
-directions forces \(\nabla u\)(Br) to lie entirely on one side of each
-st}
+\pandocbounded{\includegraphics[keepaspectratio]{quartz/content/Math495/media/tikz-export/a1-tikz-3.png}}
+\caption{Chopping the gradient image with parallel strips in many directions is one way to imagine the goal: as r tends to 0, the image should squeeze toward a single point. That is the geometric picture behind continuity of \(\nabla u\).}
 \end{figure}
-
-\emph{Chopping the gradient image with parallel strips in many
-directions is one way to imagine the goal: as r tends to 0, the image
-should squeeze toward a single point. That is the geometric picture
-behind continuity of \(\nabla u\).}
 
 Here we use the Maximum Principle. The Maximum Principle is a powerful
 property of elliptic equations. You've seen a special case already:
@@ -551,6 +511,7 @@ scratch in Part II. For now we state it as a fact:\footnote{The
   structure of the equation together with a cutoff function argument.
   Here we need only its conclusion: gradient energy on a smaller ball is
   controlled by the \(L^2\) norm of \(v\) on a larger ball.}
+\hypertarget{eq-caccioppoli}{}\label{eq-caccioppoli}
 
 \[
 \int_{B_{\frac{1}{2}}} |\nabla v|^2 \, dx \le C \int_{B_1} v^2 \, dx < \infty.
@@ -562,7 +523,7 @@ by itself prove continuity, but it explains the mechanism behind the
 two-dimensional argument: persistent oscillation is too expensive.
 
 A more careful version of the same idea gives the Courant-Lebesgue
-estimate:
+estimate: \hypertarget{eq-courant-lebesgue}{}\label{eq-courant-lebesgue}
 
 \[
 \left(\operatorname{osc}_{\partial B_r} v\right)^2 \le \frac{\pi}{\ln\!\left(\frac{1}{2r}\right)} \int_{B_{\frac{1}{2}}} |\nabla v|^2 \, dx.
@@ -647,21 +608,17 @@ The linearized equation implies that the gradient map sends points in
 a linear transformation with bounded distortion. Recall from linear
 algebra that a matrix \(A\) maps the unit circle to an ellipse. The
 ``distortion'' is determined by the condition number, the ratio of
-eigenvalues:
+eigenvalues: \hypertarget{eq-distortion}{}\label{eq-distortion}
 
 \[
 K = \frac{|\lambda_{\max}|}{|\lambda_{\min}|}.
 \]
 
-\begin{figure}
+\begin{figure}[H]
 \centering
-\pandocbounded{\includegraphics[keepaspectratio,alt={Action of a linear map on the unit circle and the induced distortion.}]{quartz/content/Math495/media/tikz-export/a1-tikz-4.png}}
-\caption{Action of a linear map on the unit circle and the induced
-distortion.}
+\pandocbounded{\includegraphics[keepaspectratio]{quartz/content/Math495/media/tikz-export/a1-tikz-4.png}}
+\caption{Action of a linear map on the unit circle and the induced distortion.}
 \end{figure}
-
-\emph{Action of a linear map on the unit circle and the induced
-distortion.}
 
 You might wonder: \emph{Why is this distortion \(K\) bounded?}
 
@@ -710,13 +667,14 @@ means that because the map cannot stretch space infinitely, it cannot
 map to values that are close in the range. Mathematically, both the
 ``chopping'' argument and the ``bounded distortion'' argument enforce
 the same decay estimate. If we shrink the radius by a factor \(\delta\),
-the oscillation drops by a fixed fraction:
+the oscillation drops by a fixed fraction: \hypertarget{eq-recurrence}{}\label{eq-recurrence}
 
 \[
 \omega(\delta r) \le \frac{1}{2} \omega(r) \implies \omega(\delta^k) \le 2^{-k} \omega(1).
 \]
 
 This implies that the oscillation decays as a power of the radius:
+\hypertarget{eq-holder}{}\label{eq-holder}
 
 \[
 \omega(r) \le C r^\alpha.
@@ -732,7 +690,7 @@ geometric arguments fail in three and higher dimensions, for the reasons
 we saw above. In Part II, we abandon the geometric approach entirely and
 build an analytical toolkit that works in every dimension: weak
 derivatives, Sobolev spaces, and the Sobolev and Caccioppoli
-inequalities --- including a full proof of the Caccioppoli bound we used
+inequalities, including a full proof of the Caccioppoli bound we used
 above.
 
 \end{document}

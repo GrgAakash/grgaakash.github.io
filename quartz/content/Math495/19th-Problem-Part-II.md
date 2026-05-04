@@ -239,7 +239,7 @@ Another natural follow up question is: could an $H^1$ function be really wild? L
 > Let $\Omega \subset \mathbb{R}^n$ be bounded and open. For $1 \le p < n$, there exists a constant $C = C(p,n,\Omega)$ such that for every $u \in W^{1,p}(\Omega)$,
 >
 > $$\|u\|_{L^{p^*}(\Omega)} \le C \|u\|_{W^{1,p}(\Omega)}.$$
-To get a sense of this inequality, let us first start with a familiar concept — the Fundamental Theorem of Calculus:
+To get a sense of this inequality, let us first start with a familiar concept ,  the Fundamental Theorem of Calculus:
 
 $$
 u(x) = u(a) + \int_a^x u'(t) \, dt.
@@ -312,7 +312,7 @@ $$\left( \frac{1}{|B_{\frac{r}{2}}|} \int_{B_{\frac{r}{2}}} |\nabla v|^p \right)
 with $p=2+\epsilon$ for some $\epsilon>0$ and $v$ is as described above in [Theorem 4](#Thm-Caccioppoli). Now, this says that $\nabla v$ is in $L^{p}$. Now from [Theorem 1](#Thm-Sobolev-Ineq), we get $v$ is in $L^{p^{*}}$. As $v = \partial_k u$, so it is pretty clear as how this improvement is for $u$ also all the way till $L^{\infty}$. Once $\nabla u \in L^\infty$, the gradient is essentially bounded, but not yet continuous.
 
 # Next step
-Now that we have all the required tools and know that $\nabla u \in L^\infty$, we will move on to analyzing Hilbert’s $19^{th}$ problem for the $n$-dimensional case, where we will be using [[Math495/19th-Problem-Part-III|Part III — De Giorgi's theorem]] and Schauder estimates to see if we can prove the analyticity of the minimizer. If you want the geometric warm-up before that jump, [[Math495/19th-Problem-Part-I|Part I]] is still the best overview.
+Now that we have all the required tools and know that $\nabla u \in L^\infty$, we will move on to analyzing Hilbert’s $19^{th}$ problem for the $n$-dimensional case, where we will be using [[Math495/19th-Problem-Part-III|Part III ,  De Giorgi's theorem]] and Schauder estimates to see if we can prove the analyticity of the minimizer. If you want the geometric warm-up before that jump, [[Math495/19th-Problem-Part-I|Part I]] is still the best overview.
 
 [^1]: By definition, $\exists$ a compact set $K \subset \mathbb{R}$ such that $\phi(x) = 0 ~~ \forall  x \notin K$. Since $K$ is compact in $\mathbb{R}$, it is bounded, so $\exists  R > 0$ such that $K \subseteq [-R, R]$ and $\phi(x) = 0$ for all $|x| > R$. Now the boundary term is
 

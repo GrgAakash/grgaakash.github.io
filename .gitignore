@@ -21,6 +21,10 @@ Math495/1.pdf
 Math495/2.pdf
 Math495/3.pdf
 Math495/4.pdf
+Math495/blog.pdf
+Math495/blog2.pdf
+Math495/blog3.pdf
+Math495/blog4.pdf
 
 # TikZ source files in figures (code already in blog.tex)
 Math495/figures/*.tex

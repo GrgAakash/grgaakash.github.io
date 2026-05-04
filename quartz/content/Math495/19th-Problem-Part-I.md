@@ -26,9 +26,9 @@ One thing to note is that even if the wire frame itself, the boundary, has sharp
 
 Before answering this, let’s rewind to the dawn of the $20^{th}$ century. In the International Congress of Mathematicians held at Paris in August 1900, the German Mathematician David Hilbert proposed $23$ problems, most of which would prove to be very influential in the coming century. [^1]
 
-![David Hilbert (1862–1943)](Math495/media/Hilbert.jpg)
+![David Hilbert (1862-1943)](Math495/media/Hilbert.jpg)
 
-*David Hilbert (1862–1943)*
+*David Hilbert (1862-1943)*
 
 
 
@@ -274,9 +274,9 @@ $$
 
 So each partial derivative of the minimizer satisfies a linear elliptic equation whose coefficients are determined by the Hessian of $F$ evaluated at $\nabla u$.
 
-![Charles Morrey Jr. (1907–1984)](Math495/media/Charles_Morrey_Jr.jpeg)
+![Charles Morrey Jr. (1907-1984)](Math495/media/Charles_Morrey_Jr.jpeg)
 
-*Charles Morrey Jr. (1907–1984)*
+*Charles Morrey Jr. (1907-1984)*
 
 
 
@@ -481,7 +481,7 @@ $$
 
 This estimate guarantees that the gradient $\nabla u$ is continuous with a controlled rate of convergence (Hölder continuity). Thus, in the planar case, the specific geometry of 2D forces regularity. The wild oscillations are controlled by the very cost of their existence.
 
-In two dimensions, geometry does the heavy lifting. But the same geometric arguments fail in three and higher dimensions, for the reasons we saw above. In Part II, we abandon the geometric approach entirely and build an analytical toolkit that works in every dimension: weak derivatives, Sobolev spaces, and the Sobolev and Caccioppoli inequalities — including a full proof of the Caccioppoli bound we used above.
+In two dimensions, geometry does the heavy lifting. But the same geometric arguments fail in three and higher dimensions, for the reasons we saw above. In Part II, we abandon the geometric approach entirely and build an analytical toolkit that works in every dimension: weak derivatives, Sobolev spaces, and the Sobolev and Caccioppoli inequalities ,  including a full proof of the Caccioppoli bound we used above.
 
 [^1]: He actually had a list of $24$ problems but he chose to publish only $23$.
 

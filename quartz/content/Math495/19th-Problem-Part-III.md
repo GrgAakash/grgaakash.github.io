@@ -350,7 +350,7 @@ And that is it. This is the De Giorgi's theorem which proves the key estimate.
 
 # Putting It Together
 
-We've now proved all three steps of De Giorgi's theorem: the $L^2 \to L^\infty$ estimate, the oscillation decay, and Hölder continuity. *So have we solved the Hilbert's 19^{th} problem?* Not quite, we still have some work to do. Let us look at the chain below which will clear things for us:
+We've now proved all three steps of De Giorgi's theorem: the $L^2 \to L^\infty$ estimate, the oscillation decay, and Hölder continuity. *So have we solved Hilbert's $19^{th}$ problem?* Not quite, we still have some work to do. Let us look at the chain below which will clear things for us:
 
 | | Step | Tool |
 |---|---|---|
