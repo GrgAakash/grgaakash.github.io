@@ -9,4 +9,6 @@ Spring 2026
 
 Intended for students with a background in an introductory analysis course or honors calculus. The emphasis here is more on exposition and idea-sharing than on technical completeness.
 
+This material was based on Math 688, taught by Professor Simon Bortz, where we covered a wide range of topics, from elliptic PDE to geometric measure theory.
+
 A source that was heavily used is [Connor Mooney's Hilbert's 19th Problem survey](https://www.math.uci.edu/~mooneycr/HilbertSurvey.pdf). If you want the most technically sound version, please refer to the survey above.
