@@ -141,6 +141,13 @@ title: Projects
                             </a>
                         </h4>
                     </div>
+                    <div class="project-item mb-4">
+                        <h4>
+                            <a href="https://grgaakash.github.io/MathGREsubjectT/resources.html" target="_blank" class="others-link">
+                                Math GRE Prep Resources
+                            </a>
+                        </h4>
+                    </div>
                 </div>
             </div>
         </div>
