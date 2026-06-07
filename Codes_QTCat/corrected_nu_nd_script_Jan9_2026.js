@@ -1,3 +1,9 @@
+function typesetMath(el) {
+    if (window.MathJax && window.MathJax.typesetPromise) {
+        window.MathJax.typesetPromise(el ? [el] : undefined).catch(function () {});
+    }
+}
+
 // Convert partition to QDV of length n
 function partitionToQDV(partition, n) {
     const qdv = new Array(n);
@@ -127,9 +133,19 @@ function ND1(partition) {
     
     if (is_NU1_initial(partition)) return null;
     
+    const trailingOnes = g1 - l;
+    if (trailingOnes < 0) return null;
+
     const newParts = partition.slice(1).map(p => p + 1);
-    const onesToAdd = new Array(g1 - l).fill(1);
-    return [...newParts, ...onesToAdd].sort((a, b) => b - a);
+    const onesToAdd = new Array(trailingOnes).fill(1);
+    const candidate = [...newParts, ...onesToAdd].filter(p => p > 0).sort((a, b) => b - a);
+    if (candidate.length === 0) return null;
+
+    const check = NU1(candidate);
+    if (check && JSON.stringify(check) === JSON.stringify([...partition].sort((a, b) => b - a))) {
+        return candidate;
+    }
+    return null;
 }
 
 // NU₂ Rule (a) pattern check
@@ -183,14 +199,13 @@ function matchesNU2RuleB(qdv) {
         consecutive2s++;
         i++;
     }
-    const k = consecutive2s;
-    
     let trailingNeg1s = 0;
     for (let j = qdv.length - 1; j >= 0 && qdv[j] === -1; j--) {
         trailingNeg1s++;
     }
-    
-    if (trailingNeg1s < k) return null;
+
+    const k = trailingNeg1s;
+    if (k < 1 || consecutive2s !== k) return null;
     
     const startB = 2 + k;
     const endB = qdv.length - k;
@@ -305,12 +320,21 @@ function ND2(qdv, suppressAlerts = false) {
         j--;
     }
     
+    let candidate = null;
+
     if (final1s >= initial0s) {
         const ruleA = matchesND2RuleA(qdv);
-        if (ruleA) return applyND2RuleA(qdv, ruleA.h, ruleA.A);
+        if (ruleA) candidate = applyND2RuleA(qdv, ruleA.h, ruleA.A);
     } else {
         const ruleB = matchesND2RuleB(qdv);
-        if (ruleB) return applyND2RuleB(qdv, ruleB.k, ruleB.B);
+        if (ruleB) candidate = applyND2RuleB(qdv, ruleB.k, ruleB.B);
+    }
+
+    if (candidate) {
+        const check = NU2(candidate, true);
+        if (check && JSON.stringify(check) === JSON.stringify(qdv)) {
+            return candidate;
+        }
     }
     
     if (!suppressAlerts && typeof window !== 'undefined') {
@@ -571,7 +595,12 @@ function ND(partition) {
         const resultQDV = ND2(rep00, true);
         if (!resultQDV) return null;
         const reduced = reduceQDVToReducedDyck(resultQDV);
-        return QDVToPartition(reduced);
+        const candidate = QDVToPartition(reduced);
+        const check = NU(candidate);
+        if (check && JSON.stringify(check) === JSON.stringify([...partition].sort((a, b) => b - a))) {
+            return candidate;
+        }
+        return null;
     } else {
         return ND1(partition);
     }
@@ -585,6 +614,7 @@ function generateSequence(initialPartition, mapType, maxIterations = 50) {
     
     let currentPartition = initialPartition;
     let iteration = 0;
+    let terminationReason = null;
     
     while (iteration < maxIterations) {
         let nextPartition = null;
@@ -635,11 +665,13 @@ function generateSequence(initialPartition, mapType, maxIterations = 50) {
         }
         
         if (nextPartition === null) {
+            terminationReason = explainPartitionMapUndefined(currentPartition, mapType);
             break;
         }
         
         // Check for cycles
         if (JSON.stringify(nextPartition) === JSON.stringify(currentPartition)) {
+            terminationReason = 'Stopped because the next object is identical to the current object.';
             break;
         }
         
@@ -658,7 +690,102 @@ function generateSequence(initialPartition, mapType, maxIterations = 50) {
         dinvs,
         types,
         iterations: iteration,
-        terminationReason: getTerminationReason(mapType, types[types.length - 1], iteration, maxIterations)
+        terminationReason: terminationReason || getTerminationReason(mapType, types[types.length - 1], iteration, maxIterations)
+    };
+}
+
+function qdvToDisplayPartition(qdv) {
+    const reduced = reduceQDVToReducedDyck(qdv);
+    return QDVToPartition(reduced);
+}
+
+function applyPartitionMap(partition, mapType) {
+    switch (mapType) {
+        case 'NU1':
+            return NU1(partition);
+        case 'ND1':
+            return ND1(partition);
+        case 'NU2': {
+            const rdv = reducedDyckFromPartition(partition);
+            if (!rdv) return null;
+            const neg1Rep = getNeg1Representative(rdv);
+            if (!neg1Rep) return null;
+            const resultQDV = NU2(neg1Rep, true);
+            if (!resultQDV) return null;
+            return QDVToPartition(reduceQDVToReducedDyck(resultQDV));
+        }
+        case 'ND2': {
+            const rdv = reducedDyckFromPartition(partition);
+            if (!rdv) return null;
+            const rep00 = get00Representative(rdv);
+            if (!rep00) return null;
+            const resultQDV = ND2(rep00, true);
+            if (!resultQDV) return null;
+            return QDVToPartition(reduceQDVToReducedDyck(resultQDV));
+        }
+        case 'NU':
+            return NU(partition);
+        case 'ND':
+            return ND(partition);
+        default:
+            return null;
+    }
+}
+
+function generateQDVSequence(initialQDV, mapType, maxIterations = 50) {
+    const qdvSequence = [initialQDV];
+    const sequence = [qdvToDisplayPartition(initialQDV)];
+    const deficits = [calculateDeficit(sequence[0])];
+    const dinvs = [calculateDinv(sequence[0])];
+    const types = [getPartitionType(sequence[0])];
+
+    let currentQDV = initialQDV;
+    let iteration = 0;
+    let terminationReason = null;
+
+    while (iteration < maxIterations) {
+        let nextQDV = null;
+
+        if (mapType === 'NU2') {
+            nextQDV = NU2(currentQDV, true);
+        } else if (mapType === 'ND2') {
+            nextQDV = ND2(currentQDV, true);
+        } else {
+            const currentPartition = qdvToDisplayPartition(currentQDV);
+            const nextPartition = applyPartitionMap(currentPartition, mapType);
+            if (nextPartition) {
+                nextQDV = reducedDyckFromPartition(nextPartition);
+            }
+        }
+
+        if (!nextQDV) {
+            terminationReason = explainQDVMapUndefined(currentQDV, mapType);
+            break;
+        }
+        if (JSON.stringify(nextQDV) === JSON.stringify(currentQDV)) {
+            terminationReason = 'Stopped because the next QDV is identical to the current QDV.';
+            break;
+        }
+
+        currentQDV = nextQDV;
+        qdvSequence.push(currentQDV);
+
+        const partition = qdvToDisplayPartition(currentQDV);
+        sequence.push(partition);
+        deficits.push(calculateDeficit(partition));
+        dinvs.push(calculateDinv(partition));
+        types.push(getPartitionType(partition));
+        iteration++;
+    }
+
+    return {
+        qdvSequence,
+        sequence,
+        deficits,
+        dinvs,
+        types,
+        iterations: iteration,
+        terminationReason: terminationReason || getTerminationReason(mapType, types[types.length - 1], iteration, maxIterations)
     };
 }
 
@@ -666,6 +793,60 @@ function getPartitionType(partition) {
     if (is_NU1_final(partition)) return 'NU₁-final';
     if (is_NU1_initial(partition)) return 'NU₁-initial';
     return 'Regular';
+}
+
+function explainPartitionMapUndefined(partition, mapType) {
+    const ell = partition.length;
+    const gamma1 = partition[0] || 0;
+
+    if (mapType === 'NU1') {
+        return `NU₁ cannot be applied because γ₁ = ${gamma1} > ℓ(γ)+2 = ${ell + 2}; this is NU₁-final, outside D₁.`;
+    }
+    if (mapType === 'ND1') {
+        return `ND₁ cannot be applied because γ₁ = ${gamma1} < ℓ(γ) = ${ell}; this is NU₁-initial, outside C₁.`;
+    }
+    if (mapType === 'NU2') {
+        if (!is_NU1_final(partition)) {
+            return `NU₂ cannot be applied because the partition is not NU₁-final: γ₁ = ${gamma1} is not greater than ℓ(γ)+2 = ${ell + 2}.`;
+        }
+        const rdv = reducedDyckFromPartition(partition);
+        const neg1Rep = rdv ? getNeg1Representative(rdv) : null;
+        if (!neg1Rep) return 'NU₂ cannot be applied because this Dyck class has no representative ending in -1.';
+        return `NU₂ cannot be applied because the -1 representative [${neg1Rep.join(', ')}] matches neither Rule (a) nor Rule (b).`;
+    }
+    if (mapType === 'ND2') {
+        if (!is_NU1_initial(partition)) {
+            return `ND₂ cannot be applied because the partition is not on the NU₂-output side: γ₁ = ${gamma1} is not less than ℓ(γ) = ${ell}.`;
+        }
+        const rdv = reducedDyckFromPartition(partition);
+        const rep00 = rdv ? get00Representative(rdv) : null;
+        if (!rep00) return 'ND₂ cannot be applied because this Dyck class has no representative beginning with 00.';
+        return `ND₂ cannot be applied because the 00 representative [${rep00.join(', ')}] is not in the NU₂ range C₂.`;
+    }
+    if (mapType === 'NU') {
+        if (is_NU1_final(partition)) {
+            return explainPartitionMapUndefined(partition, 'NU2');
+        }
+        return explainPartitionMapUndefined(partition, 'NU1');
+    }
+    if (mapType === 'ND') {
+        if (is_NU1_initial(partition)) {
+            return `ND cannot be applied: ND₁ is undefined because γ₁ = ${gamma1} < ℓ(γ) = ${ell}, and ND₂ also does not apply to this object. ${explainPartitionMapUndefined(partition, 'ND2')}`;
+        }
+        return explainPartitionMapUndefined(partition, 'ND1');
+    }
+    return `${getMethodName(mapType)} cannot be applied to this input.`;
+}
+
+function explainQDVMapUndefined(qdv, mapType) {
+    if (mapType === 'NU2') {
+        return `NU₂ cannot be applied because [${qdv.join(', ')}] matches neither Rule (a) nor Rule (b).`;
+    }
+    if (mapType === 'ND2') {
+        return `ND₂ cannot be applied because [${qdv.join(', ')}] is not in the NU₂ range C₂.`;
+    }
+    const partition = qdvToDisplayPartition(qdv);
+    return explainPartitionMapUndefined(partition, mapType);
 }
 
 function getTerminationReason(mapType, finalType, iterations, maxIterations) {
@@ -694,9 +875,46 @@ function parseQDVInput(input) {
         const values = parts.map(x => parseInt(x.trim())).filter(x => !isNaN(x));
         if (values.length === 0) throw new Error('Empty QDV');
         if (values[0] !== 0) throw new Error('QDV must start with 0');
+        for (let i = 0; i < values.length - 1; i++) {
+            if (values[i + 1] > values[i] + 1) {
+                throw new Error('QDV entries must satisfy v_{i+1} <= v_i + 1');
+            }
+        }
         return values;
     } catch (error) {
-        throw new Error('Invalid QDV format. Please use comma-separated integers starting with 0.');
+        throw new Error(error.message || 'Invalid QDV format. Please use comma-separated integers starting with 0.');
+    }
+}
+
+function getSelectedInputFormat() {
+    const input = document.querySelector('input[name="input-format"]:checked');
+    return input ? input.value : 'partition';
+}
+
+function updateSequenceInputMode() {
+    const methodInput = document.querySelector('input[name="method"]:checked');
+    const method = methodInput ? methodInput.value : 'NU1';
+    const inputFormat = getSelectedInputFormat();
+    const label = document.getElementById('input-label');
+    const input = document.getElementById('input-vector');
+    if (!label || !input) return;
+
+    if (inputFormat === 'qdv') {
+        label.textContent = 'QDV / Dyck vector (comma-separated):';
+        if (method === 'NU2') {
+            input.placeholder = '0,1,2,2,2,2,-1,0,0,1,-1,-1';
+            if (!input.dataset.userEdited) input.value = '0,1,2,2,2,2,-1,0,0,1,-1,-1';
+        } else if (method === 'ND2') {
+            input.placeholder = '0,0,0,1,2,-1,0,0,1,1,1,1';
+            if (!input.dataset.userEdited) input.value = '0,0,0,1,2,-1,0,0,1,1,1,1';
+        } else {
+            input.placeholder = '0,0,1';
+            if (!input.dataset.userEdited) input.value = '0,0,1';
+        }
+    } else {
+        label.textContent = 'Integer Partition (comma-separated):';
+        input.placeholder = '5,4,4,1';
+        if (!input.dataset.userEdited) input.value = '5,4,4,1';
     }
 }
 
@@ -724,14 +942,23 @@ function isNU2RuleAPattern(qdv) {
 function generateNuSequence() {
     const input = document.getElementById('input-vector').value;
     const method = document.querySelector('input[name="method"]:checked').value;
+    const inputFormat = getSelectedInputFormat();
     const maxIterations = parseInt(document.getElementById('max-iterations').value);
     
     try {
-        const partition = parsePartitionInput(input);
-        const result = generateSequence(partition, method, maxIterations);
-        const { sequence, deficits, dinvs, types, iterations, terminationReason } = result;
-        
-        displayNuResults(sequence, deficits, dinvs, types, method, iterations, sequence[0], terminationReason, 'partition');
+        if (inputFormat === 'qdv') {
+            const qdv = parseQDVInput(input);
+            const result = generateQDVSequence(qdv, method, maxIterations);
+            const { qdvSequence, sequence, deficits, dinvs, types, iterations, terminationReason } = result;
+            window.lastQDVSequence = qdvSequence;
+            displayNuResults(sequence, deficits, dinvs, types, method, iterations, sequence[0], terminationReason, 'qdv');
+        } else {
+            const partition = parsePartitionInput(input);
+            const result = generateSequence(partition, method, maxIterations);
+            const { sequence, deficits, dinvs, types, iterations, terminationReason } = result;
+            window.lastQDVSequence = null;
+            displayNuResults(sequence, deficits, dinvs, types, method, iterations, sequence[0], terminationReason, 'partition');
+        }
         
     } catch (error) {
         showError(error.message);
@@ -741,16 +968,27 @@ function generateNuSequence() {
 function displayNuResults(sequence, deficits, dinvs, types, method, iterations, originalPartition, terminationReason, inputType = 'partition') {
     const resultsSection = document.getElementById('results-section');
     resultsSection.style.display = 'block';
+
+    const initialQDV = inputType === 'qdv' && window.lastQDVSequence
+        ? window.lastQDVSequence[0]
+        : reducedDyckFromPartition(sequence[0]);
+    const finalQDV = inputType === 'qdv' && window.lastQDVSequence
+        ? window.lastQDVSequence[window.lastQDVSequence.length - 1]
+        : reducedDyckFromPartition(sequence[sequence.length - 1]);
     
     document.getElementById('initial-partition').textContent = `⟨${sequence[0].join(', ')}⟩`;
+    document.getElementById('initial-vector').textContent = `[${initialQDV.join(', ')}]`;
     document.getElementById('initial-deficit').textContent = deficits[0];
     document.getElementById('initial-dinv').textContent = dinvs[0];
+    document.getElementById('initial-min-triangle').textContent = initialQDV.length;
     document.getElementById('initial-type').textContent = types[0];
     
     const finalPartition = sequence[sequence.length - 1];
     document.getElementById('final-partition').textContent = `⟨${finalPartition.join(', ')}⟩`;
+    document.getElementById('final-vector').textContent = `[${finalQDV.join(', ')}]`;
     document.getElementById('final-deficit').textContent = deficits[deficits.length - 1];
     document.getElementById('final-dinv').textContent = dinvs[dinvs.length - 1];
+    document.getElementById('final-min-triangle').textContent = finalQDV.length;
     document.getElementById('final-type').textContent = types[types.length - 1];
     
     document.getElementById('total-iterations').textContent = iterations;
@@ -797,10 +1035,10 @@ function createNuSequenceTable(sequence, deficits, dinvs, types, inputType = 'pa
                     <th>Partition</th>
                     ${showQDV ? '<th>QDV Representation</th>' : ''}
                     <th>Deficit</th>
-                    <th>Dinv</th>
+                    <th>\\(\\operatorname{dinv}\\)</th>
                     <th>Type</th>
                     <th>Deficit Change</th>
-                    <th>Dinv Change</th>
+                    <th>\\(\\operatorname{dinv}\\) Change</th>
                 </tr>
             </thead>
             <tbody>
@@ -858,6 +1096,7 @@ function createNuSequenceTable(sequence, deficits, dinvs, types, inputType = 'pa
     `;
     
     tableContainer.innerHTML = tableHTML;
+    typesetMath(tableContainer);
 }
 
 function createNuVisualization(sequence, deficits, dinvs, types, inputType = 'partition') {
@@ -902,13 +1141,14 @@ function createNuVisualization(sequence, deficits, dinvs, types, inputType = 'pa
             <div class="sequence-step">
                 <strong>Step ${i}:</strong> ${partitionDisplay}${qdvDisplay}
                 <span class="stats">deficit=${deficits[i]} (${deficitChange >= 0 ? '+' : ''}${deficitChange}) 
-                dinv=${dinvs[i]} (${dinvChange >= 0 ? '+' : ''}${dinvChange}) [${types[i]}]</span>
+                \\(\\operatorname{dinv}\\)=${dinvs[i]} (${dinvChange >= 0 ? '+' : ''}${dinvChange}) [${types[i]}]</span>
             </div>
         `;
     }
     
     chartHTML += '</div>';
     chartContainer.innerHTML = chartHTML;
+    typesetMath(chartContainer);
 }
 
 function showError(message) {
@@ -1006,8 +1246,8 @@ function verifySMALLCondition() {
         
         let summaryHTML = `
             <h4>SMALL(${r}, ${k}) Verification</h4>
-            <p><strong>Target ρ(μ):</strong> k+2-r = ${k}+2-${r} = ${targetLength}</p>
-            <p><strong>Expected count:</strong> 2·p(${r}) = 2·${pR} = ${expected}</p>
+            <p><strong>Target \\(\\rho(\\mu)\\):</strong> \\(k+2-r=${k}+2-${r}=${targetLength}\\)</p>
+            <p><strong>Expected count:</strong> \\(2p(${r})=2\\cdot ${pR}=${expected}\\)</p>
             <p><strong>Flagpole count (Type 1/2/3):</strong> ${actual}</p>
             ${nonFlagpoles.length > 0 ? `<p><strong>Other partitions with length ${targetLength} (not flagpoles):</strong> ${nonFlagpoles.length} <em>(not counted)</em></p>` : ''}
             <p style="font-size: 1.2em; margin-top: 12px;"><strong>SMALL condition:</strong> 
@@ -1027,9 +1267,9 @@ function verifySMALLCondition() {
                     <thead>
                         <tr style="background: #f5f5f5; border-bottom: 2px solid #ddd;">
                             <th style="padding: 10px; text-align: left;">#</th>
-                            <th style="padding: 10px; text-align: left;">Partition μ</th>
+                            <th style="padding: 10px; text-align: left;">Partition \\(\\mu\\)</th>
                             <th style="padding: 10px; text-align: center;">Type</th>
-                            <th style="padding: 10px; text-align: left;">TI₂(μ)</th>
+                            <th style="padding: 10px; text-align: left;">\\(TI_2(\\mu)\\)</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -1061,14 +1301,14 @@ function verifySMALLCondition() {
             detailsHTML += `
                 <h4 style="color: #888; margin-top: 24px;">Other Partitions (Not Type 1/2/3)</h4>
                 <p style="color: #666; font-size: 0.9em; margin-bottom: 12px;">
-                    <em>These have TI₂ length = ${targetLength} but are NOT flagpoles. They are NOT counted in ρ⁻¹(DV<sub>${targetLength}</sub>).</em>
+                    <em>These have \\(TI_2\\) length ${targetLength} but are NOT flagpoles. They are NOT counted in \\(\\rho^{-1}(DV_${targetLength})\\).</em>
                 </p>
                 <table style="width: 100%; border-collapse: collapse; opacity: 0.7;">
                     <thead>
                         <tr style="background: #f5f5f5; border-bottom: 2px solid #ddd;">
                             <th style="padding: 10px; text-align: left;">#</th>
-                            <th style="padding: 10px; text-align: left;">Partition μ</th>
-                            <th style="padding: 10px; text-align: left;">TI₂(μ)</th>
+                            <th style="padding: 10px; text-align: left;">Partition \\(\\mu\\)</th>
+                            <th style="padding: 10px; text-align: left;">\\(TI_2(\\mu)\\)</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -1092,6 +1332,8 @@ function verifySMALLCondition() {
         
         document.getElementById('small-summary').innerHTML = summaryHTML;
         document.getElementById('small-details').innerHTML = detailsHTML;
+        typesetMath(document.getElementById('small-summary'));
+        typesetMath(document.getElementById('small-details'));
         
     } catch (error) {
         showError(error.message);
@@ -1102,8 +1344,27 @@ if (typeof document !== 'undefined') {
     document.addEventListener('DOMContentLoaded', function() {
         document.getElementById('generate-sequence').addEventListener('click', generateNuSequence);
         document.getElementById('verify-small').addEventListener('click', verifySMALLCondition);
-        
-        document.getElementById('input-vector').addEventListener('keypress', function(e) {
+
+        const sequenceInput = document.getElementById('input-vector');
+        sequenceInput.addEventListener('input', function() {
+            sequenceInput.dataset.userEdited = 'true';
+        });
+
+        document.querySelectorAll('input[name="method"]').forEach(function(radio) {
+            radio.addEventListener('change', function() {
+                updateSequenceInputMode();
+            });
+        });
+
+        document.querySelectorAll('input[name="input-format"]').forEach(function(radio) {
+            radio.addEventListener('change', function() {
+                sequenceInput.dataset.userEdited = '';
+                updateSequenceInputMode();
+            });
+        });
+        updateSequenceInputMode();
+
+        sequenceInput.addEventListener('keypress', function(e) {
             if (e.key === 'Enter') {
                 generateNuSequence();
             }
@@ -1221,16 +1482,17 @@ function computeF(mu) {
 }
 
 /**
- * Get partition statistics: distinct parts, total parts, size
+ * Get partition statistics: size, largest part, length, and distinct part count.
  */
 function getPartitionStats(partition) {
     if (!partition || partition.length === 0) {
-        return { distinctParts: 0, totalParts: 0, size: 0 };
+        return { distinctParts: 0, totalParts: 0, largestPart: 0, size: 0 };
     }
     const distinctParts = new Set(partition).size;
     const totalParts = partition.length;
+    const largestPart = Math.max(...partition);
     const size = partition.reduce((a, b) => a + b, 0);
-    return { distinctParts, totalParts, size };
+    return { distinctParts, totalParts, largestPart, size };
 }
 
 /**
@@ -1238,74 +1500,40 @@ function getPartitionStats(partition) {
  * N_{j+1}(μ) = 2⌊n_j(λ)/2⌋ + (n_{j-1}(λ) mod 2)
  */
 function computeMuFromLambda(lambda, a, epsilon) {
-    if (!lambda || lambda.length === 0) {
-        // λ = empty partition
-        // μ will just have parts of size 1
-        const result = [];
-        // N_1 depends on a and epsilon
-        const n1Count = 2 * Math.floor(a / 2) + (a % 2 === 1 ? 1 : 0) + epsilon;
-        for (let i = 0; i < n1Count; i++) result.push(1);
-        return result;
-    }
+    if (a < epsilon) return null;
     
     // Get multiplicities of λ
     const nLambda = {}; // n_j(λ) = multiplicity of part j in λ
-    for (const part of lambda) {
+    for (const part of (lambda || [])) {
         nLambda[part] = (nLambda[part] || 0) + 1;
     }
     
     // Find max part in λ
-    const maxPart = Math.max(...lambda);
+    const maxPart = lambda && lambda.length > 0 ? Math.max(...lambda) : 0;
     
-    // n_0 is related to parameter a
-    // From the HLLL construction, n_0 = a
-    nLambda[0] = a;
+    // HLLL uses n_0 = a - epsilon.
+    nLambda[0] = a - epsilon;
     
     // Compute multiplicities of μ using the recurrence
     // N_{j+1}(μ) = 2⌊n_j(λ)/2⌋ + (n_{j-1}(λ) mod 2)
     const NMu = {}; // N_j(μ) = multiplicity of part j in μ
     
-    // Compute from largest part down
-    for (let j = maxPart + 1; j >= 1; j--) {
+    for (let j = 1; j <= maxPart + 1; j++) {
         const n_j = nLambda[j] || 0;
         const n_jminus1 = nLambda[j - 1] || 0;
         NMu[j + 1] = 2 * Math.floor(n_j / 2) + (n_jminus1 % 2);
     }
     
-    // Handle N_1 (boundary case with epsilon)
-    // N_1 collects the bulk of n_0 plus adjustments
-    const n_0 = nLambda[0] || 0;
-    const n_minus1_mod2 = epsilon; // ε acts as n_{-1} mod 2
-    
-    // Count even entries in nLambda (for the 'p' term)
+    // N_1 = 2 floor(n_0/2) + p + epsilon, where p counts even values
+    // in the list n_0, n_1, ..., n_r, including zero multiplicities.
+    const n0 = nLambda[0] || 0;
     let evenCount = 0;
     for (let j = 0; j <= maxPart; j++) {
-        if ((nLambda[j] || 0) % 2 === 0 && (nLambda[j] || 0) > 0) {
+        if ((nLambda[j] || 0) % 2 === 0) {
             evenCount++;
         }
     }
-    // Actually, simpler: N_1 = 2⌊n_0/2⌋ + something
-    // From the example: N_1 = 2⌊n_0/2⌋ + p where p counts certain parities
-    // Let's use: N_1 = 2⌊n_0/2⌋ + (number of j where n_j is even and positive) + epsilon adjustment
-    
-    // Simplified approach based on size constraint:
-    // |μ| = |λ| + ρ(μ) - 2
-    // ρ(μ) = 3 + a + d(λ) + ℓ(λ) + ε
-    const stats = getPartitionStats(lambda);
-    const rho = 3 + a + stats.distinctParts + stats.totalParts + epsilon;
-    const targetSize = stats.size + rho - 2;
-    
-    // Sum up what we have so far
-    let currentSize = 0;
-    for (const [part, count] of Object.entries(NMu)) {
-        if (count > 0) {
-            currentSize += parseInt(part) * count;
-        }
-    }
-    
-    // N_1 makes up the difference
-    NMu[1] = targetSize - currentSize;
-    if (NMu[1] < 0) NMu[1] = 0;
+    NMu[1] = 2 * Math.floor(n0 / 2) + evenCount + epsilon;
     
     // Build partition from multiplicities
     const result = [];
@@ -1325,27 +1553,28 @@ function computeMuFromLambda(lambda, a, epsilon) {
  */
 function computeAEpsilonPairs(lambda, k) {
     const stats = getPartitionStats(lambda);
-    // ρ = 3 + a + d + ℓ + ε
+    // ρ = 3 + a + λ_1 + ℓ
     // |μ| = |λ| + ρ - 2 = k
     // So: ρ = k - |λ| + 2
-    // And: a = ρ - 3 - d - ℓ - ε = (k - |λ| + 2) - 3 - d - ℓ - ε = k - |λ| - 1 - d - ℓ - ε
+    // And: a = ρ - 3 - λ_1 - ℓ = k - |λ| - 1 - λ_1 - ℓ
     
     const results = [];
+    const a0 = stats.size - stats.largestPart - stats.totalParts + 3;
+    const a = k - stats.size - 1 - stats.largestPart - stats.totalParts;
+    const rho = 3 + a + stats.largestPart + stats.totalParts;
     
     for (const epsilon of [0, 1]) {
-        const a = k - stats.size - 1 - stats.distinctParts - stats.totalParts - epsilon;
-        const rho = 3 + a + stats.distinctParts + stats.totalParts + epsilon;
-        
-        if (a >= 0) {
+        if (a >= a0 && a >= epsilon) {
             const mu = computeMuFromLambda(lambda, a, epsilon);
-            const muSize = mu.reduce((x, y) => x + y, 0);
+            const muSize = mu ? mu.reduce((x, y) => x + y, 0) : null;
             results.push({
                 a: a,
                 epsilon: epsilon,
                 mu: mu,
                 rho: rho,
                 muSize: muSize,
-                valid: muSize === k
+                valid: muSize === k,
+                a0: a0
             });
         } else {
             results.push({
@@ -1355,7 +1584,8 @@ function computeAEpsilonPairs(lambda, k) {
                 rho: rho,
                 muSize: null,
                 valid: false,
-                reason: `a = ${a} < 0`
+                a0: a0,
+                reason: `a = ${a} < a_0(λ) = ${a0}`
             });
         }
     }
@@ -1365,15 +1595,18 @@ function computeAEpsilonPairs(lambda, k) {
 
 /**
  * Build TI₂ vector from (λ, a, ε)
- * TI₂ = 001 2^a B_λ^+ 1^ε
+ * TI₂ = 001 2^a B_λ^+ for ε=0, and 001 2^(a-1) B_λ^+ 1 for ε=1
  */
 function buildTI2FromParams(lambda, a, epsilon) {
+    if (a < epsilon) return null;
+
     // Build B_λ (binary Dyck vector)
-    // B_λ = 0 1^{n_k} 0 1^{n_{k-1}} ... 0 1^{n_1}
+    // B_λ = 0 1^{n_1} 0 1^{n_2} ... 0 1^{n_k}
     if (!lambda || lambda.length === 0) {
         // Empty λ: B_λ is just empty or minimal
         const ti2 = [0, 0, 1];
-        for (let i = 0; i < a; i++) ti2.push(2);
+        const numTwos = epsilon === 1 ? a - 1 : a;
+        for (let i = 0; i < numTwos; i++) ti2.push(2);
         for (let i = 0; i < epsilon; i++) ti2.push(1);
         return ti2;
     }
@@ -1385,9 +1618,9 @@ function buildTI2FromParams(lambda, a, epsilon) {
     }
     const maxPart = Math.max(...lambda);
     
-    // Build B_λ
+    // Build B_λ in increasing part order.
     const bLambda = [];
-    for (let j = maxPart; j >= 1; j--) {
+    for (let j = 1; j <= maxPart; j++) {
         bLambda.push(0);
         const count = nLambda[j] || 0;
         for (let i = 0; i < count; i++) {
@@ -1398,9 +1631,10 @@ function buildTI2FromParams(lambda, a, epsilon) {
     // Build B_λ^+ (increment each entry)
     const bLambdaPlus = bLambda.map(x => x + 1);
     
-    // Build TI₂ = 001 2^a B_λ^+ 1^ε
+    // Build TI₂ = 001 2^a B_λ^+ for ε=0, and 001 2^(a-1) B_λ^+ 1 for ε=1
     const ti2 = [0, 0, 1];
-    for (let i = 0; i < a; i++) ti2.push(2);
+    const numTwos = epsilon === 1 ? a - 1 : a;
+    for (let i = 0; i < numTwos; i++) ti2.push(2);
     ti2.push(...bLambdaPlus);
     for (let i = 0; i < epsilon; i++) ti2.push(1);
     

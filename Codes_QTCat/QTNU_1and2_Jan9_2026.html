@@ -6,8 +6,6 @@
     <title>Q,T-Catalan Chain Decompositions - NU₁ & NU₂ Maps Explorer</title>
     <link rel="stylesheet" href="styles.css">
     <!-- MathJax -->
-    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
-    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script>
         window.MathJax = {
             tex: {
@@ -16,12 +14,14 @@
             }
         };
     </script>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 </head>
 <body>
     <div class="container">
         <header>
             <h1 class="text-3d-large">Q,T-Catalan Chain Decompositions</h1>
-            <p class="subtitle">Explore NU₁-tails, NU₂-bridging, and global chain construction for q,t-Catalan numbers</p>
+            <p class="subtitle">Explore \(NU_1\)-tails, \(NU_2\)-bridging, and global chain construction for \(q,t\)-Catalan numbers</p>
         </header>
 
         <main>
@@ -32,27 +32,39 @@
                 <div class="method-selection">
                     <label>
                         <input type="radio" name="method" value="NU1" checked>
-                        NU₁ (Successor Map)
+                        \(NU_1\) (Successor Map)
                     </label>
                     <label>
                         <input type="radio" name="method" value="ND1">
-                        ND₁ (Predecessor Map)
+                        \(ND_1\) (Predecessor Map)
                     </label>
                     <label>
                         <input type="radio" name="method" value="NU2">
-                        NU₂ (Extension Map)
+                        \(NU_2\) (Extension Map)
                     </label>
                     <label>
                         <input type="radio" name="method" value="ND2">
-                        ND₂ (Extension Inverse)
+                        \(ND_2\) (Extension Inverse)
                     </label>
                     <label>
                         <input type="radio" name="method" value="NU">
-                        Extended NU (NU₁ ∪ NU₂)
+                        Extended \(NU\) (\(NU_1\cup NU_2\))
                     </label>
                     <label>
                         <input type="radio" name="method" value="ND">
-                        Extended ND (ND₁ ∪ ND₂)
+                        Extended \(ND\) (\(ND_1\cup ND_2\))
+                    </label>
+                </div>
+
+                <div class="input-group">
+                    <label>Input Format:</label>
+                    <label>
+                        <input type="radio" name="input-format" value="partition" checked>
+                        Partition
+                    </label>
+                    <label>
+                        <input type="radio" name="input-format" value="qdv">
+                        QDV / Dyck vector
                     </label>
                 </div>
 
@@ -82,7 +94,7 @@
                         <p><strong>Partition:</strong> <span id="initial-partition"></span></p>
                         <p><strong>Dyck Vector:</strong> <span id="initial-vector"></span></p>
                         <p><strong>Deficit:</strong> <span id="initial-deficit"></span></p>
-                        <p><strong>Dinv:</strong> <span id="initial-dinv"></span></p>
+                        <p><strong>\(\operatorname{dinv}\):</strong> <span id="initial-dinv"></span></p>
                         <p><strong>Min Triangle Height:</strong> <span id="initial-min-triangle"></span></p>
                         <p><strong>Type:</strong> <span id="initial-type"></span></p>
                     </div>
@@ -91,7 +103,7 @@
                         <p><strong>Partition:</strong> <span id="final-partition"></span></p>
                         <p><strong>Dyck Vector:</strong> <span id="final-vector"></span></p>
                         <p><strong>Deficit:</strong> <span id="final-deficit"></span></p>
-                        <p><strong>Dinv:</strong> <span id="final-dinv"></span></p>
+                        <p><strong>\(\operatorname{dinv}\):</strong> <span id="final-dinv"></span></p>
                         <p><strong>Min Triangle Height:</strong> <span id="final-min-triangle"></span></p>
                         <p><strong>Type:</strong> <span id="final-type"></span></p>
                     </div>
@@ -118,54 +130,54 @@
 
 
 
-            <!-- Compute f(μ) Section -->
+            <!-- Compute f(mu) Section -->
             <section class="analysis-section">
-                <h2 class="text-3d">Compute f(μ)</h2>
+                <h2 class="text-3d">Compute \(f(\mu)\)</h2>
                 <div class="input-group">
-                    <label for="f-mu-input">Partition μ (comma-separated):</label>
+                    <label for="f-mu-input">Partition \(\mu\) (comma-separated):</label>
                     <input type="text" id="f-mu-input" placeholder="4,3,1,1,1,1,1" value="4,3,1,1,1,1,1">
-                    <button id="compute-f-btn" class="btn btn-secondary">Compute f(μ)</button>
+                    <button id="compute-f-btn" class="btn btn-secondary">Compute \(f(\mu)\)</button>
                 </div>
 
                 <div id="f-results" class="summary-card" style="margin-top: 12px; display: none;">
                     <h3>Results</h3>
-                    <p><strong>Input μ:</strong> <span id="f-input-display"></span></p>
-                    <p><strong>|μ|:</strong> <span id="f-mu-size"></span></p>
+                    <p><strong>Input \(\mu\):</strong> <span id="f-input-display"></span></p>
+                    <p><strong>\(|\mu|\):</strong> <span id="f-mu-size"></span></p>
                     <p><strong>Multiplicities:</strong> <span id="f-multiplicities"></span></p>
                     <hr style="margin: 10px 0; border-color: #444;">
-                    <p><strong>f(μ) =</strong> <span id="f-output" style="font-size: 1.2em; color: #4CAF50;"></span></p>
-                    <p><strong>|f(μ)|:</strong> <span id="f-output-size"></span></p>
+                    <p><strong>\(f(\mu)=\)</strong> <span id="f-output" style="font-size: 1.2em; color: #4CAF50;"></span></p>
+                    <p><strong>\(|f(\mu)|\):</strong> <span id="f-output-size"></span></p>
                 </div>
             </section>
 
             <!-- Flag Type Explorer -->
             <section class="analysis-section">
-                <h2 class="text-3d">Flag Type Explorer (λ, a, ε) → μ</h2>
+                <h2 class="text-3d">Flag Type Explorer \((\lambda,a,\varepsilon)\to\mu\)</h2>
                 <div class="math-explanation">
-                    <p><strong>HLLL Parameterization:</strong> Every flagpole partition μ is determined by (λ, a, ε):</p>
+                    <p><strong>HLLL Parameterization:</strong> Every flagpole partition \(\mu\) is determined by \((\lambda,a,\varepsilon)\):</p>
                     <ul style="margin: 8px 0; padding-left: 20px;">
-                        <li><strong>λ</strong> = flag type (a partition)</li>
-                        <li><strong>a</strong> = integer parameter (number of 2s in TI₂)</li>
-                        <li><strong>ε ∈ {0,1}</strong> = binary switch</li>
+                        <li><strong>\(\lambda\)</strong> = flag type (a partition)</li>
+                        <li><strong>\(a\)</strong> = integer parameter controlling the initial 2-block in \(TI_2\)</li>
+                        <li><strong>\(\varepsilon\in\{0,1\}\)</strong> = binary switch</li>
                     </ul>
-                    <p style="margin-top: 8px;"><strong>Size formula:</strong> |μ| = |λ| + ρ(μ) − 2, where ρ = 3 + a + d(λ) + ℓ(λ) + ε</p>
+                    <p style="margin-top: 8px;"><strong>Size formula:</strong> \(|\mu|=|\lambda|+\rho(\mu)-2\), where \(\rho=3+a+\lambda_1+\ell(\lambda)\).</p>
                 </div>
 
                 <div class="input-group">
-                    <label for="lambda-input">Flag type λ (comma-separated):</label>
+                    <label for="lambda-input">Flag type \(\lambda\) (comma-separated):</label>
                     <input type="text" id="lambda-input" placeholder="2,1" value="2,1">
                 </div>
                 <div class="input-group">
                     <label for="target-k">Target size k:</label>
                     <input type="number" id="target-k" min="1" max="30" value="12">
-                    <button id="compute-pairs-btn" class="btn btn-secondary">Compute (a, ε) Pairs</button>
+                    <button id="compute-pairs-btn" class="btn btn-secondary">Compute \((a,\varepsilon)\) Pairs</button>
                 </div>
 
                 <div id="pairs-results" class="summary-card" style="margin-top: 12px; display: none;">
-                    <h3>Results for λ = <span id="lambda-display"></span>, k = <span id="k-display"></span></h3>
-                    <p><strong>|λ| =</strong> <span id="lambda-size"></span>, 
-                       <strong>d(λ) =</strong> <span id="lambda-distinct"></span>, 
-                       <strong>ℓ(λ) =</strong> <span id="lambda-parts"></span></p>
+                    <h3>Results for \(\lambda=\)<span id="lambda-display"></span>, \(k=\)<span id="k-display"></span></h3>
+                    <p><strong>\(|\lambda|=\)</strong> <span id="lambda-size"></span>, 
+                       <strong>\(\lambda_1=\)</strong> <span id="lambda-distinct"></span>, 
+                       <strong>\(\ell(\lambda)=\)</strong> <span id="lambda-parts"></span></p>
                     <hr style="margin: 10px 0; border-color: #444;">
                     <div id="pair-0" class="pair-result" style="margin: 15px 0; padding: 10px; background: #f5f5f5; border-radius: 8px; border: 1px solid #ddd;"></div>
                     <div id="pair-1" class="pair-result" style="margin: 15px 0; padding: 10px; background: #f5f5f5; border-radius: 8px; border: 1px solid #ddd;"></div>
@@ -176,20 +188,20 @@
             <section class="analysis-section">
                 <h2 class="text-3d">SMALL Condition Verification</h2>
                 <div class="math-explanation">
-                    <p><strong>Definition:</strong> A non-negative integer <em>r</em> is said to be SMALL with respect to <em>k</em> if:</p>
+                    <p><strong>Definition:</strong> A non-negative integer \(r\) is said to be SMALL with respect to \(k\) if:</p>
                     <p style="font-size: 1.1em; margin: 8px 0;">$$ r \leq \left\lfloor \frac{k}{2} \right\rfloor - 2 $$</p>
-                    <p>Find all partitions μ of size k where ρ(TI₂(μ)) = k+2-r and verify the SMALL condition: |ρ⁻¹(DV₊)| = 2·p(r)</p>
+                    <p>Find all partitions \(\mu\) of size \(k\) where \(\rho(TI_2(\mu))=k+2-r\) and verify the SMALL condition: \(|\rho^{-1}(DV_+)|=2p(r)\).</p>
                 </div>
 
                 <div class="input-group">
-                    <label for="small-k">Partition Size (k):</label>
+                    <label for="small-k">Partition size \(k\):</label>
                     <input type="number" id="small-k" min="1" max="12" value="4">
                     <small id="k-example" style="display: block; margin-top: 4px; color: #666;">
                         Example: k=10 → max r = ⌊5⌋ - 2 = 3 (valid r ∈ {0,1,2,3})
                     </small>
                 </div>
                 <div class="input-group">
-                    <label for="small-r">SMALL number (r):</label>
+                    <label for="small-r">SMALL number \(r\):</label>
                     <input type="number" id="small-r" min="0" max="8" value="2">
                     <small id="r-constraint" style="display: block; margin-top: 4px; color: #666;">
                         Must satisfy: r ≤ ⌊k/2⌋ - 2
@@ -215,48 +227,62 @@
                     <div class="math-card">
                         <h3>Quasi-Dyck Vectors</h3>
                         <ul>
-                            <li><strong>Definition:</strong> Sequences (v₁, v₂, ..., vₙ) where v₁ = 0 and v_{i+1} ≤ v_i + 1</li>
+                            <li><strong>Definition:</strong> Sequences \((v_1,v_2,\ldots,v_n)\) where \(v_1=0\) and \(v_{i+1}\le v_i+1\)</li>
                             <li><strong>Dyck Vectors:</strong> QDVs where all entries are non-negative</li>
                             <li><strong>Reduced Dyck Vector:</strong> Vector of minimum length in a Dyck class</li>
-                            <li><strong>Key Formula:</strong> QDV_n(λ) = (0-λ_n, 1-λ_{n-1}, ..., n-1-λ_1)</li>
+                            <li><strong>Key Formula:</strong> \(QDV_n(\lambda)=(0-\lambda_n,1-\lambda_{n-1},\ldots,n-1-\lambda_1)\)</li>
                         </ul>
                         <p style="margin-top: 12px;"><a href="dyck_visualizer.html" target="_blank">Dyck Path Visualizer</a> — visualize lattice paths from Dyck vectors</p>
                     </div>
                     <div class="math-card">
-                        <h3>NU₁ Operator (Successor Map)</h3>
+                        <h3>\(NU_1\) Operator (Successor Map)</h3>
                         <ul>
-                            <li><strong>Definition:</strong> NU₁(γ) = ⟨ℓ+1, γ₁-1, γ₂-1, ..., γₗ-1⟩</li>
-                            <li><strong>Domain:</strong> γ₁ ≤ ℓ(γ) + 2</li>
-                            <li><strong>Properties:</strong> Preserves deficit, increases dinv by 1</li>
-                            <li><strong>Termination:</strong> NU₁-final objects where γ₁ > ℓ(γ) + 2</li>
+                            <li><strong>Definition:</strong> \(NU_1(\gamma)=\langle \ell+1,\gamma_1-1,\gamma_2-1,\ldots,\gamma_\ell-1\rangle\)</li>
+                            <li><strong>Domain:</strong> \(\gamma_1\le \ell(\gamma)+2\)</li>
+                            <li><strong>Properties:</strong> Preserves deficit, increases \(\operatorname{dinv}\) by 1</li>
+                            <li><strong>Termination:</strong> \(NU_1\)-final objects where \(\gamma_1>\ell(\gamma)+2\)</li>
                         </ul>
                     </div>
                     <div class="math-card">
-                        <h3>ND₁ Operator (Predecessor Map)</h3>
+                        <h3>\(ND_1\) Operator (Predecessor Map)</h3>
                         <ul>
-                            <li><strong>Definition:</strong> ND₁(γ) = ⟨γ₂+1, γ₃+1, ..., γₗ+1, 1^{γ₁-ℓ}⟩</li>
-                            <li><strong>Domain:</strong> γ₁ ≥ ℓ(γ)</li>
-                            <li><strong>Properties:</strong> Preserves deficit, decreases dinv by 1</li>
+                            <li><strong>Definition:</strong> \(ND_1(\gamma)=\langle\gamma_2+1,\gamma_3+1,\ldots,\gamma_\ell+1,1^{\gamma_1-\ell}\rangle\)</li>
+                            <li><strong>Domain:</strong> \(\gamma_1\ge\ell(\gamma)\)</li>
+                            <li><strong>Properties:</strong> Preserves deficit, decreases \(\operatorname{dinv}\) by 1</li>
                         </ul>
                     </div>
                     <div class="math-card">
-                        <h3>NU₂ Operator (Extension Map)</h3>
+                        <h3>\(NU_2\) Operator (Extension Map)</h3>
                         <ul>
-                            <li><strong>Rule (a):</strong> [012^h A(-1)^{h-1}] → [00^{h-1}1A1^h]</li>
-                            <li><strong>Rule (b):</strong> [012^k B(-1)^k] → [00^k B01^k]</li>
-                            <li><strong>Domain:</strong> NU₁-final objects</li>
-                            <li><strong>Range:</strong> NU₁-initial objects</li>
-                            <li><strong>Properties:</strong> Preserves deficit, increases dinv by 1</li>
+                            <li><strong>Rule (a):</strong> \([012^h A(-1)^{h-1}]\mapsto[0^h1A1^h]\), \(h\ge2\)</li>
+                            <li><strong>Rule (b):</strong> \([012^k B(-1)^k]\mapsto[0^{k+1}B01^k]\), \(k\ge1\)</li>
+                            <li><strong>Domain:</strong> \(NU_1\)-final objects</li>
+                            <li><strong>Range:</strong> \(NU_1\)-initial objects</li>
+                            <li><strong>Properties:</strong> Preserves deficit, increases \(\operatorname{dinv}\) by 1</li>
+                        </ul>
+                    </div>
+
+                    <div class="math-card">
+                        <h3>Domains and Ranges</h3>
+                        <ul>
+                            <li><strong>Length:</strong> \(\ell(\gamma)\) is the number of parts of \(\gamma\), and \(\gamma_1\) is its largest part.</li>
+                            <li><strong>\(NU_1\)-initial:</strong> \(\gamma_1<\ell(\gamma)\). Here \(ND_1\) is undefined.</li>
+                            <li><strong>\(NU_1\)-final:</strong> \(\gamma_1>\ell(\gamma)+2\). Here \(NU_1\) is undefined.</li>
+                            <li><strong>\(D_1\):</strong> \(\gamma_1\le\ell(\gamma)+2\), the domain of \(NU_1\).</li>
+                            <li><strong>\(C_1\):</strong> \(\gamma_1\ge\ell(\gamma)\), the domain of \(ND_1\) and range of \(NU_1\).</li>
+                            <li><strong>\(D_2\):</strong> Dyck classes matching one of the \(NU_2\) input patterns.</li>
+                            <li><strong>\(C_2\):</strong> Dyck classes matching one of the \(NU_2\) output patterns.</li>
+                            <li><strong>Combined maps:</strong> \(NU:D_1\cup D_2\to C_1\cup C_2\), and \(ND:C_1\cup C_2\to D_1\cup D_2\).</li>
                         </ul>
                     </div>
 
                     <div class="math-card">
                         <h3>Chain Types</h3>
                         <ul>
-                            <li><strong>NU₁-fragment:</strong> Finite chain terminated by NU₁-final object</li>
-                            <li><strong>NU₁-tail:</strong> Infinite chain starting from TI(μ)</li>
-                            <li><strong>Second-order tail:</strong> Extended tail starting from TI₂(μ)</li>
-                            <li><strong>Global chain:</strong> Complete chain C_μ for partition μ</li>
+                            <li><strong>\(NU_1\)-fragment:</strong> Finite chain terminated by \(NU_1\)-final object</li>
+                            <li><strong>\(NU_1\)-tail:</strong> Infinite chain starting from \(TI(\mu)\)</li>
+                            <li><strong>Second-order tail:</strong> Extended tail starting from \(TI_2(\mu)\)</li>
+                            <li><strong>Global chain:</strong> Complete chain \(C_\mu\) for partition \(\mu\)</li>
                         </ul>
                     </div>
                 </div>
@@ -265,13 +291,19 @@
         </main>
 
         <footer>
-            <p>&copy; 2024 q,t-Catalan Chain Decompositions - Exploring NU₁-tails and NU₂-bridging for combinatorial chain construction</p>
+            <p>&copy; 2024 \(q,t\)-Catalan Chain Decompositions - Exploring \(NU_1\)-tails and \(NU_2\)-bridging for combinatorial chain construction</p>
         </footer>
     </div>
 
-    <script src="corrected_nu_nd_script_Jan9_2026.js?v=10"></script>
+    <script src="corrected_nu_nd_script_Jan9_2026.js?v=17"></script>
     <script>
         (function(){
+            function typesetMath(el) {
+                if (window.MathJax && window.MathJax.typesetPromise) {
+                    window.MathJax.typesetPromise(el ? [el] : undefined).catch(function () {});
+                }
+            }
+
             function parseCSVNumbers(s){
                 return s.split(',').map(x=>x.trim()).filter(x=>x.length).map(Number).sort((a,b)=>b-a);
             }
@@ -311,17 +343,17 @@
                 sec.className = 'analysis-section';
                 sec.id = 'ti-section';
                 sec.innerHTML = `
-                    <h2 class="text-3d">Tail Initiators (TI / TI₂)</h2>
+                    <h2 class="text-3d">Tail Initiators \\((TI/TI_2)\\)</h2>
                     <div class="input-group">
-                        <label for="ti-mu">Partition μ (comma-separated):</label>
+                        <label for="ti-mu">Partition \\(\\mu\\) (comma-separated):</label>
                         <input type="text" id="ti-mu" placeholder="3,1,1" value="3,1,1">
-                        <button id="btn-ti2" class="btn btn-outline">Compute TI₂</button>
+                        <button id="btn-ti2" class="btn btn-outline">Compute \\(TI_2\\)</button>
                     </div>
                     <div id="ti-output" class="summary-card" style="margin-top:12px;">
-                        <p><strong>TI(μ) QDV:</strong> <span id="ti-qdv">—</span></p>
-                        <p><strong>TI(μ) Partition:</strong> <span id="ti-part">—</span></p>
-                        <p><strong>TI₂(μ) Final QDV:</strong> <span id="ti2-qdv">—</span></p>
-                        <p><strong>TI₂(μ) Type:</strong> <span id="ti2-type">—</span></p>
+                        <p><strong>\\(TI(\\mu)\\) QDV:</strong> <span id="ti-qdv">—</span></p>
+                        <p><strong>\\(TI(\\mu)\\) Partition:</strong> <span id="ti-part">—</span></p>
+                        <p><strong>\\(TI_2(\\mu)\\) Final QDV:</strong> <span id="ti2-qdv">—</span></p>
+                        <p><strong>\\(TI_2(\\mu)\\) Type:</strong> <span id="ti2-type">—</span></p>
                         <p><strong>Is Flagpole:</strong> <span id="ti2-flagpole">—</span></p>
                         <p><strong>Steps:</strong></p>
                         <div id="ti-steps" style="white-space:pre-wrap; font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;">—</div>
@@ -330,6 +362,7 @@
 
                 const math = document.querySelector('.math-section');
                 (math && math.parentNode) ? math.parentNode.insertBefore(sec, math) : main.appendChild(sec);
+                typesetMath(sec);
 
                 document.getElementById('btn-ti2').addEventListener('click', function(){
                     try {
@@ -446,7 +479,7 @@
                         document.getElementById('lambda-display').textContent = lambda.length > 0 ? `(${lambda.join(', ')})` : '∅';
                         document.getElementById('k-display').textContent = k;
                         document.getElementById('lambda-size').textContent = stats.size;
-                        document.getElementById('lambda-distinct').textContent = stats.distinctParts;
+                        document.getElementById('lambda-distinct').textContent = stats.largestPart;
                         document.getElementById('lambda-parts').textContent = stats.totalParts;
                         
                         // Display each pair
@@ -456,28 +489,30 @@
                             
                             if (pair.valid) {
                                 const ti2 = window.buildTI2FromParams(lambda, pair.a, pair.epsilon);
+                                const ti2Text = ti2 ? `[${ti2.join(', ')}]` : 'not defined';
                                 div.innerHTML = `
                                     <p style="font-size: 1.1em; margin-bottom: 8px;">
-                                        <strong style="color: #4CAF50;">Case ${i + 1}: ε = ${pair.epsilon}</strong>
+                                        <strong style="color: #4CAF50;">Case ${i + 1}: \\(\\varepsilon=${pair.epsilon}\\)</strong>
                                     </p>
-                                    <p><strong>a =</strong> ${pair.a}</p>
-                                    <p><strong>ρ(μ) =</strong> ${pair.rho}</p>
-                                    <p><strong>μ =</strong> <span style="color: #64B5F6;">(${pair.mu.join(', ')})</span></p>
-                                    <p><strong>|μ| =</strong> ${pair.muSize} ${pair.muSize === k ? '✓' : '✗'}</p>
-                                    <p><strong>TI₂ =</strong> <span style="font-family: monospace; color: #FFB74D;">[${ti2.join(', ')}]</span></p>
+                                    <p><strong>\\(a=\\)</strong> ${pair.a}</p>
+                                    <p><strong>\\(\\rho(\\mu)=\\)</strong> ${pair.rho}</p>
+                                    <p><strong>\\(\\mu=\\)</strong> <span style="color: #64B5F6;">(${pair.mu.join(', ')})</span></p>
+                                    <p><strong>\\(|\\mu|=\\)</strong> ${pair.muSize} ${pair.muSize === k ? '✓' : '✗'}</p>
+                                    <p><strong>\\(TI_2=\\)</strong> <span style="font-family: monospace; color: #FFB74D;">${ti2Text}</span></p>
                                 `;
                                 div.style.borderLeft = '4px solid #4CAF50';
                             } else {
                                 div.innerHTML = `
                                     <p style="font-size: 1.1em; margin-bottom: 8px;">
-                                        <strong style="color: #f44336;">Case ${i + 1}: ε = ${pair.epsilon}</strong>
+                                        <strong style="color: #f44336;">Case ${i + 1}: \\(\\varepsilon=${pair.epsilon}\\)</strong>
                                     </p>
-                                    <p><strong>a =</strong> ${pair.a} <span style="color: #f44336;">(invalid: ${pair.reason || 'a < 0'})</span></p>
-                                    <p>No valid μ for these parameters.</p>
+                                    <p><strong>\\(a=\\)</strong> ${pair.a} <span style="color: #f44336;">(invalid: ${pair.reason || 'a < 0'})</span></p>
+                                    <p>No valid \\(\\mu\\) for these parameters.</p>
                                 `;
                                 div.style.borderLeft = '4px solid #f44336';
                             }
                         }
+                        typesetMath(document.getElementById('pairs-results'));
                     } catch (e) {
                         alert('Error: ' + e.message);
                     }

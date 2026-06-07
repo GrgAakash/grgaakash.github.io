@@ -5,6 +5,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>HLLL Local Chain Explorer</title>
     <link rel="stylesheet" href="styles.css">
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['\\(', '\\)']],
+                displayMath: [['\\[', '\\]']]
+            },
+            svg: { fontCache: 'global' }
+        };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
 </head>
 <body>
     <div class="container">
@@ -16,7 +26,7 @@
         <main>
             <section>
                 <h2 class="text-3d">Partition lookup</h2>
-                <p>Comma-separated parts, e.g. <code>5,3,1,1</code>.</p>
+                <p>Enter a partition \(\mu\) as comma-separated parts, e.g. <code>5,3,1,1</code>.</p>
                 <div class="input-group" style="margin-top:12px;">
                     <input type="text" id="pl-input" placeholder="5,3,1,1" value="5,3,1,1" style="max-width:420px;">
                     <button type="button" class="btn btn-primary" id="pl-run">Look up</button>
@@ -26,17 +36,18 @@
 
             <section>
                 <h2 class="text-3d">Enumerate partitions by deficit</h2>
+                <p>List partitions with a chosen value of \(\operatorname{defc}=k\), optionally restricting the reduced Dyck-vector length range.</p>
                 <div class="input-group" style="display:flex;flex-wrap:wrap;gap:12px;align-items:flex-end;">
                     <div>
-                        <label for="ed-k">K (defc)</label><br>
+                        <label for="ed-k">\(k=\operatorname{defc}\)</label><br>
                         <input type="number" id="ed-k" min="1" max="30" value="10" style="width:5rem;">
                     </div>
                     <div>
-                        <label for="ed-lmin">L min</label><br>
+                        <label for="ed-lmin">\(L_{\min}\)</label><br>
                         <input type="number" id="ed-lmin" value="" placeholder="auto" style="width:5rem;">
                     </div>
                     <div>
-                        <label for="ed-lmax">L max</label><br>
+                        <label for="ed-lmax">\(L_{\max}\)</label><br>
                         <input type="number" id="ed-lmax" value="" placeholder="auto" style="width:5rem;">
                     </div>
                     <div>
@@ -50,9 +61,10 @@
 
             <section>
                 <h2 class="text-3d">Flagpole rows</h2>
+                <p>Build the flagpole data \((\lambda,a,\varepsilon)\mapsto \mu\mapsto TI_2\) for one deficit.</p>
                 <div class="input-group" style="display:flex;flex-wrap:wrap;gap:12px;align-items:flex-end;">
                     <div>
-                        <label for="fp-k">Deficit k</label><br>
+                        <label for="fp-k">Deficit \(k\)</label><br>
                         <input type="number" id="fp-k" min="1" max="20" value="10" style="width:5rem;">
                     </div>
                     <button type="button" class="btn btn-primary" id="fp-run">Build table</button>
@@ -62,10 +74,10 @@
 
             <section>
                 <h2 class="text-3d">Global chain initials (from TI₂)</h2>
-                <p>Uses NU₁-final enumeration over an automatically chosen length range based on the deficit <code>k</code>. Works for any <code>k</code>.</p>
+                <p>Uses \(NU_1\)-final enumeration over an automatically chosen length range based on the deficit \(k\). Works for any \(k\).</p>
                 <div class="input-group" style="display:flex;flex-wrap:wrap;gap:12px;align-items:flex-end;">
                     <div>
-                        <label for="gc-k">Deficit k</label><br>
+                        <label for="gc-k">Deficit \(k\)</label><br>
                         <input type="number" id="gc-k" min="1" max="20" value="10" style="width:5rem;">
                     </div>
                     <div>
@@ -79,9 +91,9 @@
 
             <section>
                 <h2 class="text-3d">Appendix chain consistency table (defc = 10)</h2>
-                <p>For every chain in the HLLL appendix, this checks that each element has defc&nbsp;=&nbsp;10 and that each NU₁-initial partition's
-                   <strong>a</strong> (dinv), <strong>h</strong> (mind), and <strong>m</strong> (consecutive same-mind&nbsp;−&nbsp;1) match the appendix vectors.
-                   <br><em>This section uses the included HLLL appendix table and only works for <strong>k&nbsp;=&nbsp;10</strong>.
+                <p>For every chain in the HLLL appendix, this checks that each element has \(\operatorname{defc}=10\) and that each \(NU_1\)-initial partition's
+                   <strong>\(a\)</strong> (\(\operatorname{dinv}\)), <strong>\(h\)</strong> (\(\operatorname{mind}\)), and <strong>\(m\)</strong> (consecutive same-\(\operatorname{mind}\) minus \(1\)) match the appendix vectors.
+                   <br><em>This section uses the included HLLL appendix table and only works for <strong>\(k=10\)</strong>.
                    The panels above (Flagpole table, Global chain initials) work for any deficit.</em></p>
                 <div class="input-group" style="margin-top:12px;">
                     <button type="button" class="btn btn-primary" id="va-run">Build appendix consistency table</button>
@@ -96,6 +108,12 @@
     <script>
     (function () {
         const H = window.HLLLVerification;
+
+        function typesetMath(el) {
+            if (window.MathJax && window.MathJax.typesetPromise) {
+                window.MathJax.typesetPromise(el ? [el] : undefined).catch(function () {});
+            }
+        }
 
         function parsePartition(str) {
             const parts = str.split(/[,\\s]+/).map((s) => s.trim()).filter(Boolean).map((x) => parseInt(x, 10));
@@ -166,7 +184,7 @@
             const rows = H.flagpoleRowsForDefc(defc);
             const wrap = document.getElementById('fp-table-wrap');
             let html = '<table class="sequence-table" style="width:100%;border-collapse:collapse;"><thead><tr>' +
-                ['#', 'λ', 'a', 'ε', 'μ (compact)', 'TI₂ (compact)', 'L', 'dinv(TI₂)'].map(function (h) {
+                ['#', '\\(\\lambda\\)', '\\(a\\)', '\\(\\varepsilon\\)', '\\(\\mu\\) (compact)', '\\(TI_2\\) (compact)', '\\(L\\)', '\\(\\operatorname{dinv}(TI_2)\\)'].map(function (h) {
                     return '<th style="text-align:left;border:1px solid #0d0d0d;padding:6px;">' + h + '</th>';
                 }).join('') + '</tr></thead><tbody>';
             rows.forEach(function (r, i) {
@@ -184,6 +202,7 @@
             });
             html += '</tbody></table><p style="margin-top:8px;">Rows: ' + rows.length + '</p>';
             wrap.innerHTML = html;
+            typesetMath(wrap);
             return rows;
         }
 
@@ -319,7 +338,7 @@
 
                 var html = '<table class="sequence-table" style="width:100%;border-collapse:collapse;">' +
                     '<thead><tr>' +
-                    ['#', 'C(μ)', 'Status', 'Chain elements', 'a-vector', 'm-vector', 'h-vector', 'Details'].map(function (h) {
+                    ['#', '\\(C_{\\mu}\\)', 'Status', 'Chain elements', '\\(a\\)-vector', '\\(m\\)-vector', '\\(h\\)-vector', 'Details'].map(function (h) {
                         return '<th style="text-align:left;border:1px solid #0d0d0d;padding:6px;white-space:nowrap;">' + h + '</th>';
                     }).join('') + '</tr></thead><tbody>';
 
@@ -347,6 +366,7 @@
                     'defc = 10, a (dinv) matches, h (mind) matches, NU₁-initial status. ' +
                     'm-values are compared using consecutive same-mind blocks.</p>';
                 out.innerHTML = html;
+                typesetMath(out);
             }, 50);
         });
 
