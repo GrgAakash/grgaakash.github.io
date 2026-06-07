@@ -3,36 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>HLLL appendix verification tools (defc / flagpole / NU chains)</title>
+    <title>HLLL Local Chain Explorer</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     <div class="container">
         <header>
-            <h1 class="text-3d-large">HLLL verification helpers</h1>
-            <p class="subtitle">In-browser equivalents of <code>Codes_QTCat/verification_scripts</code> (Python)</p>
-            <p style="margin-top:12px;font-size:0.95rem;">
-                <a href="QTNU_1and2_Jan9_2026.html">NU / ND explorer</a>
-                &nbsp;·&nbsp;
-                <a href="dyck_visualizer.html">Dyck visualizer</a>
-                &nbsp;·&nbsp;
-                <a href="https://github.com/GrgAakash/grgaakash.github.io/tree/main/Codes_QTCat/verification_scripts" target="_blank" rel="noopener">Python scripts on GitHub</a>
-            </p>
+            <h1 class="text-3d-large">HLLL Local Chain Explorer</h1>
+            <p class="subtitle">Deficit, flagpole, and NU-chain calculations for the appendix families</p>
         </header>
 
         <main>
-            <section>
-                <h2 class="text-3d">What this mirrors</h2>
-                <p>These panels correspond to the command-line tools in <code>verification_scripts/</code>:</p>
-                <ul style="margin-left:1.25rem;margin-top:0.5rem;">
-                    <li><strong>Partition lookup</strong> — <code>verify_chains_hlll.py --partition …</code></li>
-                    <li><strong>Enumerate by deficit</strong> — <code>verify_chains_hlll.py --enumerate-defc K</code> (scan lengths <code>L</code> in a range you set)</li>
-                    <li><strong>Flagpole table</strong> — <code>flagpole_defc10.py</code> style enumeration for a chosen deficit <code>k</code></li>
-                    <li><strong>Global chain initials</strong> — forward + backward construction from <code>TI₂</code> as in <code>verify_chains_hlll.py</code> (default <code>k = 10</code>)</li>
-                </ul>
-                <p style="margin-top:0.75rem;font-size:0.9rem;">Heavy enumeration can take a few seconds in the browser. Results use the same reduced-DV statistics as the Python code (<code>defc = L(L−1)/2 − area − dinv</code>).</p>
-            </section>
-
             <section>
                 <h2 class="text-3d">Partition lookup</h2>
                 <p>Comma-separated parts, e.g. <code>5,3,1,1</code>.</p>
@@ -81,7 +62,7 @@
 
             <section>
                 <h2 class="text-3d">Global chain initials (from TI₂)</h2>
-                <p>Uses NU₁-final enumeration for lengths <code>L = 5 … 13</code> (same window as the Python verifier for <code>k = 10</code>).</p>
+                <p>Uses NU₁-final enumeration over an automatically chosen length range based on the deficit <code>k</code>. Works for any <code>k</code>.</p>
                 <div class="input-group" style="display:flex;flex-wrap:wrap;gap:12px;align-items:flex-end;">
                     <div>
                         <label for="gc-k">Deficit k</label><br>
@@ -97,20 +78,21 @@
             </section>
 
             <section>
-                <h2 class="text-3d">Python scripts (reference)</h2>
-                <p>Clone the site repo or open these paths locally:</p>
-                <ul style="margin-left:1.25rem;">
-                    <li><code>verification_scripts/flagpole_defc10.py</code> — flagpole enumeration, TAIL₂ appendix vectors</li>
-                    <li><code>verification_scripts/verify_chains_hlll.py</code> — full global initials, <code>--partition</code>, <code>--enumerate-defc</code></li>
-                    <li><code>verification_scripts/verify_all_chains.py</code> — all appendix chains vs <code>a,m,h</code> and TI₂ placement</li>
-                    <li><code>verification_scripts/compare_chains.py</code> / <code>compare_chains_hlll.py</code> — chain comparison helpers</li>
-                    <li><code>verification_scripts/crosscheck_pdf.py</code> — PDF-style crosscheck blocks</li>
-                </ul>
+                <h2 class="text-3d">Appendix chain consistency table (defc = 10)</h2>
+                <p>For every chain in the HLLL appendix, this checks that each element has defc&nbsp;=&nbsp;10 and that each NU₁-initial partition's
+                   <strong>a</strong> (dinv), <strong>h</strong> (mind), and <strong>m</strong> (consecutive same-mind&nbsp;−&nbsp;1) match the appendix vectors.
+                   <br><em>This section uses the included HLLL appendix table and only works for <strong>k&nbsp;=&nbsp;10</strong>.
+                   The panels above (Flagpole table, Global chain initials) work for any deficit.</em></p>
+                <div class="input-group" style="margin-top:12px;">
+                    <button type="button" class="btn btn-primary" id="va-run">Build appendix consistency table</button>
+                    <span id="va-summary" style="margin-left:16px;font-weight:bold;"></span>
+                </div>
+                <div id="va-out" style="margin-top:16px;"></div>
             </section>
         </main>
     </div>
 
-    <script src="verification_hlll_core.js"></script>
+    <script src="hlll_core.js?v=12"></script>
     <script>
     (function () {
         const H = window.HLLLVerification;
@@ -134,9 +116,8 @@
                     'mu = ' + JSON.stringify(r.mu) + '   compact: ' + r.compact + '\n' +
                     'reduced Dyck vector (length ' + r.L + '): ' + JSON.stringify(r.v) + '\n' +
                     'area = ' + r.area + ', dinv = ' + r.dinv + ', defc = ' + r.defc + '\n\n' +
-                    'In the HLLL appendix, C(compact) names a global chain for a fixed deficit k.\n' +
-                    'Listed tuples are NU₁-initial partitions in that chain; defc equals k along the chain,\n' +
-                    'not necessarily defc(mu) for the label mu.';
+                    'For an appendix chain label C(compact), the listed tuples are NU₁-initial partitions in that chain.\n' +
+                    'The deficit stays constant along a chain, so the chain deficit is not necessarily the same as defc(mu) for the label alone.';
             } catch (e) {
                 el.textContent = String(e.message || e);
             }
@@ -226,7 +207,7 @@
                 out.textContent = 'Invalid k.';
                 return;
             }
-            out.textContent = 'Computing NU₁-final pool and chain…';
+            out.textContent = 'Computing…';
             setTimeout(function () {
                 const rows = H.flagpoleRowsForDefc(k);
                 if (!rows.length || idx < 1 || idx > rows.length) {
@@ -236,40 +217,137 @@
                     return;
                 }
                 const fd = rows[idx - 1];
-                const allNu1Final = H.collectNu1FinalDefc(k, 5, 13);
-                const forward = H.buildFullChainInitials(fd.ti2);
-                const backward = H.findBackwardChain(fd.ti2, allNu1Final, k);
-                const full = backward.concat(forward);
                 const tiPart = H.reducedDvToPartition(fd.tiRdv);
-                let text = '';
+                const muCompact = H.partToHlllStr(fd.mu);
+
+                var full = [];
+                var chainNote = '';
+                var hlllLabel = '';
+                var hlllData = H.HLLL_DATA_K10;
+                if (k === 10 && hlllData) {
+                    var matchedLabel = null;
+                    if (hlllData[muCompact]) {
+                        matchedLabel = muCompact;
+                    } else {
+                        var ti2Str = JSON.stringify(fd.ti2);
+                        var labels = Object.keys(hlllData);
+                        for (var li = 0; li < labels.length; li++) {
+                            var ch = hlllData[labels[li]].chain.map(function(s){ return H.parseHlllStr(s); });
+                            for (var ci = 0; ci < ch.length; ci++) {
+                                if (JSON.stringify(ch[ci]) === ti2Str) { matchedLabel = labels[li]; break; }
+                            }
+                            if (matchedLabel) break;
+                        }
+                    }
+                    if (matchedLabel) {
+                        var chainStrs = hlllData[matchedLabel].chain;
+                        full = chainStrs.map(function (s) { return H.parseHlllStr(s); });
+                        hlllLabel = matchedLabel;
+                        chainNote = 'appendix chain label: ' + matchedLabel;
+                    }
+                }
+                if (!full.length) {
+                    var forward = H.buildFullChainInitials(fd.ti2);
+                    full = forward;
+                    chainNote = 'forward chain generated from TI₂' + (k !== 10 ? ' (appendix comparison is available only for k = 10)' : '');
+                }
+
+                var ti2Pos = -1;
+                for (var fi = 0; fi < full.length; fi++) {
+                    if (JSON.stringify(full[fi]) === JSON.stringify(fd.ti2)) { ti2Pos = fi; break; }
+                }
+
+                var text = '';
                 text += 'Row #' + idx + ' of ' + rows.length + ' flagpole rows for defc = ' + k + '\n';
-                text += 'mu = ' + JSON.stringify(fd.mu) + '   compact: ' + H.partToHlllStr(fd.mu) + '\n';
+                text += 'mu = ' + JSON.stringify(fd.mu) + '   compact: ' + muCompact + '\n';
                 text += 'lambda = ' + (fd.lambda.length ? JSON.stringify(fd.lambda) : '()') + ', a = ' + fd.a + ', eps = ' + fd.eps + '\n';
                 text += 'TI_2 = ' + JSON.stringify(fd.ti2) + '   [' + H.partToHlllStr(fd.ti2) + ']\n';
-                text += 'TI   = ' + JSON.stringify(tiPart) + '   [' + H.partToHlllStr(tiPart) + ']\n\n';
-                text += 'FULL GLOBAL CHAIN initials (' + full.length + ' rows, TI_2 at pos ' + backward.length + '):\n';
+                text += 'TI   = ' + JSON.stringify(tiPart) + '   [' + H.partToHlllStr(tiPart) + ']\n';
+                text += 'Displayed chain: ' + chainNote + '\n\n';
+                text += 'FULL GLOBAL CHAIN C_(' + muCompact + ')  (' + full.length + ' elements' +
+                    (ti2Pos >= 0 ? ', TI₂ at pos ' + ti2Pos : '') + '):\n';
                 text += 'pos  HLLL                      dinv   area   L   notes\n';
                 text += '---  ------------------------  -----  -----  --  -----\n';
                 full.forEach(function (p, i) {
-                    const rdv = H.partitionToReducedDv(p);
-                    const dinv = H.computeDinv(rdv);
-                    const area = H.computeArea(rdv);
-                    const L = rdv.length;
-                    const notes = [];
+                    var rdv = H.partitionToReducedDv(p);
+                    var dinv = H.computeDinv(rdv);
+                    var area = H.computeArea(rdv);
+                    var L = rdv.length;
+                    var notes = [];
                     if (JSON.stringify(p) === JSON.stringify(fd.ti2)) notes.push('TI_2');
                     if (JSON.stringify(p) === JSON.stringify(tiPart)) notes.push('TI');
                     text += String(i).padStart(3) + '  ' + H.partToHlllStr(p).padEnd(24) + '  ' +
                         String(dinv).padStart(5) + '  ' + String(area).padStart(5) + '  ' + String(L).padStart(2) + '  ' + notes.join(' ') + '\n';
                 });
-                text += '\nHLLL format:\nC_(' + H.partToHlllStr(fd.mu) + '): ' +
+                text += '\nHLLL format:\nC_(' + muCompact + '): ' +
                     full.map(function (p) { return '(' + H.partToHlllStr(p) + ')'; }).join(', ') + '.\n';
-                const aVals = full.map(function (p) { return H.computeDinv(H.partitionToReducedDv(p)); });
-                const hVals = full.map(function (p) { return H.partitionToReducedDv(p).length; });
+                var aVals = full.map(function (p) { return H.computeDinv(H.partitionToReducedDv(p)); });
+                var hVals = full.map(function (p) { return H.partitionToReducedDv(p).length; });
                 text += 'a = (' + aVals.join(', ') + ')\n';
                 text += 'h = (' + hVals.join(', ') + ')\n';
+
+                if (k === 10 && hlllLabel) {
+                    var fwd = H.buildFullChainInitials(fd.ti2);
+                    var fwdStrs = fwd.map(function (p) { return H.partToHlllStr(p); });
+                    var fullStrs = full.map(function (p) { return H.partToHlllStr(p); });
+                    var fwdMatch = fwdStrs.every(function (s, i) { return fullStrs.indexOf(s) >= 0; });
+                    text += '\n--- Appendix comparison ---\n';
+                    text += 'Forward from TI₂ found ' + fwd.length + ' of ' + full.length + ' elements.\n';
+                    text += 'All forward elements in HLLL chain: ' + (fwdMatch ? 'YES' : 'NO') + '\n';
+                    if (ti2Pos >= 0) {
+                        text += 'Elements before TI₂ in the appendix chain: ' + ti2Pos + '\n';
+                    }
+                }
+
                 out.textContent = text;
                 document.getElementById('gc-idx').max = String(rows.length);
             }, 0);
+        });
+
+        document.getElementById('va-run').addEventListener('click', function () {
+            var summary = document.getElementById('va-summary');
+            var out = document.getElementById('va-out');
+            summary.textContent = 'Running…';
+            out.innerHTML = '';
+            setTimeout(function () {
+                var results = H.checkAllChainsK10(false);
+                var passed = results.filter(function (r) { return r.ok; }).length;
+                var failed = results.length - passed;
+                summary.textContent = passed + ' / ' + results.length + ' MATCH' +
+                    (failed > 0 ? '   (' + failed + ' NEED REVIEW)' : '   — all matched ✓');
+                summary.style.color = failed > 0 ? '#c0392b' : '#27ae60';
+
+                var html = '<table class="sequence-table" style="width:100%;border-collapse:collapse;">' +
+                    '<thead><tr>' +
+                    ['#', 'C(μ)', 'Status', 'Chain elements', 'a-vector', 'm-vector', 'h-vector', 'Details'].map(function (h) {
+                        return '<th style="text-align:left;border:1px solid #0d0d0d;padding:6px;white-space:nowrap;">' + h + '</th>';
+                    }).join('') + '</tr></thead><tbody>';
+
+                results.forEach(function (r, i) {
+                    var statusColor = r.ok ? '#27ae60' : '#c0392b';
+                    var statusText = r.ok ? 'MATCH' : 'REVIEW';
+                    var chainStr = r.data.chain.map(function (s) { return '(' + s + ')'; }).join(', ');
+                    var aStr = '(' + r.data.a.join(', ') + ')';
+                    var mStr = '(' + r.data.m.join(', ') + ')';
+                    var hStr = '(' + r.data.h.join(', ') + ')';
+                    var detailsStr = r.ok ? '—' : r.errors.map(function (e) { return '<div style="color:#c0392b;font-size:0.85rem;">' + e + '</div>'; }).join('');
+                    html += '<tr>' +
+                        '<td style="border:1px solid #0d0d0d;padding:6px;">' + (i + 1) + '</td>' +
+                        '<td style="border:1px solid #0d0d0d;padding:6px;font-weight:bold;">C(' + r.label + ')</td>' +
+                        '<td style="border:1px solid #0d0d0d;padding:6px;color:' + statusColor + ';font-weight:bold;">' + statusText + '</td>' +
+                        '<td style="border:1px solid #0d0d0d;padding:6px;font-size:0.85rem;max-width:400px;word-break:break-all;">' + chainStr + '</td>' +
+                        '<td style="border:1px solid #0d0d0d;padding:6px;font-size:0.85rem;white-space:nowrap;">' + aStr + '</td>' +
+                        '<td style="border:1px solid #0d0d0d;padding:6px;font-size:0.85rem;white-space:nowrap;">' + mStr + '</td>' +
+                        '<td style="border:1px solid #0d0d0d;padding:6px;font-size:0.85rem;white-space:nowrap;">' + hStr + '</td>' +
+                        '<td style="border:1px solid #0d0d0d;padding:6px;">' + detailsStr + '</td>' +
+                        '</tr>';
+                });
+                html += '</tbody></table>';
+                html += '<p style="margin-top:12px;font-size:0.9rem;"><strong>Checks shown per chain element:</strong> ' +
+                    'defc = 10, a (dinv) matches, h (mind) matches, NU₁-initial status. ' +
+                    'm-values are compared using consecutive same-mind blocks.</p>';
+                out.innerHTML = html;
+            }, 50);
         });
 
         document.getElementById('pl-run').click();

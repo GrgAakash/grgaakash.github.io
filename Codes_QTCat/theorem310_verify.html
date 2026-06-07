@@ -1,0 +1,1175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>q,t-Catalan Local Chain Explorer</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1 class="text-3d-large">q,t-Catalan Local Chain Explorer</h1>
+            <p class="subtitle">S(m,h) head &amp; tail symmetry for local-chain decompositions of Def(k)</p>
+        </header>
+
+        <main>
+            <section>
+                <h2 class="text-3d">Head and tail symmetry calculator</h2>
+                <div class="input-group" style="display:flex;flex-wrap:wrap;gap:12px;align-items:flex-end;">
+                    <div>
+                        <label for="v-k">Deficit k</label><br>
+                        <input type="number" id="v-k" min="0" value="4" style="width:5rem;">
+                    </div>
+                    <button type="button" class="btn btn-primary" id="v-run">Compute symmetry data</button>
+                    <button type="button" class="btn btn-secondary" id="v-run-all">Compute k = 0 to 10</button>
+                </div>
+                <div id="v-status" style="margin-top:12px;"></div>
+                <div id="v-out" style="margin-top:16px;"></div>
+            </section>
+
+            <section>
+                <h2 class="text-3d">m = 0 first-stable row calculator</h2>
+                <p>
+                    For a partition size <strong>d</strong>, this computes the first-stable row
+                    <strong>h = d + 4</strong>, <strong>k = 2d + 2</strong>, and
+                    <strong>S<sub>d</sub> = binom(h,2) - k</strong>.  It then lists the rooted
+                    intervals
+                    <strong>&mu;<sub>1</sub> + 1 &le; A &le; S<sub>d</sub> - &ell;(&mu;) - 1</strong>
+                    and the resulting area multiplicities.  Endpoint Dyck words are shown directly
+                    for the common rows <strong>d = 4&ndash;9</strong>, and the page can compute
+                    them live for other positive values of <strong>d</strong>.
+                </p>
+                <div class="input-group" style="display:flex;flex-wrap:wrap;gap:12px;align-items:flex-end;margin-top:12px;">
+                    <div>
+                        <label for="m0-d">Partition size d</label><br>
+                        <input type="number" id="m0-d" min="1" value="5" style="width:5rem;">
+                    </div>
+                    <button type="button" class="btn btn-primary" id="m0-run">Compute m = 0 row</button>
+                </div>
+                <div id="m0-out" style="margin-top:16px;overflow-x:auto;"></div>
+            </section>
+
+            <section>
+                <h2 class="text-3d">Local chain explorer</h2>
+                <p>After computing symmetry data above, pick a local chain to see its elements.</p>
+                <div class="input-group" style="display:flex;flex-wrap:wrap;gap:12px;align-items:flex-end;">
+                    <div>
+                        <label for="lc-idx">Chain #</label><br>
+                        <input type="number" id="lc-idx" min="1" value="1" style="width:5rem;">
+                    </div>
+                    <button type="button" class="btn btn-primary" id="lc-show">Show elements</button>
+                </div>
+                <pre id="lc-out" style="margin-top:16px;white-space:pre-wrap;word-break:break-all;max-height:500px;overflow-y:auto;"></pre>
+            </section>
+
+            <section>
+                <h2 class="text-3d">Distinguished chain explorer</h2>
+                <p>Iterated <strong>ν̃₂</strong>, <strong>ν̃₃</strong>, and a related <strong>ν̃₂</strong> variant from the standard starting vectors. Each step is a Dyck vector along the distinguished chain; row <em>i</em> is paired with row <em>N</em>−<em>i</em> for the forced ζ<sub>H</sub> symmetry on the all-1-coefficient families.</p>
+                <div class="input-group" style="display:flex;flex-wrap:wrap;gap:12px;align-items:flex-end;">
+                    <div>
+                        <label for="cx-k">Deficit k</label><br>
+                        <input type="number" id="cx-k" min="1" value="5" style="width:5rem;">
+                    </div>
+                    <button type="button" class="btn btn-primary" id="cx-h0">Build H(0, k+2)</button>
+                    <button type="button" class="btn btn-primary" id="cx-t0">Build T(0, k+3)</button>
+                    <button type="button" class="btn btn-primary" id="cx-h1">Build H(1, (k+7)/2)</button>
+                </div>
+                <p id="cx-note" style="margin-top:10px;font-size:0.9rem;color:#444;"></p>
+                <div id="cx-status" style="margin-top:8px;"></div>
+                <div id="cx-out" style="margin-top:16px;overflow-x:auto;"></div>
+            </section>
+
+            <section>
+                <h2 class="text-3d">Batch summary</h2>
+                <div id="batch-out"></div>
+            </section>
+        </main>
+    </div>
+
+<script>
+"use strict";
+
+// ============================================================
+// Core combinatorial utilities
+// ============================================================
+
+function partitionToReducedDV(mu) {
+    if (!mu || mu.length === 0) return [0];
+    mu = mu.slice().sort((a,b) => b-a);
+    const ell = mu.length;
+    for (let n = ell + 1; n < ell + mu[0] + 10; n++) {
+        const pad = mu.concat(Array(n - ell).fill(0));
+        const v = [];
+        for (let i = 0; i < n; i++) v.push(i - pad[n - 1 - i]);
+        if (v.every(x => x >= 0) && v[0] === 0) return v;
+    }
+    return null;
+}
+
+function reducedDVToPartition(v) {
+    const n = v.length;
+    const parts = [];
+    for (let j = 0; j < n; j++) {
+        const p = (n - 1 - j) - v[n - 1 - j];
+        if (p > 0) parts.push(p);
+    }
+    return parts.sort((a,b) => b-a);
+}
+
+function computeArea(v) { return v.reduce((s,x) => s+x, 0); }
+
+function computeDinv(v) {
+    let d = 0;
+    for (let i = 0; i < v.length; i++)
+        for (let j = i+1; j < v.length; j++)
+            if (v[i] - v[j] === 0 || v[i] - v[j] === 1) d++;
+    return d;
+}
+
+function computeDefc(v) {
+    const n = v.length;
+    return n*(n-1)/2 - computeArea(v) - computeDinv(v);
+}
+
+// ============================================================
+// nu-tilde maps and distinguished-chain moves
+// ============================================================
+
+function isValidDV(v) {
+    if (!v.length) return true;
+    if (v[0] !== 0) return false;
+    for (let i = 0; i < v.length; i++) if (v[i] < 0) return false;
+    for (let i = 0; i < v.length - 1; i++) if (v[i + 1] > v[i] + 1) return false;
+    return true;
+}
+
+function contextNuScan(inner, left, right, direction) {
+    left = left || [];
+    right = right || [];
+    const full0 = left.concat(inner).concat(right);
+    const targetDefc = computeDefc(full0);
+    const nInner = inner.length;
+    const idxs = direction === 'left'
+        ? [...Array(nInner).keys()]
+        : [...Array(nInner).keys()].reverse();
+    for (const i of idxs) {
+        if (inner[i] === 0) continue;
+        const ni = inner.slice();
+        ni[i] -= 1;
+        const full = left.concat(ni).concat(right);
+        if (!isValidDV(full)) continue;
+        if (computeDefc(full) === targetDefc) return ni;
+    }
+    return null;
+}
+
+function contextNuLeft(inner, left, right) {
+    return contextNuScan(inner, left, right, 'left');
+}
+
+function contextNuRight(inner, left, right) {
+    return contextNuScan(inner, left, right, 'right');
+}
+
+function nuTilde2(w) {
+    w = w.slice();
+    if (w.length < 3 || w[0] !== 0) return null;
+    const inner = w.slice(1);
+    const v2 = inner[1];
+    const vn = inner[inner.length - 1];
+    if (vn === 1 && inner.slice(0, -1).every(x => x === 0)) return null;
+    const v3 = inner.length >= 3 ? inner[2] : null;
+    if (v2 === 1 && v3 !== null && v3 <= 1 && vn === 1) {
+        const innerMid = inner.slice(0, -1);
+        const nuMid = contextNuLeft(innerMid, [0], [vn]);
+        if (!nuMid) return null;
+        return [0].concat(nuMid).concat([vn]);
+    }
+    const nuInner = contextNuLeft(inner, [0], []);
+    if (!nuInner) return null;
+    return [0].concat(nuInner);
+}
+
+function nuTilde3(w) {
+    if (w.length < 2 || w[w.length - 1] !== 0) return null;
+    const inner = w.slice(0, -1);
+    const nuInner = contextNuRight(inner, [], [0]);
+    if (!nuInner) return null;
+    return nuInner.concat([0]);
+}
+
+function nuTilde2Variant(w) {
+    if (w.length < 4 || w[0] !== 0 || w[1] !== 1) return null;
+    const inner = w.slice(2);
+    const n = inner.length;
+    if (n < 2) return null;
+    const v2 = inner[1];
+    const v3 = inner[2];
+    const vn = inner[n - 1];
+    const vnm1 = inner[n - 2];
+    if (v2 === 1 && v3 !== undefined && v3 <= 2 && vnm1 === 1 && vn === 2 && n >= 4) {
+        const innerMid = inner.slice(0, -2);
+        const nuMid = contextNuLeft(innerMid, [0, 1], [vnm1, vn]);
+        if (!nuMid) return null;
+        return [0, 1].concat(nuMid).concat([vnm1, vn]);
+    }
+    if (v2 === 1 && v3 === 2 && vnm1 === 2 && vn === 2 && n >= 4) {
+        const innerMid = inner.slice(0, -1);
+        const nuMid = contextNuLeft(innerMid, [0, 1], [vn]);
+        if (!nuMid) return null;
+        return [0, 1].concat(nuMid).concat([vn]);
+    }
+    const nuInner = contextNuLeft(inner, [0, 1], []);
+    if (!nuInner) return null;
+    return [0, 1].concat(nuInner);
+}
+
+function iterateNuTilde2(k, maxSteps) {
+    maxSteps = maxSteps || 10000;
+    if (k < 1) return [];
+    const v = [0, 0];
+    for (let i = 1; i <= k; i++) v.push(i);
+    const seq = [v];
+    let cur = v;
+    for (let s = 0; s < maxSteps; s++) {
+        const nxt = nuTilde2(cur);
+        if (!nxt) break;
+        seq.push(nxt);
+        cur = nxt;
+    }
+    return seq;
+}
+
+function iterateNuTilde3(k, maxSteps) {
+    maxSteps = maxSteps || 10000;
+    if (k < 2) return [];
+    const v = [0];
+    for (let i = 1; i <= k + 1; i++) v.push(i);
+    v.push(0);
+    const seq = [v];
+    let cur = v;
+    for (let s = 0; s < maxSteps; s++) {
+        const nxt = nuTilde3(cur);
+        if (!nxt) break;
+        seq.push(nxt);
+        cur = nxt;
+    }
+    return seq;
+}
+
+function iterateNuTilde2Variant(k, maxSteps) {
+    maxSteps = maxSteps || 10000;
+    if (k < 3 || k % 2 === 0) return [];
+    const half = Math.floor(k / 2) + 1;
+    const v = [0, 1, 0];
+    for (let i = 1; i <= half; i++) v.push(i);
+    const seq = [v];
+    let cur = v;
+    for (let s = 0; s < maxSteps; s++) {
+        const nxt = nuTilde2Variant(cur);
+        if (!nxt) break;
+        seq.push(nxt);
+        cur = nxt;
+    }
+    return seq;
+}
+
+function setEqStr(a, b) {
+    if (a.size !== b.size) return false;
+    for (const x of a) if (!b.has(x)) return false;
+    return true;
+}
+
+function expectedHeadsS0(k) {
+    const h = k + 2;
+    const parts = allPartitionsOfDefc(k);
+    const segments = buildNuSegments(parts);
+    const chains = assembleLocalChains(segments);
+    const s = new Set();
+    for (const c of chains) {
+        if (c.m === 0 && c.h === h) s.add(partKey(c.head.part));
+    }
+    return s;
+}
+
+function expectedTailsStail0(k) {
+    const hp = k + 3;
+    const parts = allPartitionsOfDefc(k);
+    const segments = buildNuSegments(parts);
+    const chains = assembleLocalChains(segments);
+    const s = new Set();
+    for (const c of chains) {
+        if (!c.isFin) continue;
+        if (c.tailMprime !== 0 || c.tailHprime !== hp) continue;
+        s.add(partKey(c.tail.part));
+    }
+    return s;
+}
+
+function expectedHeadsS1Half(k) {
+    if (k % 2 === 0) return new Set();
+    const h = (k + 7) >> 1;
+    const parts = allPartitionsOfDefc(k);
+    const segments = buildNuSegments(parts);
+    const chains = assembleLocalChains(segments);
+    const s = new Set();
+    for (const c of chains) {
+        if (c.m === 1 && c.h === h) s.add(partKey(c.head.part));
+    }
+    return s;
+}
+
+function partitionSetFromDVSequence(seq) {
+    const s = new Set();
+    for (const v of seq) s.add(partKey(reducedDVToPartition(v)));
+    return s;
+}
+
+function nu1(mu) {
+    if (!mu || mu.length === 0) return null;
+    mu = mu.slice().sort((a,b) => b-a);
+    const ell = mu.length;
+    if (mu[0] > ell + 2) return null;
+    let np = [ell + 1].concat(mu.map(p => p - 1));
+    np = np.filter(p => p > 0).sort((a,b) => b-a);
+    return np;
+}
+
+function nd1(delta) {
+    if (!delta || delta.length === 0) return null;
+    delta = delta.slice().sort((a,b) => b-a);
+    const s = delta.length;
+    if (delta[0] < s) return null;
+    let np = delta.slice(1).map(p => p + 1).concat(Array(delta[0] - s).fill(1));
+    np = np.filter(p => p > 0).sort((a,b) => b-a);
+    const check = nu1(np);
+    if (!check || check.join(',') !== delta.join(',')) return null;
+    return np;
+}
+
+function isNu1Initial(mu) {
+    if (!mu || mu.length === 0) return true;
+    const m = mu.slice().sort((a,b) => b-a);
+    return m[0] < m.length;
+}
+
+function isNu1Final(mu) {
+    if (!mu || mu.length === 0) return false;
+    const m = mu.slice().sort((a,b) => b-a);
+    return m[0] > m.length + 2;
+}
+
+function minLengthForDefc(k) {
+    let L = 1;
+    while (L*(L-1)/2 < k) L++;
+    return L;
+}
+
+function enumerateDefcPartitions(L, targetDefc) {
+    const targetAD = L*(L-1)/2 - targetDefc;
+    const results = [];
+    function backtrack(i, v, area, dinv) {
+        const remaining = L - i;
+        if (area > targetAD) return;
+        let maxAddArea = 0;
+        for (let x = i; x < L; x++) maxAddArea += x;
+        const maxAddDinv = remaining*(remaining-1)/2 + remaining*i;
+        if (area + dinv + maxAddArea + maxAddDinv < targetAD) return;
+        if (i === L) {
+            if (area + dinv === targetAD) results.push(v.slice());
+            return;
+        }
+        const maxVal = i > 0 ? v[i-1] + 1 : 0;
+        for (let val = 0; val <= maxVal; val++) {
+            let nd = 0;
+            for (let j = 0; j < i; j++) if (v[j] - val === 0 || v[j] - val === 1) nd++;
+            v.push(val);
+            backtrack(i+1, v, area + val, dinv + nd);
+            v.pop();
+        }
+    }
+    backtrack(0, [], 0, 0);
+    return results;
+}
+
+// ============================================================
+// Theorem 3.10 primitives
+// ============================================================
+
+function minDelta(partition) {
+    if (!partition || partition.length === 0) return 1;
+    const parts = partition.slice().sort((a,b) => b-a);
+    let md = 0;
+    for (let j = 0; j < parts.length; j++) md = Math.max(md, parts[j] + j + 1);
+    return md;
+}
+
+function cornerRow(partition) {
+    if (!partition || partition.length === 0) return 1;
+    const parts = partition.slice().sort((a,b) => b-a);
+    const md = minDelta(partition);
+    let cr = 0;
+    for (let j = 0; j < parts.length; j++)
+        if (parts[j] + j + 1 === md) cr = j + 1;
+    return cr;
+}
+
+function partKey(p) { return p.join(','); }
+
+function allPartitionsOfDefc(k, maxL) {
+    if (maxL === undefined) maxL = k + 5;
+    const Lmin = minLengthForDefc(k);
+    const allParts = new Map();
+    for (let L = Lmin; L <= maxL; L++) {
+        const dvs = enumerateDefcPartitions(L, k);
+        for (const v of dvs) {
+            const part = reducedDVToPartition(v);
+            const key = partKey(part);
+            if (!allParts.has(key) || L < allParts.get(key).L)
+                allParts.set(key, { part, rdv:v, L, dinv: computeDinv(v), area: computeArea(v) });
+        }
+    }
+    const extraSteps = maxL + k;
+    for (const key of [...allParts.keys()]) {
+        let current = allParts.get(key).part;
+        for (let s = 0; s < extraSteps; s++) {
+            const nxt = nu1(current);
+            if (!nxt) break;
+            const nk = partKey(nxt);
+            if (!allParts.has(nk)) {
+                const rdv = partitionToReducedDV(nxt);
+                allParts.set(nk, { part:nxt, rdv, L:rdv.length, dinv:computeDinv(rdv), area:computeArea(rdv) });
+            }
+            current = nxt;
+        }
+    }
+    return allParts;
+}
+
+// ============================================================
+// Nu-segments & local chains
+// ============================================================
+
+function buildNuSegments(partsMap) {
+    const partSet = new Set(partsMap.keys());
+    const visited = new Set();
+    const segments = [];
+
+    for (const key of partSet) {
+        if (visited.has(key)) continue;
+        let current = partsMap.get(key).part;
+        while (true) {
+            const prev = nd1(current);
+            if (!prev || !partSet.has(partKey(prev))) break;
+            current = prev;
+        }
+        const seg = [];
+        while (current) {
+            const ck = partKey(current);
+            if (!partSet.has(ck) || visited.has(ck)) break;
+            const d = partsMap.get(ck);
+            seg.push({ part:current, dinv:d.dinv, md:minDelta(current), cr:cornerRow(current), area:d.area });
+            visited.add(ck);
+            current = nu1(current);
+        }
+        if (seg.length) segments.push(seg);
+    }
+    segments.sort((a,b) => a[0].dinv - b[0].dinv);
+    return segments;
+}
+
+function isValidStaircase(seq) {
+    if (!seq.length) return null;
+    const h = seq[0][0];
+    let firstBlock = 0;
+    for (const [md] of seq) { if (md === h) firstBlock++; else break; }
+    const m = firstBlock - 1;
+    let pos = firstBlock, blockMd = h + 1, blockSize = h;
+    while (pos < seq.length) {
+        let count = 0;
+        for (let ecr = 1; ecr <= blockSize; ecr++) {
+            if (pos >= seq.length) return [m, h];
+            const [md, cr] = seq[pos];
+            if (md !== blockMd || cr !== ecr) {
+                if (count === 0 && md !== blockMd) return pos > firstBlock ? [m,h] : null;
+                return null;
+            }
+            count++; pos++;
+        }
+        blockMd++; blockSize++;
+    }
+    return [m, h];
+}
+
+function assembleLocalChains(segments) {
+    const segByStart = new Map();
+    for (let si = 0; si < segments.length; si++) {
+        const d = segments[si][0].dinv;
+        if (!segByStart.has(d)) segByStart.set(d, []);
+        segByStart.get(d).push(si);
+    }
+    const assigned = new Set();
+    const chains = [];
+
+    for (let si = 0; si < segments.length; si++) {
+        if (assigned.has(si)) continue;
+        const seg = segments[si];
+        const h = seg[0].md;
+        const elems = seg.slice();
+        assigned.add(si);
+
+        let firstBlock = 0;
+        for (const e of elems) { if (e.md === h) firstBlock++; else break; }
+        const m = firstBlock - 1;
+
+        let merging = true;
+        while (merging) {
+            merging = false;
+            const lastDinv = elems[elems.length - 1].dinv;
+            const cands = segByStart.get(lastDinv + 1) || [];
+            for (const csi of cands) {
+                if (assigned.has(csi)) continue;
+                const profile = elems.map(e => [e.md, e.cr]).concat(segments[csi].map(e => [e.md, e.cr]));
+                const res = isValidStaircase(profile);
+                if (res && res[0] === m && res[1] === h) {
+                    elems.push(...segments[csi]);
+                    assigned.add(csi);
+                    merging = true;
+                    break;
+                }
+            }
+        }
+
+        const lastPart = elems[elems.length-1].part;
+        const isFin = isNu1Final(lastPart);
+        let tailLabel = null;
+        let tailMprime = null, tailHprime = null;
+        if (isFin) {
+            const lastMd = elems[elems.length-1].md;
+            let tbs = 0;
+            for (let i = elems.length-1; i >= 0; i--) { if (elems[i].md === lastMd) tbs++; else break; }
+            tailMprime = tbs - 1;
+            tailHprime = lastMd;
+            tailLabel = `(${elems[elems.length-1].dinv}, ${tailMprime}, ${tailHprime})`;
+        }
+
+        chains.push({ elems, a: elems[0].dinv, m, h, head: elems[0],
+                       tail: elems[elems.length-1], isFin, tailLabel,
+                       tailMprime, tailHprime });
+    }
+    return chains;
+}
+
+function computeSpoly(chains, tm, th) {
+    const poly = new Map();
+    for (const c of chains) {
+        if (c.m !== tm || c.h !== th) continue;
+        for (let i = 0; i <= tm; i++) {
+            const qe = -i + c.head.area, te = i + c.head.dinv;
+            const key = `${qe},${te}`;
+            poly.set(key, (poly.get(key)||0) + 1);
+        }
+    }
+    return poly;
+}
+
+function computeTailSpoly(chains, tMprime, tHprime) {
+    const poly = new Map();
+    for (const c of chains) {
+        if (!c.isFin || c.tailMprime !== tMprime || c.tailHprime !== tHprime) continue;
+        const adjArea = c.tail.area - (tHprime - 1);
+        for (let i = 0; i <= tMprime; i++) {
+            const qe = i + adjArea, te = -i + c.tail.dinv;
+            const key = `${qe},${te}`;
+            poly.set(key, (poly.get(key)||0) + 1);
+        }
+    }
+    return poly;
+}
+
+function checkSym(poly) {
+    for (const [key, coeff] of poly) {
+        const [q,t] = key.split(',').map(Number);
+        const swapped = `${t},${q}`;
+        if ((poly.get(swapped)||0) !== coeff) return false;
+    }
+    return true;
+}
+
+function polyToStr(poly) {
+    if (!poly.size) return "0";
+    const entries = [...poly.entries()].map(([k,v]) => {
+        const [q,t] = k.split(',').map(Number);
+        return {q, t, v};
+    }).sort((a,b) => a.q - b.q || a.t - b.t);
+    return entries.map(e => (e.v === 1 ? '' : e.v+'·') + `q<sup>${e.q}</sup>t<sup>${e.t}</sup>`).join(' + ');
+}
+
+// ============================================================
+// m = 0 first-stable row calculator
+// ============================================================
+
+function htmlEscape(s) {
+    return String(s).replace(/[&<>"']/g, ch => ({
+        '&': '&amp;',
+        '<': '&lt;',
+        '>': '&gt;',
+        '"': '&quot;',
+        "'": '&#39;'
+    }[ch]));
+}
+
+function integerPartitions(n) {
+    const out = [];
+    function rec(rem, maxPart, cur) {
+        if (rem === 0) {
+            out.push(cur.slice());
+            return;
+        }
+        for (let p = Math.min(rem, maxPart); p >= 1; p--) {
+            cur.push(p);
+            rec(rem - p, p, cur);
+            cur.pop();
+        }
+    }
+    if (n === 0) return [[]];
+    rec(n, n, []);
+    return out;
+}
+
+function partitionDisplay(mu) {
+    if (!mu.length) return '()';
+    const counts = new Map();
+    for (const p of mu) counts.set(p, (counts.get(p) || 0) + 1);
+    const pieces = [];
+    for (const p of [...counts.keys()].sort((a,b) => b-a)) {
+        const c = counts.get(p);
+        pieces.push(c === 1 ? `${p}` : `${p}<sup>${c}</sup>`);
+    }
+    return '(' + pieces.join(',') + ')';
+}
+
+function conjugatePartition(mu) {
+    if (!mu.length) return [];
+    const maxPart = mu[0];
+    const out = [];
+    for (let j = 1; j <= maxPart; j++) {
+        let c = 0;
+        for (const p of mu) if (p >= j) c++;
+        out.push(c);
+    }
+    return out;
+}
+
+const includedM0Endpoints = {"4":{"bottom":{"4":[0,0,1,2,0,0,1,1],"3,1":[0,0,1,0,0,1,1,1],"2,2":[0,0,0,1,0,0,1,1],"2,1,1":[0,0,0,0,1,1,0,1],"1,1,1,1":[0,0,0,0,0,0,1,1]},"top":{"4":[0,0,1,1,2,3,4,5],"3,1":[0,0,1,1,2,3,4,4],"2,2":[0,0,0,1,2,3,4,5],"2,1,1":[0,0,0,1,2,3,4,4],"1,1,1,1":[0,0,0,1,2,3,4,3]}},"5":{"bottom":{"5":[0,0,1,2,0,1,0,1,1],"4,1":[0,0,1,2,0,0,1,0,1],"3,2":[0,0,1,0,0,1,0,1,1],"3,1,1":[0,0,1,0,0,0,0,1,2],"2,2,1":[0,0,0,1,0,0,0,1,1],"2,1,1,1":[0,0,0,0,1,0,1,0,1],"1,1,1,1,1":[0,0,0,0,0,0,0,1,1]},"top":{"5":[0,0,1,1,2,3,4,5,6],"4,1":[0,0,1,1,2,3,4,5,5],"3,2":[0,0,0,1,2,3,4,5,6],"3,1,1":[0,0,1,1,2,3,4,5,4],"2,2,1":[0,0,0,1,2,3,4,5,5],"2,1,1,1":[0,0,0,1,2,3,4,5,4],"1,1,1,1,1":[0,0,0,1,2,3,4,4,4]}},"6":{"bottom":{"6":[0,0,1,2,2,1,0,0,0,1],"5,1":[0,0,1,2,1,0,0,0,1,1],"4,2":[0,0,1,2,0,0,1,0,0,1],"4,1,1":[0,0,1,1,0,0,0,1,1,1],"3,3":[0,0,1,0,0,1,0,0,1,1],"3,2,1":[0,0,1,0,0,0,1,1,0,1],"3,1,1,1":[0,0,1,0,0,0,0,0,1,2],"2,2,2":[0,0,0,1,0,0,0,0,1,1],"2,2,1,1":[0,0,0,0,1,0,0,1,0,1],"2,1,1,1,1":[0,0,0,0,0,1,1,0,0,1],"1,1,1,1,1,1":[0,0,0,0,0,0,0,0,1,1]},"top":{"6":[0,0,1,1,2,3,4,5,6,7],"5,1":[0,0,1,2,2,3,4,5,5,6],"4,2":[0,0,1,1,2,3,4,5,6,6],"4,1,1":[0,0,1,2,3,3,3,4,5,6],"3,3":[0,0,0,1,2,3,4,5,6,7],"3,2,1":[0,0,1,1,2,3,4,5,6,5],"3,1,1,1":[0,0,1,2,2,3,4,5,4,5],"2,2,2":[0,0,0,1,2,3,4,5,6,6],"2,2,1,1":[0,0,0,1,2,3,4,5,6,5],"2,1,1,1,1":[0,0,0,1,2,3,4,5,5,5],"1,1,1,1,1,1":[0,0,0,1,2,3,4,5,5,4]}},"7":{"bottom":{"7":[0,0,1,2,2,1,0,1,0,0,1],"6,1":[0,0,1,2,1,0,1,0,0,1,1],"5,2":[0,0,1,2,1,0,0,0,1,0,1],"5,1,1":[0,0,1,2,0,1,0,1,0,0,1],"4,3":[0,0,1,2,0,0,1,0,0,0,1],"4,2,1":[0,0,1,1,0,0,0,1,0,1,1],"4,1,1,1":[0,0,1,1,0,0,0,0,0,1,2],"3,3,1":[0,0,1,0,0,1,0,0,0,1,1],"3,2,2":[0,0,1,0,0,0,1,0,1,0,1],"3,2,1,1":[0,0,1,0,0,0,0,0,0,1,2],"3,1,1,1,1":[0,0,0,1,2,0,0,0,0,0,1],"2,2,2,1":[0,0,0,1,0,0,0,0,0,1,1],"2,2,1,1,1":[0,0,0,0,1,0,0,0,1,0,1],"2,1,1,1,1,1":[0,0,0,0,0,1,0,1,0,0,1],"1,1,1,1,1,1,1":[0,0,0,0,0,0,0,0,0,1,1]},"top":{"7":[0,0,1,1,2,3,4,5,6,7,8],"6,1":[0,0,1,2,2,3,4,5,6,6,7],"5,2":[0,0,1,1,2,3,4,5,6,7,7],"5,1,1":[0,0,1,2,3,3,4,5,6,7,4],"4,3":[0,0,0,1,2,3,4,5,6,7,8],"4,2,1":[0,0,1,2,2,3,4,5,6,7,5],"4,1,1,1":[0,0,1,2,3,3,4,5,6,6,4],"3,3,1":[0,0,1,1,2,3,4,5,6,7,6],"3,2,2":[0,0,0,1,2,3,4,5,6,7,7],"3,2,1,1":[0,0,1,1,2,3,4,5,6,6,6],"3,1,1,1,1":[0,0,1,2,2,3,4,5,5,6,5],"2,2,2,1":[0,0,0,1,2,3,4,5,6,7,6],"2,2,1,1,1":[0,0,0,1,2,3,4,5,6,6,6],"2,1,1,1,1,1":[0,0,0,1,2,3,4,5,6,6,5],"1,1,1,1,1,1,1":[0,0,0,1,2,3,4,5,6,5,5]}},"8":{"bottom":{"8":[0,0,1,2,2,1,1,0,0,1,0,1],"7,1":[0,0,1,2,2,1,1,0,0,0,0,1],"6,2":[0,0,1,2,1,1,0,0,0,0,1,1],"6,1,1":[0,0,1,2,1,0,1,0,0,1,0,1],"5,3":[0,0,1,2,1,0,0,0,1,0,0,1],"5,2,1":[0,0,1,2,0,1,0,1,0,0,0,1],"5,1,1,1":[0,0,1,1,2,0,0,1,0,0,0,1],"4,4":[0,0,1,2,0,0,1,0,0,0,0,1],"4,3,1":[0,0,1,1,0,0,0,1,0,0,1,1],"4,2,2":[0,0,1,1,0,0,0,0,1,1,0,1],"4,2,1,1":[0,0,1,1,0,0,0,0,0,0,1,2],"4,1,1,1,1":[0,0,1,0,1,2,0,0,0,0,0,1],"3,3,2":[0,0,1,0,0,1,0,0,0,0,1,1],"3,3,1,1":[0,0,1,0,0,0,1,0,0,1,0,1],"3,2,2,1":[0,0,1,0,0,0,0,1,1,0,0,1],"3,2,1,1,1":[0,0,1,0,0,0,0,0,0,0,1,2],"3,1,1,1,1,1":[0,0,0,1,2,0,0,0,0,0,0,1],"2,2,2,2":[0,0,0,1,0,0,0,0,0,0,1,1],"2,2,2,1,1":[0,0,0,0,1,0,0,0,0,1,0,1],"2,2,1,1,1,1":[0,0,0,0,0,1,0,0,1,0,0,1],"2,1,1,1,1,1,1":[0,0,0,0,0,0,1,1,0,0,0,1],"1,1,1,1,1,1,1,1":[0,0,0,0,0,0,0,0,0,0,1,1]},"top":{"8":[0,0,1,1,2,3,4,5,6,7,8,9],"7,1":[0,0,1,2,3,3,4,5,6,6,7,8],"6,2":[0,0,1,2,2,3,4,5,6,7,7,8],"6,1,1":[0,0,1,2,3,4,4,5,5,6,7,7],"5,3":[0,0,1,1,2,3,4,5,6,7,8,8],"5,2,1":[0,0,1,2,3,3,4,5,6,7,8,5],"5,1,1,1":[0,0,1,2,3,4,4,5,6,7,8,3],"4,4":[0,0,0,1,2,3,4,5,6,7,8,9],"4,3,1":[0,0,1,2,2,3,4,5,6,7,8,6],"4,2,2":[0,0,1,1,2,3,4,5,6,7,8,7],"4,2,1,1":[0,0,1,2,3,3,4,5,6,7,7,5],"4,1,1,1,1":[0,0,1,2,3,4,4,5,5,6,6,6],"3,3,2":[0,0,0,1,2,3,4,5,6,7,8,8],"3,3,1,1":[0,0,1,2,2,3,4,5,6,7,6,7],"3,2,2,1":[0,0,1,1,2,3,4,5,6,7,7,7],"3,2,1,1,1":[0,0,1,2,2,3,4,5,6,6,7,6],"3,1,1,1,1,1":[0,0,1,2,3,3,4,5,6,5,6,6],"2,2,2,2":[0,0,0,1,2,3,4,5,6,7,8,7],"2,2,2,1,1":[0,0,0,1,2,3,4,5,6,7,7,7],"2,2,1,1,1,1":[0,0,0,1,2,3,4,5,6,7,7,6],"2,1,1,1,1,1,1":[0,0,0,1,2,3,4,5,6,7,6,6],"1,1,1,1,1,1,1,1":[0,0,0,1,2,3,4,5,6,6,6,6]}},"9":{"bottom":{"9":[0,0,1,2,2,1,1,1,0,0,0,1,1],"8,1":[0,0,1,2,2,1,1,0,1,0,0,0,1],"7,2":[0,0,1,2,1,1,0,1,0,0,0,1,1],"7,1,1":[0,0,1,2,1,1,0,0,1,0,1,0,1],"6,3":[0,0,1,2,1,1,0,0,0,0,1,0,1],"6,2,1":[0,0,1,2,1,0,1,0,0,1,0,0,1],"6,1,1,1":[0,0,1,2,1,0,0,1,1,0,0,0,1],"5,4":[0,0,1,2,1,0,0,0,1,0,0,0,1],"5,3,1":[0,0,1,2,0,1,0,1,0,0,0,0,1],"5,2,2":[0,0,1,1,2,0,0,1,0,0,0,0,1],"5,2,1,1":[0,0,1,1,1,0,0,0,0,1,0,1,1],"5,1,1,1,1":[0,0,1,1,1,0,0,0,0,0,0,1,2],"4,4,1":[0,0,1,2,0,0,1,0,0,0,0,0,1],"4,3,2":[0,0,1,1,0,0,0,1,0,0,0,1,1],"4,3,1,1":[0,0,1,1,0,0,0,0,1,0,1,0,1],"4,2,2,1":[0,0,1,1,0,0,0,0,0,0,0,1,2],"4,2,1,1,1":[0,0,1,0,1,2,0,0,0,0,0,0,1],"4,1,1,1,1,1":[0,0,1,0,1,0,1,0,0,0,0,1,1],"3,3,3":[0,0,1,0,0,1,0,0,0,0,0,1,1],"3,3,2,1":[0,0,1,0,0,0,1,0,0,0,1,0,1],"3,3,1,1,1":[0,0,1,0,0,0,0,1,0,1,0,0,1],"3,2,2,2":[0,0,1,0,0,0,0,0,0,0,0,1,2],"3,2,2,1,1":[0,0,0,1,2,0,0,0,0,0,0,0,1],"3,2,1,1,1,1":[0,0,0,1,1,0,0,0,0,0,0,1,1],"3,1,1,1,1,1,1":[0,0,0,1,0,1,0,0,0,0,1,0,1],"2,2,2,2,1":[0,0,0,1,0,0,0,0,0,0,0,1,1],"2,2,2,1,1,1":[0,0,0,0,1,0,0,0,0,0,1,0,1],"2,2,1,1,1,1,1":[0,0,0,0,0,1,0,0,0,1,0,0,1],"2,1,1,1,1,1,1,1":[0,0,0,0,0,0,1,0,1,0,0,0,1],"1,1,1,1,1,1,1,1,1":[0,0,0,0,0,0,0,0,0,0,0,1,1]},"top":{"9":[0,0,1,1,2,3,4,5,6,7,8,9,10],"8,1":[0,0,1,2,3,3,4,5,6,7,7,8,9],"7,2":[0,0,1,2,2,3,4,5,6,7,8,8,9],"7,1,1":[0,0,1,2,3,4,5,5,6,6,7,7,8],"6,3":[0,0,1,1,2,3,4,5,6,7,8,9,9],"6,2,1":[0,0,1,2,3,4,4,5,6,7,8,9,5],"6,1,1,1":[0,0,1,2,3,4,5,5,6,6,6,7,8],"5,4":[0,0,0,1,2,3,4,5,6,7,8,9,10],"5,3,1":[0,0,1,2,3,3,4,5,6,7,8,9,6],"5,2,2":[0,0,1,2,3,3,4,5,6,7,7,8,8],"5,2,1,1":[0,0,1,2,3,4,4,5,6,7,8,8,5],"5,1,1,1,1":[0,0,1,2,3,4,5,5,6,5,6,7,8],"4,4,1":[0,0,1,2,2,3,4,5,6,7,8,9,7],"4,3,2":[0,0,1,1,2,3,4,5,6,7,8,9,8],"4,3,1,1":[0,0,1,2,3,3,4,5,6,7,8,8,6],"4,2,2,1":[0,0,1,2,3,3,4,5,6,7,7,7,8],"4,2,1,1,1":[0,0,1,2,3,4,4,5,6,6,7,8,6],"4,1,1,1,1,1":[0,0,1,2,3,4,4,5,6,7,8,7,4],"3,3,3":[0,0,0,1,2,3,4,5,6,7,8,9,9],"3,3,2,1":[0,0,1,1,2,3,4,5,6,7,8,8,8],"3,3,1,1,1":[0,0,1,2,3,3,4,5,6,7,7,8,6],"3,2,2,2":[0,0,0,1,2,3,4,5,6,7,8,9,8],"3,2,2,1,1":[0,0,1,1,2,3,4,5,6,7,8,8,7],"3,2,1,1,1,1":[0,0,1,2,2,3,4,5,6,7,8,7,6],"3,1,1,1,1,1,1":[0,0,1,2,3,3,4,5,6,6,7,7,6],"2,2,2,2,1":[0,0,0,1,2,3,4,5,6,7,8,8,8],"2,2,2,1,1,1":[0,0,0,1,2,3,4,5,6,7,8,8,7],"2,2,1,1,1,1,1":[0,0,0,1,2,3,4,5,6,7,8,7,7],"2,1,1,1,1,1,1,1":[0,0,0,1,2,3,4,5,6,7,7,7,7],"1,1,1,1,1,1,1,1,1":[0,0,0,1,2,3,4,5,6,7,7,7,6]}}};
+const liveM0EndpointCache = {};
+const liveM0EndpointPending = {};
+const liveM0EndpointErrors = {};
+const liveM0EndpointSlow = {};
+
+function endpointSourceLabel(d) {
+    if (includedM0Endpoints[d]) return 'Endpoint Dyck words are shown for this d.';
+    if (liveM0EndpointCache[d]) return 'Endpoint Dyck words were computed for this d.';
+    if (liveM0EndpointErrors[d]) return 'Endpoint Dyck words could not be computed in this browser for this d; interval data is shown.';
+    if (liveM0EndpointSlow[d]) return 'Still computing endpoint Dyck words; interval data is shown now.';
+    if (liveM0EndpointPending[d]) return 'Endpoint Dyck words are being computed; interval data is shown now.';
+    return 'Endpoint Dyck words are being computed; interval data is shown now.';
+}
+
+function formatEndpointWord(word) {
+    if (!word) return '';
+    const arr = Array.isArray(word) ? word : String(word).split('').map(Number);
+    return arr.some(x => x >= 10) ? arr.join(',') : arr.join('');
+}
+
+function endpointCell(word, d) {
+    if (word) return htmlEscape(formatEndpointWord(word));
+    if (liveM0EndpointPending[d]) return '<span style="color:#6b7280;">computing</span>';
+    if (liveM0EndpointErrors[d]) return '<span style="color:#9ca3af;">unavailable</span>';
+    return '&mdash;';
+}
+
+function partitionLexCompare(a, b) {
+    const n = Math.max(a.length, b.length);
+    for (let i = 0; i < n; i++) {
+        const av = i < a.length ? a[i] : -1;
+        const bv = i < b.length ? b[i] : -1;
+        if (av !== bv) return av - bv;
+    }
+    return 0;
+}
+
+function tupleLexCompare(a, b) {
+    const n = Math.max(a.length, b.length);
+    for (let i = 0; i < n; i++) {
+        const av = i < a.length ? a[i] : -1;
+        const bv = i < b.length ? b[i] : -1;
+        if (av !== bv) return av - bv;
+    }
+    return 0;
+}
+
+function m0EndpointWorkerSource() {
+    const workerFunctions = [
+        computeArea, computeDinv, computeDefc, isValidDV,
+        partitionToReducedDV, reducedDVToPartition, nu1, nd1, isNu1Final,
+        minLengthForDefc, enumerateDefcPartitions, allPartitionsOfDefc,
+        minDelta, cornerRow, buildNuSegments, isValidStaircase,
+        assembleLocalChains, integerPartitions, partKey,
+        partitionLexCompare, tupleLexCompare
+    ].map(fn => fn.toString()).join('\n');
+    return `${workerFunctions}
+function endpointDataForD(d) {
+    const h = d + 4;
+    const k = 2*d + 2;
+    const S = h*(h - 1)/2 - k;
+    const partsMap = allPartitionsOfDefc(k, h);
+    const segments = buildNuSegments(partsMap);
+    const chains = assembleLocalChains(segments);
+    const family = chains.filter(c => c.m === 0 && c.h === h);
+    const byArea = new Map();
+    for (const c of family) {
+        const rdv = partitionToReducedDV(c.head.part);
+        const area = c.head.area;
+        const dinv = c.head.dinv;
+        if (!byArea.has(area)) byArea.set(area, []);
+        byArea.get(area).push({rdv, area, dinv});
+    }
+    const labelRows = [];
+    const allLabels = integerPartitions(d).sort(partitionLexCompare);
+    for (const area of [...byArea.keys()].sort((a,b) => a-b)) {
+        const group = byArea.get(area).sort((x,y) => tupleLexCompare(x.rdv, y.rdv));
+        const dinv = group.length ? group[0].dinv : 0;
+        const fitting = allLabels.filter(mu => (mu[0] || 0) <= area - 1 && mu.length <= dinv - 1).sort(partitionLexCompare);
+        for (let i = 0; i < group.length; i++) {
+            const mu = fitting[i];
+            if (!mu) continue;
+            labelRows.push({label: partKey(mu), area, rdv: group[i].rdv});
+        }
+    }
+    const bottom = {};
+    const top = {};
+    for (const mu of integerPartitions(d)) {
+        const key = partKey(mu);
+        const amin = (mu[0] || 0) + 1;
+        const amax = S - mu.length - 1;
+        const b = labelRows.find(row => row.label === key && row.area === amin);
+        const t = labelRows.find(row => row.label === key && row.area === amax);
+        if (!b || !t) throw new Error('Endpoint not found for ' + key);
+        bottom[key] = b.rdv;
+        top[key] = t.rdv;
+    }
+    return {bottom, top};
+}
+self.onmessage = function(event) {
+    const d = event.data.d;
+    try {
+        self.postMessage({d, ok:true, data:endpointDataForD(d)});
+    } catch (err) {
+        self.postMessage({d, ok:false, error:String(err && err.message ? err.message : err)});
+    }
+};`;
+}
+
+function requestM0EndpointData(d) {
+    if (includedM0Endpoints[d] || liveM0EndpointCache[d] || liveM0EndpointPending[d] || liveM0EndpointErrors[d]) return;
+    liveM0EndpointPending[d] = true;
+    delete liveM0EndpointSlow[d];
+    window.setTimeout(() => {
+        if (liveM0EndpointPending[d]) {
+            liveM0EndpointSlow[d] = true;
+            const current = parseInt(document.getElementById('m0-d').value, 10);
+            if (current === d) renderM0FirstStable();
+        }
+    }, 1500);
+    try {
+        const blob = new Blob([m0EndpointWorkerSource()], {type:'application/javascript'});
+        const worker = new Worker(URL.createObjectURL(blob));
+        worker.onmessage = event => {
+            const msg = event.data;
+            delete liveM0EndpointPending[msg.d];
+            delete liveM0EndpointSlow[msg.d];
+            if (msg.ok) liveM0EndpointCache[msg.d] = msg.data;
+            else liveM0EndpointErrors[msg.d] = msg.error || 'unavailable';
+            worker.terminate();
+            const current = parseInt(document.getElementById('m0-d').value, 10);
+            if (current === msg.d) renderM0FirstStable();
+        };
+        worker.onerror = () => {
+            delete liveM0EndpointPending[d];
+            delete liveM0EndpointSlow[d];
+            liveM0EndpointErrors[d] = 'unavailable';
+            worker.terminate();
+            const current = parseInt(document.getElementById('m0-d').value, 10);
+            if (current === d) renderM0FirstStable();
+        };
+        worker.postMessage({d});
+    } catch (err) {
+        delete liveM0EndpointPending[d];
+        delete liveM0EndpointSlow[d];
+        liveM0EndpointErrors[d] = 'unavailable';
+    }
+}
+
+function summarizeM0FirstStable(d) {
+    const h = d + 4;
+    const k = 2*d + 2;
+    const S = h*(h - 1)/2 - k;
+    const parts = integerPartitions(d);
+    const rows = parts.map(mu => {
+        const mu1 = mu[0] || 0;
+        const ell = mu.length;
+        const amin = mu1 + 1;
+        const amax = S - ell - 1;
+        const key = partKey(mu);
+        const conj = conjugatePartition(mu);
+        const conjKey = partKey(conj);
+        return { mu, key, conj, conjKey, mu1, ell, amin, amax };
+    });
+
+    const counts = new Map();
+    for (const row of rows) {
+        for (let A = row.amin; A <= row.amax; A++) {
+            counts.set(A, (counts.get(A) || 0) + 1);
+        }
+    }
+
+    return { d, h, k, S, rows, counts, endpointData: includedM0Endpoints[d] || liveM0EndpointCache[d] || null };
+}
+
+function renderM0FirstStable() {
+    const d = parseInt(document.getElementById('m0-d').value, 10);
+    const out = document.getElementById('m0-out');
+    if (isNaN(d) || d < 1) {
+        out.innerHTML = '<p style="color:#dc2626;"><strong>d must be a positive integer.</strong></p>';
+        return;
+    }
+    if (d > 18 && !confirm(`d = ${d} has many partitions, so the table may be large. Continue?`)) return;
+
+    const data = summarizeM0FirstStable(d);
+    const endpointData = data.endpointData;
+    if (!endpointData) requestM0EndpointData(d);
+    const totalIntervalSize = data.rows.reduce((s,r) => s + Math.max(0, r.amax - r.amin + 1), 0);
+    const minA = Math.min(...data.counts.keys());
+    const maxA = Math.max(...data.counts.keys());
+
+    let html = `<div class="summary-card">
+        <h3 style="margin-bottom:8px;">m = 0 first-stable row for d = ${data.d}</h3>
+        <p>
+            h = ${data.h}, k = ${data.k}, S<sub>${data.d}</sub> = ${data.S}.
+            Partitions of d: ${data.rows.length}. Total interval entries: ${totalIntervalSize}.
+            <strong>${endpointSourceLabel(data.d)}</strong>
+        </p>
+    </div>`;
+
+    html += '<h3 style="margin:16px 0 8px;">Rooted intervals and endpoint words</h3>';
+    html += '<table><thead><tr><th>&lambda;</th><th>&lambda;&prime;</th><th>&mu;<sub>1</sub></th><th>&ell;</th><th>bottom endpoint</th><th>bottom (A,D)</th><th>interval</th><th>top endpoint</th><th>top (A,D)</th></tr></thead><tbody>';
+    for (const r of data.rows) {
+        const bottomWord = endpointData && endpointData.bottom[r.key] ? endpointData.bottom[r.key] : null;
+        const topWord = endpointData && endpointData.top[r.key] ? endpointData.top[r.key] : null;
+        html += `<tr>
+            <td>${partitionDisplay(r.mu)}</td>
+            <td>${partitionDisplay(r.conj)}</td>
+            <td>${r.mu1}</td>
+            <td>${r.ell}</td>
+            <td style="font-family:monospace;">${endpointCell(bottomWord, data.d)}</td>
+            <td>(${r.amin}, ${data.S - r.amin})</td>
+            <td>${r.amin} &le; A &le; ${r.amax}</td>
+            <td style="font-family:monospace;">${endpointCell(topWord, data.d)}</td>
+            <td>(${r.amax}, ${data.S - r.amax})</td>
+        </tr>`;
+    }
+    html += '</tbody></table>';
+
+    html += '<h3 style="margin:20px 0 8px;">Area multiplicities</h3>';
+    html += '<table><tbody><tr><th>A</th>';
+    for (let A = minA; A <= maxA; A++) html += `<td>${A}</td>`;
+    html += '</tr><tr><th>#</th>';
+    for (let A = minA; A <= maxA; A++) html += `<td>${data.counts.get(A) || 0}</td>`;
+    html += '</tr></tbody></table>';
+
+    html += '<h3 style="margin:20px 0 8px;">Endpoint swap pairs</h3>';
+    html += '<p style="font-size:0.92rem;color:#444;">The m = 0 involution sends the bottom endpoint for &lambda; to the top endpoint for the conjugate partition &lambda;&prime;. On statistics this is (A,D) &mapsto; (D,A), because A + D = S<sub>d</sub>.</p>';
+    html += '<table><thead><tr><th>&lambda;</th><th>bottom word</th><th>bottom (A,D)</th><th>&lambda;&prime;</th><th>target top word</th><th>target (A,D)</th></tr></thead><tbody>';
+    for (const r of data.rows) {
+        const startWord = endpointData && endpointData.bottom[r.key] ? endpointData.bottom[r.key] : null;
+        const targetWord = endpointData && endpointData.top[r.conjKey] ? endpointData.top[r.conjKey] : null;
+        html += `<tr>
+            <td>${partitionDisplay(r.mu)}</td>
+            <td style="font-family:monospace;">${endpointCell(startWord, data.d)}</td>
+            <td>(${r.amin}, ${data.S - r.amin})</td>
+            <td>${partitionDisplay(r.conj)}</td>
+            <td style="font-family:monospace;">${endpointCell(targetWord, data.d)}</td>
+            <td>(${data.S - r.amin}, ${r.amin})</td>
+        </tr>`;
+    }
+    html += '</tbody></table>';
+
+    out.innerHTML = html;
+}
+
+// ============================================================
+// UI
+// ============================================================
+
+let lastChains = null;
+let lastK = null;
+
+function runSymmetryK(k) {
+    const t0 = performance.now();
+    const parts = allPartitionsOfDefc(k);
+    const segments = buildNuSegments(parts);
+    const chains = assembleLocalChains(segments);
+
+    const mhPairs = new Map();
+    for (const c of chains) {
+        const key = `${c.m},${c.h}`;
+        if (!mhPairs.has(key)) mhPairs.set(key, []);
+        mhPairs.get(key).push(c);
+    }
+
+    const results = [];
+    let allHeadSym = true;
+    for (const [key, chs] of [...mhPairs.entries()].sort()) {
+        const [m,h] = key.split(',').map(Number);
+        const poly = computeSpoly(chains, m, h);
+        const sym = checkSym(poly);
+        if (!sym) allHeadSym = false;
+        results.push({ m, h, poly, sym, count: chs.length });
+    }
+
+    const tailMhPairs = new Map();
+    for (const c of chains) {
+        if (!c.isFin) continue;
+        const key = `${c.tailMprime},${c.tailHprime}`;
+        if (!tailMhPairs.has(key)) tailMhPairs.set(key, []);
+        tailMhPairs.get(key).push(c);
+    }
+
+    const tailResults = [];
+    let allTailSym = true;
+    for (const [key, chs] of [...tailMhPairs.entries()].sort()) {
+        const [mp, hp] = key.split(',').map(Number);
+        const poly = computeTailSpoly(chains, mp, hp);
+        const sym = checkSym(poly);
+        if (!sym) allTailSym = false;
+        tailResults.push({ m: mp, h: hp, poly, sym, count: chs.length });
+    }
+
+    const allSym = allHeadSym && allTailSym;
+    const elapsed = ((performance.now() - t0)/1000).toFixed(2);
+
+    lastChains = chains;
+    lastK = k;
+
+    return { k, parts: parts.size, segs: segments.length, chains: chains.length,
+             finiteCh: chains.filter(c=>c.isFin).length,
+             infiniteCh: chains.filter(c=>!c.isFin).length,
+             results, tailResults, allHeadSym, allTailSym, allSym, elapsed };
+}
+
+function renderSingle(r) {
+    let html = '';
+
+    const headIcon = r.allHeadSym ? '&#10004;' : '&#10008;';
+    const headColor = r.allHeadSym ? '#16a34a' : '#dc2626';
+    const tailIcon = r.allTailSym ? '&#10004;' : '&#10008;';
+    const tailColor = r.allTailSym ? '#16a34a' : '#dc2626';
+
+    html += `<div class="summary-card">
+        <h3 style="margin-bottom:8px;">
+            <span style="color:${headColor};font-size:1.2rem;">${headIcon} Thm 3.10 (heads)</span>
+            &nbsp;&nbsp;
+            <span style="color:${tailColor};font-size:1.2rem;">${tailIcon} Thm 3.14 (tails)</span>
+            &nbsp;&nbsp; k = ${r.k}
+        </h3>
+        <p><strong>${r.parts}</strong> partitions &nbsp;|&nbsp; <strong>${r.segs}</strong> nu-segments &nbsp;|&nbsp; <strong>${r.chains}</strong> local chains (<strong>${r.finiteCh}</strong> finite, <strong>${r.infiniteCh}</strong> infinite) &nbsp;|&nbsp; <strong>${r.elapsed}s</strong></p>
+    </div>`;
+
+    html += '<h3 style="margin:16px 0 8px;">Theorem 3.10 — S(m,h) from heads</h3>';
+    html += '<table><thead><tr><th>(m,h)</th><th>Chains</th><th>Symmetric?</th><th>S(m,h)</th></tr></thead><tbody>';
+    for (const p of r.results) {
+        const sym = p.sym ? '<strong style="color:#16a34a;">YES</strong>' : '<strong style="color:#dc2626;">NO</strong>';
+        html += `<tr><td>(${p.m}, ${p.h})</td><td>${p.count}</td><td>${sym}</td><td style="font-size:0.85rem;">${polyToStr(p.poly)}</td></tr>`;
+    }
+    html += '</tbody></table>';
+
+    html += '<h3 style="margin:20px 0 8px;">Theorem 3.14 — S<sub>tail</sub>(m&prime;,h&prime;) from tails</h3>';
+    if (r.tailResults.length === 0) {
+        html += '<p style="color:#666;">No finite chains for this k (no tail polynomials).</p>';
+    } else {
+        html += '<table><thead><tr><th>(m&prime;,h&prime;)</th><th>Finite chains</th><th>Symmetric?</th><th>S<sub>tail</sub>(m&prime;,h&prime;)</th></tr></thead><tbody>';
+        for (const p of r.tailResults) {
+            const sym = p.sym ? '<strong style="color:#16a34a;">YES</strong>' : '<strong style="color:#dc2626;">NO</strong>';
+            html += `<tr><td>(${p.m}, ${p.h})</td><td>${p.count}</td><td>${sym}</td><td style="font-size:0.85rem;">${polyToStr(p.poly)}</td></tr>`;
+        }
+        html += '</tbody></table>';
+    }
+
+    html += '<h3 style="margin:20px 0 8px;">Local chains</h3>';
+    html += '<table><thead><tr><th>#</th><th>|chain|</th><th>Head (a,m,h)</th><th>Tail (b,m&prime;,h&prime;)</th><th>Head partition</th><th>Tail partition</th><th>head dinv</th><th>head area</th><th>tail dinv</th><th>tail adj.area</th></tr></thead><tbody>';
+    for (let i = 0; i < lastChains.length; i++) {
+        const c = lastChains[i];
+        const headStr = c.head.part.length ? '('+c.head.part.join(',')+')' : '()';
+        const tailStr = c.isFin ? (c.tail.part.length ? '('+c.tail.part.join(',')+')' : '()') : '&mdash;';
+        const tailLbl = c.tailLabel || 'infinite';
+        const tailAdjArea = c.isFin ? c.tail.area - (c.tailHprime - 1) : '&mdash;';
+        const tailDinv = c.isFin ? c.tail.dinv : '&mdash;';
+        html += `<tr><td>${i+1}</td><td>${c.elems.length}</td><td>(${c.a},${c.m},${c.h})</td><td>${tailLbl}</td><td>${headStr}</td><td>${tailStr}</td><td>${c.head.dinv}</td><td>${c.head.area}</td><td>${tailDinv}</td><td>${tailAdjArea}</td></tr>`;
+    }
+    html += '</tbody></table>';
+
+    return html;
+}
+
+document.getElementById('v-run').addEventListener('click', function() {
+    const k = parseInt(document.getElementById('v-k').value);
+    if (isNaN(k) || k < 0) { alert('k must be a non-negative integer'); return; }
+    if (k > 13 && !confirm(`k = ${k} involves a very large number of partitions and may freeze the browser for a while. Continue?`)) return;
+    const status = document.getElementById('v-status');
+    status.innerHTML = '<span class="loading"></span> Computing k = ' + k + ' &mdash; this may take a moment for large k...';
+    setTimeout(() => {
+        const r = runSymmetryK(k);
+        status.innerHTML = '';
+        document.getElementById('v-out').innerHTML = renderSingle(r);
+    }, 50);
+});
+
+document.getElementById('v-run-all').addEventListener('click', function() {
+    const status = document.getElementById('v-status');
+    const batchOut = document.getElementById('batch-out');
+    status.innerHTML = '<span class="loading"></span> Running k = 0 to 10 ...';
+    document.getElementById('v-out').innerHTML = '';
+
+    let html = '<table><thead><tr><th>k</th><th>Parts</th><th>Chains</th><th>Head (m,h)</th><th>Thm 3.10</th><th>Tail (m&prime;,h&prime;)</th><th>Thm 3.14</th><th>Time</th></tr></thead><tbody>';
+    let allOk = true;
+    let kDone = 0;
+
+    function doNext() {
+        if (kDone > 10) {
+            html += '</tbody></table>';
+            if (allOk) html += '<div class="summary-card" style="margin-top:16px;"><h3 style="color:#16a34a;">&#10004; Symmetry data completed for k = 0 through 10</h3></div>';
+            batchOut.innerHTML = html;
+            status.innerHTML = '';
+            return;
+        }
+        status.innerHTML = `<span class="loading"></span> Running k = ${kDone} ...`;
+        setTimeout(() => {
+            const r = runSymmetryK(kDone);
+            const headSym = r.allHeadSym ? '<strong style="color:#16a34a;">PASS</strong>' : '<strong style="color:#dc2626;">FAIL</strong>';
+            const tailSym = r.allTailSym ? '<strong style="color:#16a34a;">PASS</strong>' : '<strong style="color:#dc2626;">FAIL</strong>';
+            if (!r.allSym) allOk = false;
+            const mhStr = r.results.map(p => `(${p.m},${p.h})`).join(', ');
+            const tailMhStr = r.tailResults.length ? r.tailResults.map(p => `(${p.m},${p.h})`).join(', ') : '&mdash;';
+            html += `<tr><td>${r.k}</td><td>${r.parts}</td><td>${r.chains}</td><td>${mhStr}</td><td>${headSym}</td><td>${tailMhStr}</td><td>${tailSym}</td><td>${r.elapsed}s</td></tr>`;
+            kDone++;
+            doNext();
+        }, 20);
+    }
+    doNext();
+});
+
+document.getElementById('m0-run').addEventListener('click', renderM0FirstStable);
+renderM0FirstStable();
+
+document.getElementById('lc-show').addEventListener('click', function() {
+    if (!lastChains) { document.getElementById('lc-out').textContent = 'Compute symmetry data first.'; return; }
+    const idx = parseInt(document.getElementById('lc-idx').value) - 1;
+    if (idx < 0 || idx >= lastChains.length) { document.getElementById('lc-out').textContent = `Pick a chain # between 1 and ${lastChains.length}.`; return; }
+    const c = lastChains[idx];
+    let out = `Local chain #${idx+1}  (a=${c.a}, m=${c.m}, h=${c.h})  ${c.isFin ? 'finite' : 'infinite'}  ${c.elems.length} elements\n`;
+    out += `Tail label: ${c.tailLabel || 'infinite'}\n\n`;
+    out += `${'pos'.padStart(4)}  ${'partition'.padEnd(30)}  ${'dinv'.padStart(5)}  ${'area'.padStart(5)}  ${'min_d'.padStart(5)}  ${'cr'.padStart(3)}\n`;
+    out += '─'.repeat(60) + '\n';
+    const maxShow = 100;
+    const elems = c.elems.slice(0, maxShow);
+    for (let i = 0; i < elems.length; i++) {
+        const e = elems[i];
+        const ps = e.part.length ? '('+e.part.join(',')+')' : '()';
+        out += `${(i+1+'').padStart(4)}  ${ps.padEnd(30)}  ${(e.dinv+'').padStart(5)}  ${(e.area+'').padStart(5)}  ${(e.md+'').padStart(5)}  ${(e.cr+'').padStart(3)}\n`;
+    }
+    if (c.elems.length > maxShow) out += `\n... (${c.elems.length - maxShow} more elements truncated)\n`;
+    document.getElementById('lc-out').textContent = out;
+});
+
+const pairColors = ['#f0fdf4', '#eff6ff', '#fefce8', '#fdf2f8', '#f5f5f4'];
+
+function renderConstructionExplorer(title, seq, matchInfo) {
+    const N = seq.length - 1;
+    let html = '<h3 style="margin:0 0 8px;">' + title + '</h3>';
+    if (matchInfo) {
+        const ok = matchInfo.ok;
+        const col = ok ? '#16a34a' : '#ca8a04';
+        const icon = ok ? '&#10004;' : '&#9888;';
+        html += `<p style="margin:0 0 12px;color:${col};"><strong>${icon}</strong> ${matchInfo.text}</p>`;
+    }
+    html += '<table><thead><tr><th>Step</th><th>ζ pair</th><th>Dyck vector</th><th>Partition</th><th>Area</th><th>Dinv</th></tr></thead><tbody>';
+    for (let i = 0; i < seq.length; i++) {
+        const v = seq[i];
+        const pair = N - i;
+        const pg = i <= pair ? i : pair;
+        const bg = pairColors[pg % pairColors.length];
+        const part = reducedDVToPartition(v);
+        const ps = part.length ? '(' + part.join(',') + ')' : '()';
+        const pairStr = i === pair ? `${i} (axis)` : `${i} ↔ ${pair}`;
+        html += `<tr style="background:${bg};"><td>${i}</td><td>${pairStr}</td><td style="font-family:monospace;font-size:0.85rem;">(${v.join(',')})</td><td>${ps}</td><td>${computeArea(v)}</td><td>${computeDinv(v)}</td></tr>`;
+    }
+    html += '</tbody></table>';
+    return html;
+}
+
+function runConstructionExplorer(mode) {
+    const k = parseInt(document.getElementById('cx-k').value, 10);
+    if (isNaN(k) || k < 1) { alert('k must be a positive integer'); return; }
+    const noteEl = document.getElementById('cx-note');
+    const st = document.getElementById('cx-status');
+    const out = document.getElementById('cx-out');
+    noteEl.textContent = '';
+    st.innerHTML = '<span class="loading"></span> Computing…';
+    setTimeout(() => {
+        let seq, title, matchInfo = null;
+        if (mode === 'h0') {
+            if (k > 12 && !confirm(`k = ${k} may take a while. Continue?`)) { st.innerHTML = ''; return; }
+            seq = iterateNuTilde2(k);
+            title = `ν̃₂ chain → H(0, ${k + 2}) (${seq.length} steps)`;
+            const exp = expectedHeadsS0(k);
+            const got = partitionSetFromDVSequence(seq);
+            matchInfo = { ok: setEqStr(exp, got), text: `Local-chain heads for S(0, ${k + 2}): ${setEqStr(exp, got) ? 'matches ν̃₂ partition set.' : 'MISMATCH — compare sets manually.'}` };
+        } else if (mode === 't0') {
+            if (k < 2) { st.innerHTML = ''; alert('ν̃₃ requires k ≥ 2.'); return; }
+            if (k > 12 && !confirm(`k = ${k} may take a while. Continue?`)) { st.innerHTML = ''; return; }
+            seq = iterateNuTilde3(k);
+            title = `ν̃₃ chain → T(0, ${k + 3}) (${seq.length} steps)`;
+            const exp = expectedTailsStail0(k);
+            const got = partitionSetFromDVSequence(seq);
+            const ok = setEqStr(exp, got);
+            let msg = `Finite-chain tails with S_tail(0, ${k + 3}): ${ok ? 'matches ν̃₃ partition set.' : 'does not match (see note).'}`;
+            if (k === 2 && !ok) msg += ' At k = 2 the ν̃₃ walk visits intermediate partitions that are not terminal tails of (b, 0, 5)-chains; agreement holds for k ≥ 3.';
+            matchInfo = { ok: ok, text: msg };
+        } else {
+            if (k % 2 === 0 || k < 3) {
+                st.innerHTML = '';
+                noteEl.textContent = 'Section 9 variant requires odd k ≥ 3.';
+                out.innerHTML = '';
+                return;
+            }
+            if (k > 13 && !confirm(`k = ${k} may take a while. Continue?`)) { st.innerHTML = ''; return; }
+            seq = iterateNuTilde2Variant(k);
+            const h = (k + 7) >> 1;
+            title = `ν̃₂ (Section 9) → H(1, ${h}) (${seq.length} steps)`;
+            const exp = expectedHeadsS1Half(k);
+            const got = partitionSetFromDVSequence(seq);
+            matchInfo = { ok: setEqStr(exp, got), text: `Local-chain heads for S(1, ${h}): ${setEqStr(exp, got) ? 'matches ν̃ partition set.' : 'MISMATCH — compare sets manually.'}` };
+        }
+        st.innerHTML = '';
+        out.innerHTML = renderConstructionExplorer(title, seq, matchInfo);
+    }, 30);
+}
+
+document.getElementById('cx-h0').addEventListener('click', () => runConstructionExplorer('h0'));
+document.getElementById('cx-t0').addEventListener('click', () => runConstructionExplorer('t0'));
+document.getElementById('cx-h1').addEventListener('click', () => runConstructionExplorer('h1'));
+</script>
+</body>
+</html>

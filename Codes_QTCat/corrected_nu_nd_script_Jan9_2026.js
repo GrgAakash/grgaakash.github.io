@@ -143,7 +143,9 @@ function matchesNU2RuleA(qdv) {
     }
     
     const h = trailingNeg1s + 1;
-    
+    // HLLL Definition 4.1(a) requires h >= 2; h=1 is redundant with NU1
+    if (h < 2) return null;
+
     let consecutive2s = 0;
     let i = 2;
     while (i < qdv.length && qdv[i] === 2) {
@@ -522,17 +524,39 @@ function finalTI2(muPartition) {
     return null;
 }
 
-function findNU1FinalQDV(partition) {
-    return reducedDyckFromPartition(partition);
+function getNeg1Representative(rdv) {
+    let v = rdv.slice();
+    while (v[v.length - 1] !== -1) {
+        if (v.length <= 1) return null;
+        const w = v.slice(1).map(x => x - 1);
+        if (w[0] !== 0) return null;
+        v = w;
+    }
+    return v;
+}
+
+function get00Representative(rdv) {
+    if (rdv.length >= 2 && rdv[0] === 0 && rdv[1] === 0) return rdv;
+    let v = rdv.slice();
+    while (v.length > 1) {
+        const w = v.slice(1).map(x => x - 1);
+        if (w[0] !== 0) break;
+        v = w;
+        if (v.length >= 2 && v[0] === 0 && v[1] === 0) return v;
+    }
+    return null;
 }
 
 function NU(partition) {
     if (is_NU1_final(partition)) {
-        const qdv = findNU1FinalQDV(partition);
-        if (!qdv) return null;
-        const resultQDV = NU2(qdv);
+        const rdv = reducedDyckFromPartition(partition);
+        if (!rdv) return null;
+        const neg1Rep = getNeg1Representative(rdv);
+        if (!neg1Rep) return null;
+        const resultQDV = NU2(neg1Rep, true);
         if (!resultQDV) return null;
-        return QDVToPartition(resultQDV);
+        const reduced = reduceQDVToReducedDyck(resultQDV);
+        return QDVToPartition(reduced);
     } else {
         return NU1(partition);
     }
@@ -540,22 +564,14 @@ function NU(partition) {
 
 function ND(partition) {
     if (is_NU1_initial(partition)) {
-        const n = partition[0] + partition.length;
-        const qdv = partitionToQDV(partition, n);
-        const defc0 = calculateDeficit(partition);
-        
-        const nd1Q = ND1_QDV(qdv);
-        if (nd1Q) {
-            const pNext = QDVToPartition(nd1Q);
-            if (calculateDeficit(pNext) === defc0) return pNext;
-        }
-        
-        const resultQDV = ND2(qdv, true); 
-        if (resultQDV) {
-            const pNext = QDVToPartition(resultQDV);
-            if (calculateDeficit(pNext) === defc0) return pNext;
-        }
-        return null;
+        const rdv = reducedDyckFromPartition(partition);
+        if (!rdv) return null;
+        const rep00 = get00Representative(rdv);
+        if (!rep00) return null;
+        const resultQDV = ND2(rep00, true);
+        if (!resultQDV) return null;
+        const reduced = reduceQDVToReducedDyck(resultQDV);
+        return QDVToPartition(reduced);
     } else {
         return ND1(partition);
     }
@@ -581,22 +597,33 @@ function generateSequence(initialPartition, mapType, maxIterations = 50) {
                 nextPartition = ND1(currentPartition);
                 break;
             case 'NU2':
-                // Convert to QDV, apply NU₂, convert back
-                const qdv = findNU1FinalQDV(currentPartition);
-                if (qdv) {
-                    const resultQDV = NU2(qdv);
-                    if (resultQDV) {
-                        nextPartition = QDVToPartition(resultQDV);
+                {
+                    const rdv2 = reducedDyckFromPartition(currentPartition);
+                    if (rdv2) {
+                        const neg1Rep = getNeg1Representative(rdv2);
+                        if (neg1Rep) {
+                            const resultQDV2 = NU2(neg1Rep, true);
+                            if (resultQDV2) {
+                                const reduced2 = reduceQDVToReducedDyck(resultQDV2);
+                                nextPartition = QDVToPartition(reduced2);
+                            }
+                        }
                     }
                 }
                 break;
             case 'ND2':
-                // Convert to QDV, apply ND₂, convert back
-                const n = currentPartition[0] + currentPartition.length;
-                const inputQDV = partitionToQDV(currentPartition, n);
-                const resultQDV = ND2(inputQDV);
-                if (resultQDV) {
-                    nextPartition = QDVToPartition(resultQDV);
+                {
+                    const rdvD = reducedDyckFromPartition(currentPartition);
+                    if (rdvD) {
+                        const rep00 = get00Representative(rdvD);
+                        if (rep00) {
+                            const resultQDVD = ND2(rep00, true);
+                            if (resultQDVD) {
+                                const reducedD = reduceQDVToReducedDyck(resultQDVD);
+                                nextPartition = QDVToPartition(reducedD);
+                            }
+                        }
+                    }
                 }
                 break;
             case 'NU':
@@ -1071,18 +1098,20 @@ function verifySMALLCondition() {
     }
 }
 
-document.addEventListener('DOMContentLoaded', function() {
-    document.getElementById('generate-sequence').addEventListener('click', generateNuSequence);
-    document.getElementById('verify-small').addEventListener('click', verifySMALLCondition);
-    
-    document.getElementById('input-vector').addEventListener('keypress', function(e) {
-        if (e.key === 'Enter') {
-            generateNuSequence();
-        }
+if (typeof document !== 'undefined') {
+    document.addEventListener('DOMContentLoaded', function() {
+        document.getElementById('generate-sequence').addEventListener('click', generateNuSequence);
+        document.getElementById('verify-small').addEventListener('click', verifySMALLCondition);
+        
+        document.getElementById('input-vector').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                generateNuSequence();
+            }
+        });
+        
+        generateNuSequence();
     });
-    
-    generateNuSequence();
-});
+}
 
 function testNU2Example() {
     const testQDV = [0, 1, 2, 2, 2, 2, -1, 0, 0, 1, -1, -1];
@@ -1112,6 +1141,8 @@ if (typeof module !== 'undefined' && module.exports) {
         QDVToPartition,
         reduceQDVToReducedDyck,
         reducedDyckFromPartition,
+        getNeg1Representative,
+        get00Representative,
         is_NU1_initial,
         is_NU1_final,
         calculateDinv,
@@ -1385,6 +1416,8 @@ if (typeof window !== 'undefined') {
         window.QDVToPartition = QDVToPartition;
         window.reduceQDVToReducedDyck = reduceQDVToReducedDyck;
         window.reducedDyckFromPartition = reducedDyckFromPartition;
+        window.getNeg1Representative = getNeg1Representative;
+        window.get00Representative = get00Representative;
         window.NU_QDV = NU_QDV;
         window.ND1_QDV = ND1_QDV;
         window.isType1 = isType1;
