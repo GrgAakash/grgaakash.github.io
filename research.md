@@ -16,7 +16,7 @@ title: Research
                     <div class="research-item mb-4">
                         <h4>Multi-Agent AI for Mathematical Reasoning</h4>
                         <p class="text-muted">June 2026 - Present</p>
-                        <p>With three fellow research interns, developing and evaluating multi-agent AI systems for mathematical reasoning and proof-oriented research workflows. Applying the system to a research problem under Professor Kyungyong Lee's guidance.</p>
+                        <p>RIPS at UCLA: Along with three fellow research interns, I am developing and evaluating multi-agent AI systems for mathematical reasoning and proof-oriented research workflows, with application to a research problem under Professor Kyungyong Lee's guidance.</p>
                         <p>Academic Mentor: Mehmet Yigit Turali</p>
                         <p>Industry Sponsor: OpenAI</p>
                         <p>Industry Mentors: Giambattista Parascandolo (GB) and Professor Gregory Valiant</p>
@@ -24,7 +24,7 @@ title: Research
                     <div class="research-item mb-4">
                         <h4>Rectifiability</h4>
                         <p class="text-muted">Feb 2026 - Present</p>
-                        <p>With one postdoc, studying rectifiability characterization in the parabolic setting and connections to Riesz transforms and tangent measures.</p>
+                        <p>Along with a postdoctoral researcher, I am studying rectifiability characterization in the parabolic setting and connections to Riesz transforms and tangent measures.</p>
                         <p>Mentor: Professor Simon Bortz</p>
                     </div>
                     <div class="research-item mb-4">
@@ -44,13 +44,13 @@ title: Research
                     <div class="research-item mb-4">
                         <h4>LLM Distillation</h4>
                         <p class="text-muted">March 2026 - July 2026</p>
-                        <p>With one graduate student, worked on LLM distillation in network-based epidemic simulation.</p>
+                        <p>Along with a graduate student, I worked on LLM distillation in network-based epidemic simulation.</p>
                         <p>Mentors: Professor Chuntian Wang and Professor Jia Zhao</p>
                     </div>
                     <div class="research-item mb-4">
                         <h4>An Exploration of Finite-Size Effects in the Dynamics of Epidemic Compartmental Modeling</h4>
                         <p class="text-muted">May 2025 - Dec 2025</p>
-                        <p>With four fellow student researchers, worked on developing and analyzing the dynamics of an epidemic compartment model (SIHRS), incorporating vital dynamics through independent Poisson clocks and a martingale formulation. Used real-world county data from COVID-19 to show the model's usefulness. Also worked on the global stability analysis of the model.</p>
+                        <p>Along with four fellow student researchers, I worked on developing and analyzing the dynamics of an epidemic compartment model (SIHRS), incorporating vital dynamics through independent Poisson clocks and a martingale formulation. I used real-world county data from COVID-19 to show the model's usefulness and also worked on the global stability analysis of the model.</p>
                         <p>Mentors: Professor Chuntian Wang, Professor Yuanzhen Shao, Professor Yuanyuan Song</p>
                     </div>
                     <div class="research-item mb-4">
