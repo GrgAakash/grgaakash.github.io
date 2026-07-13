@@ -30,7 +30,6 @@ title: Home
             <div class="card-body">
                 <h5>Current Positions</h5>
                 <ul>
-                    <li>IT Desk Assistant - OIT, University of Alabama (Aug 2025 - Present) </li>  
                 </ul>
             </div>
         </div>
@@ -38,6 +37,7 @@ title: Home
             <div class="card-body">
                 <h5>Previous Roles</h5>
                 <ul>
+                    <li>IT Desk Assistant - OIT, University of Alabama (Aug 2025 - May 2026)</li>
                     <li>Peer Tutor - Mathematics Technology Learning Center (Sept 2024 - May 2025)</li>
                     <li>Student Technology Assistant - Student Center, University of Alabama (Jan 2025- July 2025)</li>
                     <li>Membership Associate - University Recreation Center (Summer 2025)</li>     
