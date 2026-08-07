@@ -80,7 +80,7 @@ title: Research
                 </div>
                 <div class="card-body">
                     <div class="publication-item mb-4">
-                        <p><strong>A. Gurung</strong>, S. Wagle, A. Carr, C. McCann, K. Kodatt, Y. Song, Y. Shao, C. Wang. "An exploration of finite-size effects in the dynamics of epidemic compartmental modelling." <em>Under Review</em>.<br>
+                        <p><span class="text-muted">(first author)</span> <strong>Gurung A.</strong>, Wagle S., Carr A., McCann C., Kodatt K., Song Y., Shao Y. and Wang C. "An exploration of finite-size effects in the dynamics of epidemic compartmental modelling." <em>European Journal of Applied Mathematics</em>, to appear, 2026.<br>
                         <button class="btn btn-sm btn-outline-primary mt-2" onclick="toggleCodeLink('code-link-1')">Code</button>
                         <span id="code-link-1" style="display: none;" class="ms-2">Relevant codes can be found at <a href="https://github.com/GrgAakash/Code-collection--REU-25/tree/main/SIHRS" target="_blank">https://github.com/GrgAakash/Code-collection--REU-25/tree/main/SIHRS</a></span></p>
                     </div>
