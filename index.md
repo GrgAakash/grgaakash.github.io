@@ -14,6 +14,8 @@ permalink: /
         <p class="home-links">
             <a href="{{ '/assets/CV.pdf' | relative_url }}" target="_blank" rel="noopener noreferrer">CV</a>
             <span class="home-sep">&middot;</span>
+            <a href="https://scholar.google.com/citations?user={{ site.author.scholar }}" target="_blank" rel="noopener noreferrer">Google Scholar</a>
+            <span class="home-sep">&middot;</span>
             <a href="https://linkedin.com/in/{{ site.author.linkedin }}" target="_blank" rel="noopener noreferrer">LinkedIn</a>
             <span class="home-sep">&middot;</span>
             <a href="https://github.com/{{ site.author.github }}" target="_blank" rel="noopener noreferrer">GitHub</a>

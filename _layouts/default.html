@@ -16,6 +16,30 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="stylesheet" href="{{ '/assets/css/style.css' | relative_url }}">
     <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+    {% if page.url == "/" %}
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Person",
+      "name": {{ site.author.name | jsonify }},
+      "url": {{ site.url | append: site.baseurl | jsonify }},
+      "image": {{ site.author.avatar | absolute_url | jsonify }},
+      "description": {{ site.description | strip_newlines | strip | jsonify }},
+      "jobTitle": "Mathematics Student",
+      "affiliation": {
+        "@type": "CollegeOrUniversity",
+        "name": "University of Alabama"
+      },
+      "knowsAbout": ["Geometric measure theory", "Algebraic combinatorics", "Mathematical modeling"],
+      "sameAs": [
+        "https://scholar.google.com/citations?user={{ site.author.scholar }}",
+        "https://github.com/{{ site.author.github }}",
+        "https://linkedin.com/in/{{ site.author.linkedin }}"
+      ]
+    }
+    </script>
+    {% endif %}
 </head>
 <body>
     <nav class="navbar navbar-expand-lg navbar-light bg-white border-bottom sticky-top">
@@ -52,6 +76,10 @@
                 {{ site.author.location }}
             </p>
             <p class="mb-0">
+                {% if site.author.scholar %}
+                <a href="https://scholar.google.com/citations?user={{ site.author.scholar }}">Google Scholar</a>
+                <span class="home-sep">&middot;</span>
+                {% endif %}
                 {% if site.author.github %}
                 <a href="https://github.com/{{ site.author.github }}">GitHub</a>
                 {% endif %}
