@@ -14,17 +14,15 @@ title: Research
                 </div>
                 <div class="card-body">
                     <div class="research-item mb-4">
-                        <h4>Multi-Agent AI for Mathematical Reasoning</h4>
-                        <p class="text-muted">June 2026 - Present</p>
-                        <p>RIPS at UCLA: Along with three fellow research interns, I am developing and evaluating multi-agent AI systems for mathematical reasoning and proof-oriented research workflows, with application to a research problem under Professor Kyungyong Lee's guidance.</p>
-                        <p>Academic Mentor: Mehmet Yigit Turali</p>
-                        <p>Industry Sponsor: OpenAI</p>
-                        <p>Industry Mentors: Giambattista Parascandolo (GB) and Professor Gregory Valiant</p>
+                        <h4>LLM Distillation</h4>
+                        <p class="text-muted">March 2026 - Present</p>
+                        <p>Along with a graduate student, working on LLM distillation in network-based epidemic simulation.</p>
+                        <p>Mentors: Professor Chuntian Wang and Professor Jia Zhao</p>
                     </div>
                     <div class="research-item mb-4">
                         <h4>Rectifiability</h4>
                         <p class="text-muted">Feb 2026 - Present</p>
-                        <p>Along with a postdoctoral researcher, I am studying rectifiability characterization in the parabolic setting and connections to Riesz transforms and tangent measures.</p>
+                        <p>Along with a postdoctoral researcher, studying rectifiability characterization in the parabolic setting and connections to Riesz transforms and tangent measures.</p>
                         <p>Mentor: Professor Simon Bortz</p>
                     </div>
                     <div class="research-item mb-4">
@@ -42,15 +40,17 @@ title: Research
                 </div>
                 <div class="card-body">
                     <div class="research-item mb-4">
-                        <h4>LLM Distillation</h4>
-                        <p class="text-muted">March 2026 - July 2026</p>
-                        <p>Along with a graduate student, I worked on LLM distillation in network-based epidemic simulation.</p>
-                        <p>Mentors: Professor Chuntian Wang and Professor Jia Zhao</p>
+                        <h4>Multi-Agent AI for Mathematical Reasoning</h4>
+                        <p class="text-muted">June 2026 - Aug 2026</p>
+                        <p>RIPS at UCLA: Along with three fellow research interns, developed and evaluated multi-agent AI systems for mathematical reasoning and proof-oriented research workflows. Applying the system to a research problem under Professor Kyungyong Lee's guidance and also doing my independent side quest.</p>
+                        <p>Academic Mentor: Mehmet Yigit Turali</p>
+                        <p>Industry Sponsor: OpenAI</p>
+                        <p>Industry Mentors: Giambattista Parascandolo (GB) and Professor Gregory Valiant</p>
                     </div>
                     <div class="research-item mb-4">
                         <h4>An Exploration of Finite-Size Effects in the Dynamics of Epidemic Compartmental Modeling</h4>
                         <p class="text-muted">May 2025 - Dec 2025</p>
-                        <p>Along with four fellow student researchers, I worked on developing and analyzing the dynamics of an epidemic compartment model (SIHRS), incorporating vital dynamics through independent Poisson clocks and a martingale formulation. I used real-world county data from COVID-19 to show the model's usefulness and also worked on the global stability analysis of the model.</p>
+                        <p>Along with four fellow student researchers, worked on developing and analyzing the dynamics of an epidemic compartment model (SIHRS), incorporating vital dynamics through independent Poisson clocks and a martingale formulation. Used real-world county data from COVID-19 to show the model's usefulness and also worked on the global stability analysis of the model.</p>
                         <p>Mentors: Professor Chuntian Wang, Professor Yuanzhen Shao, Professor Yuanyuan Song</p>
                     </div>
                     <div class="research-item mb-4">
@@ -74,61 +74,6 @@ title: Research
                 </div>
             </div>
 
-            <div class="card mb-4">
-                <div class="card-header">
-                    <h3>Publications</h3>
-                </div>
-                <div class="card-body">
-                    <div class="publication-item mb-4">
-                        <p><span class="text-muted">(first author)</span> <strong>Gurung A.</strong>, Wagle S., Carr A., McCann C., Kodatt K., Song Y., Shao Y. and Wang C. "An exploration of finite-size effects in the dynamics of epidemic compartmental modelling." <em>European Journal of Applied Mathematics</em>, to appear, 2026.<br>
-                        <button class="btn btn-sm btn-outline-primary mt-2" onclick="toggleCodeLink('code-link-1')">Code</button>
-                        <span id="code-link-1" style="display: none;" class="ms-2">Relevant codes can be found at <a href="https://github.com/GrgAakash/Code-collection--REU-25/tree/main/SIHRS" target="_blank">https://github.com/GrgAakash/Code-collection--REU-25/tree/main/SIHRS</a></span></p>
-                    </div>
-
-                    <div class="publication-item mb-4">
-                        <p><strong>A. Gurung</strong> and C.-H. Pan. "Continued Fractions, <em>a</em>-Fibonacci numbers, and the middle <em>b</em>-noise," <em>Mathematics Exchange</em>, 18(1), 77–87, 2024.<br>
-                        <button class="btn btn-sm btn-outline-primary mt-2" onclick="toggleCodeLink('doi-link-1')">DOI</button>
-                        <span id="doi-link-1" style="display: none;" class="ms-2"><a href="https://doi.org/10.33043/r6a225bc" target="_blank">https://doi.org/10.33043/r6a225bc</a></span></p>
-                    </div>
-
-                    <div class="publication-item mb-4">
-                        <p>(with the Polymath Jr. Group). "The integrals in Gradshteyn and Ryzhik. Part 34: Bessel functions," <em>Scientia Series A: Mathematical Sciences</em>, 34, 109–129, 2024.<br>
-                        <button class="btn btn-sm btn-outline-primary mt-2" onclick="toggleCodeLink('doi-link-2')">DOI</button>
-                        <span id="doi-link-2" style="display: none;" class="ms-2"><a href="https://doi.org/10.71712/cf8k-0x77" target="_blank">https://doi.org/10.71712/cf8k-0x77</a></span></p>
-                    </div>
-                </div>
-            </div>
-
-            <div class="card mb-4">
-                <div class="card-header">
-                    <h3>Conferences & Workshops</h3>
-                </div>
-                <div class="card-body">
-                    <div class="presentation-item mb-4">
-                        <p>March 2026: AMS Southeastern Sectional Meeting, <strong>Presenter</strong></p>
-                    </div>
-                    <div class="presentation-item mb-4">
-                        <p>May 2024: CUNY Undergraduate Research Day 2024, <strong>Presenter</strong></p>
-                    </div>
-                    <div class="presentation-item mb-4">
-                        <p>Aug 2024: MathFest 2024, <strong>Presenter</strong></p>
-                    </div>
-                    <div class="presentation-item mb-4">
-                        <p>Sept-Nov 2024: Preliminary Arizona Winter School 2024: Symmetries of Root Systems, <strong>Attendee</strong></p>
-                    </div>
-                </div>
-            </div>
         </div>
     </div>
-</div>
-
-<script>
-function toggleCodeLink(id) {
-    var element = document.getElementById(id);
-    if (element.style.display === 'none') {
-        element.style.display = 'inline';
-    } else {
-        element.style.display = 'none';
-    }
-}
-</script> 
+</div> 

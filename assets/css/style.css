@@ -1,48 +1,214 @@
-/* Global Styles */
 body {
-    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
-    line-height: 1.6;
-    color: #333;
+    font-family: Georgia, "Iowan Old Style", Palatino, "Palatino Linotype", "Times New Roman", serif;
+    line-height: 1.7;
+    color: #222;
+    background: #fff;
 }
 
-/* Navigation */
 .navbar {
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    box-shadow: none;
+    padding-top: 0.65rem;
+    padding-bottom: 0.65rem;
 }
 
-.navbar-dark .navbar-nav .nav-link {
-    color: rgba(255,255,255,0.8);
+/* Keep the nav, content and footer on one measure. */
+.navbar > .container,
+.site-footer > .container,
+.site-main {
+    max-width: 860px;
 }
 
-.navbar-dark .navbar-nav .nav-link:hover {
-    color: #fff;
+.navbar-brand {
+    font-weight: 600;
+    color: #111 !important;
 }
 
-/* Main Content */
-main {
-    min-height: calc(100vh - 200px);
+.navbar-light .navbar-nav .nav-link {
+    color: #444;
 }
 
-/* Profile Section */
-.profile-image {
-    border: 3px solid #fff;
-    box-shadow: 0 0 15px rgba(0,0,0,0.1);
+.navbar-light .navbar-nav .nav-link:hover,
+.navbar-light .navbar-nav .nav-link.active {
+    color: #111;
 }
 
-/* Cards */
+.site-main {
+    min-height: calc(100vh - 180px);
+    padding-top: 3rem;
+    padding-bottom: 4rem;
+}
+
+/* Inner pages wrap their content in a nested .container; don't double the gutters. */
+.site-main .container {
+    max-width: 100%;
+    padding-left: 0;
+    padding-right: 0;
+}
+
+.site-main .container.mt-5 {
+    margin-top: 0 !important;
+}
+
+.site-main .container > h1 {
+    font-size: 2.15rem;
+    font-weight: 600;
+    letter-spacing: 0.01em;
+    margin-bottom: 1.5rem;
+}
+
+.home-header {
+    margin-bottom: 2.5rem;
+}
+
+.home-photo {
+    max-width: 180px;
+    border-radius: 4px;
+}
+
+.home-name {
+    font-size: 2.15rem;
+    font-weight: 600;
+    margin-bottom: 0.35rem;
+    letter-spacing: 0.01em;
+}
+
+.home-affiliation {
+    color: #555;
+    margin-bottom: 0.75rem;
+}
+
+.home-links a,
+.home-more a,
+.site-footer a {
+    color: #1a4f8b;
+    text-decoration: none;
+}
+
+.home-links a:hover,
+.home-more a:hover,
+.site-footer a:hover {
+    text-decoration: underline;
+}
+
+.home-sep {
+    margin: 0 0.4rem;
+    color: #999;
+}
+
+.home-section {
+    margin-bottom: 2.75rem;
+}
+
+.home-section h2 {
+    font-size: 1.45rem;
+    font-weight: 600;
+    margin-bottom: 1.1rem;
+    padding-bottom: 0.35rem;
+    border-bottom: 1px solid #ddd;
+}
+
+.home-section h3 {
+    font-size: 1.08rem;
+    font-weight: 600;
+    margin-top: 1.25rem;
+    margin-bottom: 0.4rem;
+}
+
+.plain-list {
+    list-style: none;
+    padding-left: 0;
+}
+
+.plain-list li {
+    margin-bottom: 0.45rem;
+}
+
+.pub-list {
+    padding-left: 1.25rem;
+}
+
+.pub-list li {
+    margin-bottom: 1.1rem;
+}
+
+.home-more {
+    margin-top: 1.25rem;
+}
+
+/* One project: description tight to its mentor line, clear gap to the next. */
+.home-entry {
+    margin-bottom: 1.35rem;
+}
+
+.home-entry p {
+    margin-bottom: 0.25rem;
+}
+
+.home-entry .home-meta {
+    margin-bottom: 0;
+}
+
+.home-meta {
+    font-size: 0.9rem;
+    color: #666;
+}
+
+.home-meta a,
+.home-section a {
+    color: #1a4f8b;
+    text-decoration: none;
+}
+
+.home-meta a:hover,
+.home-section a:hover {
+    text-decoration: underline;
+}
+
 .card {
     border: none;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-    transition: transform 0.2s ease-in-out;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.08);
 }
 
-.card:hover {
-    transform: translateY(-5px);
+/* Research and Projects still use Bootstrap cards as section wrappers;
+   strip the panel chrome so they read as headed sections, not dashboard
+   tiles. Scoped to .mb-4 so the photo gallery on /moments keeps its cards. */
+.site-main .card.mb-4 {
+    box-shadow: none;
+    margin-bottom: 2.75rem !important;
 }
 
-/* Publications */
-.publication-card {
-    margin-bottom: 1.5rem;
+.site-main .card.mb-4 > .card-header {
+    background: transparent;
+    border-bottom: 1px solid #ddd;
+    padding: 0 0 0.35rem;
+}
+
+.site-main .card.mb-4 > .card-header h3 {
+    font-size: 1.45rem;
+    font-weight: 600;
+    margin-bottom: 0;
+}
+
+.site-main .card.mb-4 > .card-body {
+    padding: 1.25rem 0 0;
+}
+
+.site-main .card.mb-4 > .card-body h4 {
+    font-size: 1.08rem;
+    font-weight: 600;
+}
+
+.site-main .card.mb-4 > .card-body .text-muted {
+    font-size: 0.92rem;
+}
+
+.site-main .card.mb-4 a {
+    color: #1a4f8b;
+    text-decoration: none;
+}
+
+.site-main .card.mb-4 a:hover {
+    text-decoration: underline;
 }
 
 .publication-title {
@@ -60,71 +226,37 @@ main {
     font-style: italic;
 }
 
-/* Projects */
 .project-card img {
     height: 200px;
     object-fit: cover;
 }
 
-/* Footer */
-.footer {
-    background-color: #343a40;
-    color: white;
-    padding: 2rem 0;
+.site-footer {
+    border-top: 1px solid #e6e6e6;
+    color: #666;
+    font-size: 0.9rem;
 }
 
-.footer a {
-    color: white;
-    text-decoration: none;
-}
-
-.footer a:hover {
-    color: rgba(255,255,255,0.8);
-}
-
-.social-links a {
-    font-size: 1.5rem;
-    margin-right: 1rem;
-}
-
-/* Buttons */
 .btn-primary {
-    background-color: #007bff;
-    border-color: #007bff;
+    background-color: #1a4f8b;
+    border-color: #1a4f8b;
 }
 
 .btn-primary:hover {
-    background-color: #0056b3;
-    border-color: #0056b3;
+    background-color: #163f6e;
+    border-color: #163f6e;
 }
 
-/* Responsive Design */
 @media (max-width: 768px) {
-    .navbar-brand {
-        font-size: 1.2rem;
+    .home-name {
+        font-size: 1.75rem;
     }
-    
+
     h1 {
         font-size: 2rem;
     }
-    
+
     h2 {
-        font-size: 1.75rem;
+        font-size: 1.5rem;
     }
 }
-
-/* Animations */
-.fade-in {
-    animation: fadeIn 0.5s ease-in;
-}
-
-@keyframes fadeIn {
-    from {
-        opacity: 0;
-        transform: translateY(20px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-} 

@@ -3,24 +3,25 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% if page.title %}{{ page.title }} - {% endif %}{{ site.title }}</title>
-    <meta name="description" content="{{ site.description }}">
-    
-    <!-- Bootstrap CSS -->
+    <title>{% if page.url == "/" %}{{ site.title }} | Mathematics{% elsif page.title %}{{ page.title }} | {{ site.title }}{% else %}{{ site.title }}{% endif %}</title>
+    <meta name="description" content="{{ page.description | default: site.description }}">
+    <link rel="canonical" href="{{ page.url | absolute_url }}">
+    <meta property="og:title" content="{% if page.url == "/" %}{{ site.title }} | Mathematics{% elsif page.title %}{{ page.title }} | {{ site.title }}{% else %}{{ site.title }}{% endif %}">
+    <meta property="og:description" content="{{ page.description | default: site.description }}">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="{{ page.url | absolute_url }}">
+    <meta property="og:image" content="{{ site.author.avatar | absolute_url }}">
+
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <!-- Custom CSS -->
     <link rel="stylesheet" href="{{ '/assets/css/style.css' | relative_url }}">
-    <!-- MathJax -->
     <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 </head>
 <body>
-    <!-- Navigation -->
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+    <nav class="navbar navbar-expand-lg navbar-light bg-white border-bottom sticky-top">
         <div class="container">
             <a class="navbar-brand" href="{{ '/' | relative_url }}">{{ site.title }}</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
@@ -30,7 +31,7 @@
                         {% if item.url contains '.pdf' %}
                         <a class="nav-link" href="{{ item.url | relative_url }}" target="_blank" rel="noopener noreferrer">{{ item.name }}</a>
                         {% else %}
-                        <a class="nav-link {% if page.url == item.url %}active{% endif %}" href="{{ item.url | relative_url }}">{{ item.name }}</a>
+                        <a class="nav-link{% if page.url == item.url %} active{% endif %}" href="{{ item.url | relative_url }}">{{ item.name }}</a>
                         {% endif %}
                     </li>
                     {% endfor %}
@@ -39,44 +40,29 @@
         </div>
     </nav>
 
-    <!-- Main Content -->
-    <main class="container mt-5 pt-4">
+    <main class="container site-main">
         {{ content }}
     </main>
 
-    <!-- Footer -->
-    <footer class="footer bg-dark text-white mt-5">
+    <footer class="site-footer">
         <div class="container py-4">
-            <div class="row">
-                <div class="col-md-6">
-                    <h5>Contact</h5>
-                    <p>
-                        <i class="fas fa-envelope"></i> <a href="mailto:{{ site.email }}" class="text-white">{{ site.email }}</a><br>
-                        <i class="fas fa-map-marker-alt"></i> {{ site.author.location }}
-                    </p>
-                </div>
-                <div class="col-md-6 text-md-end">
-                    <h5>Follow Me</h5>
-                    <div class="social-links">
-                        {% if site.author.github %}
-                        <a href="https://github.com/{{ site.author.github }}" class="text-white me-3"><i class="fab fa-github"></i></a>
-                        {% endif %}
-                        {% if site.author.linkedin %}
-                        <a href="https://linkedin.com/in/{{ site.author.linkedin }}" class="text-white me-3"><i class="fab fa-linkedin"></i></a>
-                        {% endif %}
-                        <!-- Add other social media links as needed -->
-                    </div>
-                </div>
-            </div>
-            <div class="row mt-3">
-                <div class="col text-center">
-                    <small>&copy; {{ site.time | date: '%Y' }} {{ site.title }}. All rights reserved.</small>
-                </div>
-            </div>
+            <p class="mb-1">
+                <a href="mailto:{{ site.email }}">{{ site.email }}</a>
+                <span class="home-sep">·</span>
+                {{ site.author.location }}
+            </p>
+            <p class="mb-0">
+                {% if site.author.github %}
+                <a href="https://github.com/{{ site.author.github }}">GitHub</a>
+                {% endif %}
+                {% if site.author.linkedin %}
+                <span class="home-sep">·</span>
+                <a href="https://linkedin.com/in/{{ site.author.linkedin }}">LinkedIn</a>
+                {% endif %}
+            </p>
         </div>
     </footer>
 
-    <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
-</html> 
+</html>

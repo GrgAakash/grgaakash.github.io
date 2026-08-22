@@ -2,8 +2,9 @@
 title: Aakash Gurung
 email: aakash.grg159@gmail.com
 description: >-
-  Mathematics and Computer Science student at The University of Alabama, 
-  focusing on combinatorics, mathematical research, and computer science.
+  Aakash Gurung is a mathematician at the University of Alabama.
+  Research interests include geometric measure theory, algebraic combinatorics,
+  epidemic modeling, and mathematical AI.
 baseurl: "" # the subpath of your site, e.g. /blog
 url: "https://grgaakash.github.io" # the base hostname & protocol for your site
 repository: grgaakash/grgaakash.github.io
@@ -12,7 +13,7 @@ repository: grgaakash/grgaakash.github.io
 author:
   name: Aakash Gurung
   avatar: /assets/images/profile.jpg
-  bio: BS Mathematics and Computer Science Student at The University of Alabama
+  bio: Mathematician at the University of Alabama
   location: Tuscaloosa, AL
   email: aakash.grg159@gmail.com
   phone: 9295196616
@@ -81,10 +82,12 @@ google_analytics:
 nav_order:
   - name: Home
     url: /
-  - name: Projects
-    url: /projects
   - name: Research
     url: /research
+  - name: Projects
+    url: /projects
+  - name: Notes
+    url: /Math495/garden/index
   - name: CV
     url: /assets/CV.pdf
 

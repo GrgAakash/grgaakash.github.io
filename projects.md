@@ -111,14 +111,6 @@ title: Projects
                             <p><a href="Codes_QTCat/QTNU_1and2_Jan9_2026.html" target="_blank" class="btn btn-primary">Explore Q,T-Catalan Chains</a> &nbsp; <a href="Codes_QTCat/dyck_visualizer.html" target="_blank" class="btn btn-primary">Dyck Path Visualizer</a> &nbsp; <a href="Codes_QTCat/hlll_verification_tools.html" target="_blank" class="btn btn-primary">HLLL verification tools</a></p>
                         </div>
                     </div>
-
-                    <div class="project-item mb-4">
-                        <h4>
-                            <a href="/Math495/garden/index" target="_blank" rel="noopener noreferrer" class="others-link">
-                                Notes
-                            </a>
-                        </h4>
-                    </div>
                 </div>
             </div>
 
@@ -205,17 +197,32 @@ title: Projects
 }
 
 .btn-primary {
-    background-color: #007bff;
-    color: white;
-    padding: 0.5rem 1rem;
+    /* Bootstrap 5.3 drives .btn through custom properties, so set those too
+       or the hover/active states revert to solid blue. */
+    --bs-btn-bg: transparent;
+    --bs-btn-color: #1a4f8b;
+    --bs-btn-border-color: #c8d3e0;
+    --bs-btn-hover-bg: #f4f7fb;
+    --bs-btn-hover-color: #1a4f8b;
+    --bs-btn-hover-border-color: #1a4f8b;
+    --bs-btn-active-bg: #e9eff7;
+    --bs-btn-active-color: #1a4f8b;
+    --bs-btn-active-border-color: #1a4f8b;
+
+    background-color: transparent;
+    color: #1a4f8b;
+    border: 1px solid #c8d3e0;
+    padding: 0.4rem 0.9rem;
     border-radius: 4px;
     text-decoration: none;
     display: inline-block;
+    font-size: 0.92rem;
 }
 
 .btn-primary:hover {
-    background-color: #0056b3;
-    color: white;
+    background-color: #f4f7fb;
+    border-color: #1a4f8b;
+    color: #1a4f8b;
 }
 </style>
 
@@ -224,8 +231,6 @@ document.addEventListener('DOMContentLoaded', function() {
     const sihrToggle = document.querySelector('.sihr-toggle');
     const sihrsToggle = document.querySelector('.sihrs-toggle');
     const qtcatToggle = document.querySelector('.qtcat-toggle');
-    const blogToggle = document.querySelector('.blog-toggle');
-    const math495Toggle = document.querySelector('.math495-toggle');
     
     sihrToggle.addEventListener('click', function(e) {
         e.preventDefault();
@@ -257,24 +262,5 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
     
-    blogToggle.addEventListener('click', function(e) {
-        e.preventDefault();
-        const icon = this.querySelector('.fa-chevron-down');
-        if (this.getAttribute('aria-expanded') === 'true') {
-            this.setAttribute('aria-expanded', 'false');
-        } else {
-            this.setAttribute('aria-expanded', 'true');
-        }
-    });
-    
-    math495Toggle.addEventListener('click', function(e) {
-        e.preventDefault();
-        const icon = this.querySelector('.fa-chevron-down');
-        if (this.getAttribute('aria-expanded') === 'true') {
-            this.setAttribute('aria-expanded', 'false');
-        } else {
-            this.setAttribute('aria-expanded', 'true');
-        }
-    });
 });
 </script> 
