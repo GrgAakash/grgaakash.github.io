@@ -64,6 +64,7 @@ permalink: /
 <section class="home-section">
     <h2>Research Experience</h2>
     <p>See the <a href="{{ '/research' | relative_url }}">full list of current and past research experience</a>, with dates and mentors.</p>
+    <p>I have also been trying AI-assisted mathematical discoveries with Lean-verified results; those experiments are collected under <a href="{{ '/projects#ai-assisted-mathematics' | relative_url }}">AI-Assisted Mathematics</a>.</p>
 </section>
 
 <section class="home-section">

@@ -8,6 +8,112 @@ title: Projects
 
     <div class="row">
         <div class="col-md-12">
+            <div class="card mb-4" id="ai-assisted-mathematics">
+                <div class="card-header">
+                    <h3>AI-Assisted Mathematics</h3>
+                </div>
+                <div class="card-body">
+                    <p>Lean-verified results and ongoing AI-assisted mathematical research.</p>
+                    <div class="project-item mb-4">
+                        <h4>
+                            <a href="#ai-assisted-mathematics" class="factorial-toggle" data-bs-toggle="collapse" data-bs-target="#factorialDetails" aria-expanded="false" aria-controls="factorialDetails">
+                                <span>Factorial-residue hypergraphs and covering congruences</span>
+                                <i class="fas fa-chevron-down ms-2"></i>
+                            </a>
+                        </h4>
+                        <div id="factorialDetails" class="collapse">
+                            <p class="text-muted">PALOMAR-verified core · ongoing manuscript development</p>
+                            <p>A weighted prime-coloured hypergraph framework for factorial residues, in which compatible residue covers correspond exactly to Chinese-remainder covering systems. The main structural result gives a fixed proportional saving in the minimum compatible covering cost,</p>
+                            <div class="equations">
+                                <p>\[\kappa(L)\le (1-\delta)L\log L\]</p>
+                            </div>
+                            <p>for all sufficiently large \(L\).</p>
+                            <p>As an arithmetic application, the framework gives a quantitative resolution of an auxiliary factorial problem posed by Erdős: for every sufficiently large \(L\), there are quantitatively many \(L\)-rough integers</p>
+                            <div class="equations">
+                                <p>\[2L!&lt;n\le (L+1)!\]</p>
+                            </div>
+                            <p>such that \(n-k!\) is composite for every \(1\le k\le L\).</p>
+                            <p>The formally verified version of the auxiliary theorem is registered as <strong>PALOMAR-2026-08-27-000003 v1</strong>. The current manuscript is being reorganized around the broader factorial-residue hypergraph and covering-congruence theory.</p>
+                            <p>
+                                <a href="https://palomar-registry.org/entry.html?id=PALOMAR-2026-08-27-000003&amp;version=1" target="_blank" rel="noopener noreferrer" class="btn btn-primary">PALOMAR</a>
+                                <a href="https://github.com/GrgAakash/factorial-hypergraph-auxiliary-erdos" target="_blank" rel="noopener noreferrer" class="btn btn-primary">GitHub</a>
+                            </p>
+                            <ul class="verified-meta">
+                                <li><strong>Discovery and proof development:</strong> mostly AI-assisted using ChatGPT Web (GPT-5.6 Sol Pro), Codex (GPT-5.6 Sol Max), and Aristotle (Harmonic). Human involvement consisted of selecting and reframing the problem, proposing the broader factorial-residue hypergraph interpretation, and reviewing the resulting arguments</li>
+                                <li><strong>Formal verification:</strong> Lean 4 · Comparator · Lean kernel · NanoDa</li>
+                                <li><strong>Verified scope:</strong> quantitative auxiliary Erdős theorem and its problem-specific proof chain</li>
+                                <li><strong>Working draft</strong> (human exposition and revision in progress)</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="project-item mb-4" id="tunnell-ternary-forms">
+                        <h4>
+                            <a href="#tunnell-ternary-forms" class="tunnell-toggle" data-bs-toggle="collapse" data-bs-target="#tunnellDetails" aria-expanded="false" aria-controls="tunnellDetails">
+                                <span>Stable matching and a two-to-one map for Tunnell’s ternary forms</span>
+                                <i class="fas fa-chevron-down ms-2"></i>
+                            </a>
+                        </h4>
+                        <div id="tunnellDetails" class="collapse">
+                            <p class="text-muted">PALOMAR-verified core · ongoing manuscript development</p>
+                            <p>A deterministic arithmetic-combinatorial framework for Tunnell’s ternary quadratic forms, in which the numerical \(2{:}1\) relation between two representation sets is realized by an explicit map. Writing</p>
+                            <div class="equations">
+                                <p>\[\mathcal{B}_n=\left\{(x,y,z)\in\mathbb{Z}^3:2x^2+y^2+8z^2=n\right\},\qquad \mathcal{A}_n=\left\{(u,v,w)\in\mathbb{Z}^3:2u^2+v^2+32w^2=n\right\},\]</p>
+                            </div>
+                            <p>the main result constructs, for every odd positive squarefree \(n\) satisfying \(|\mathcal{B}_n|=2|\mathcal{A}_n|\), a deterministic map</p>
+                            <div class="equations">
+                                <p>\[\Phi_n:\mathcal{B}_n\longrightarrow\mathcal{A}_n,\qquad \left|\Phi_n^{-1}(a)\right|=2 \quad\text{for every }a\in\mathcal{A}_n.\]</p>
+                            </div>
+                            <p>For odd squarefree congruent numbers, <a href="https://doi.org/10.1007/BF01389327" target="_blank" rel="noopener noreferrer">Tunnell’s theorem</a> supplies the required counting identity. The construction combines an elementary even-coordinate map, three explicit quarter-turn correspondences, and a canonical stable matching of the remaining antipodal orbits determined by primitive midpoint directions.</p>
+                            <p>The executable two-to-one map and its registered specifications are formally verified and registered as <strong>PALOMAR-2026-09-07-000010 v2</strong>.</p>
+                            <p>
+                                <a href="https://palomar-registry.org/entry.html?id=PALOMAR-2026-09-07-000010&amp;version=2" target="_blank" rel="noopener noreferrer" class="btn btn-primary">PALOMAR</a>
+                                <a href="https://github.com/GrgAakash/tunnell-two-to-one-map" target="_blank" rel="noopener noreferrer" class="btn btn-primary">GitHub</a>
+                            </p>
+                            <ul class="verified-meta">
+                                <li><strong>Discovery and proof development:</strong> AI-assisted using ChatGPT Web (GPT-5.6 Sol Pro), Codex (GPT-5.6 Sol Max), and Aristotle (Harmonic), with human direction in preventing dead ends and guiding the argument</li>
+                                <li><strong>Formal verification:</strong> Lean 4 · Mathlib · Comparator · Lean kernel · NanoDa</li>
+                                <li><strong>Verified scope:</strong> deterministic global map, inverse identities, exactly-two fibre theorem, and the complete \(n=41\) example</li>
+                                <li><strong>Human mentor:</strong> Professor Kyungyong Lee, who aided me in the process of verification</li>
+                                <li><strong>Working draft</strong> (human exposition and revision in progress)</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="project-item mb-4" id="moh-p3-curve">
+                        <h4>
+                            <a href="#moh-p3-curve" class="moh-toggle" data-bs-toggle="collapse" data-bs-target="#mohDetails" aria-expanded="false" aria-controls="mohDetails">
+                                <span>Moh’s \(P_3\) curve is a global set-theoretic complete intersection</span>
+                                <i class="fas fa-chevron-down ms-2"></i>
+                            </a>
+                        </h4>
+                        <div id="mohDetails" class="collapse">
+                            <p class="text-muted">PALOMAR-verified core · ongoing manuscript development</p>
+                            <p>A global solution for the classical Moh \(P_3\) curve, arising from the family introduced by T. T. Moh in 1974 (<a href="https://www.jstage.jst.go.jp/article/jmath1948/26/4/26_4_722/_article/-char/en" target="_blank" rel="noopener noreferrer">Moh</a>).</p>
+                            <p>Let
+                            \[\mathfrak{p}=\ker\!\left(\mathbb{Q}[x,y,z]\to\mathbb{Q}[t]\right),\qquad (x,y,z)\mapsto(t^6+t^{31},t^8,t^{10}).\]
+                            The main result constructs two explicit degree-\(16\) polynomials \(H_1,H_2\in\mathbb{Q}[x,y,z]\) satisfying
+                            \[\mathfrak{p}^2\subseteq(H_1,H_2)\subseteq\mathfrak{p}.\]
+                            Hence
+                            \[\sqrt{(H_1,H_2)}=\mathfrak{p},\]
+                            so the entire affine Moh curve is cut out set-theoretically by two polynomial equations.</p>
+                            <p>The construction uses a globally invertible transformation of the Hilbert–Burch matrix into a symmetric form, followed by determinant and adjugate identities. The final verification reduces to a finite collection of exact polynomial identities: two proving \(H_1,H_2\in\mathfrak{p}\), and ten proving \(\mathfrak{p}^2\subseteq(H_1,H_2)\).</p>
+                            <p>The set-theoretic complete intersection and its registered specifications are formally verified and registered as <strong>PALOMAR-2026-09-07-000012 v1</strong>.</p>
+                            <p>
+                                <a href="https://palomar-registry.org/entry.html?id=PALOMAR-2026-09-07-000012&amp;version=1" target="_blank" rel="noopener noreferrer" class="btn btn-primary">PALOMAR</a>
+                                <a href="https://github.com/GrgAakash/moh-p3-set-theoretic-complete-intersection" target="_blank" rel="noopener noreferrer" class="btn btn-primary">GitHub</a>
+                            </p>
+                            <ul class="verified-meta">
+                                <li><strong>Discovery and proof development:</strong> heavily AI-assisted using ChatGPT Web (GPT-5.6 Sol Pro and GPT-6 Pro)</li>
+                                <li><strong>Explicit witnesses:</strong> two degree-\(16\) polynomials \(H_1,H_2\)</li>
+                                <li><strong>Exact verification:</strong> 12 explicit polynomial identities over \(\mathbb{Q}\)</li>
+                                <li><strong>Formal verification:</strong> Lean 4 · Mathlib · Comparator · Lean kernel · NanoDa</li>
+                                <li><strong>Macaulay2:</strong> independent replay script prepared; external execution pending</li>
+                                <li><strong>Working draft</strong> (human exposition and revision in progress)</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <div class="card mb-4">
                 <div class="card-header">
                     <h3> Class and Research Projects</h3>
@@ -16,7 +122,7 @@ title: Projects
                     <div class="project-item mb-4">
                         <h4>
                             <a href="#" class="sihr-toggle" data-bs-toggle="collapse" data-bs-target="#sihrDetails">
-                                SIHR Model Visualization
+                                <span>SIHR Model Visualization</span>
                                 <i class="fas fa-chevron-down ms-2"></i>
                             </a>
                         </h4>
@@ -59,7 +165,7 @@ title: Projects
                     <div class="project-item mb-4">
                         <h4>
                             <a href="#" class="sihrs-toggle" data-bs-toggle="collapse" data-bs-target="#sihrsDetails">
-                                SIHRS Model Visualization
+                                <span>SIHRS Model Visualization</span>
                                 <i class="fas fa-chevron-down ms-2"></i>
                             </a>
                         </h4>
@@ -101,7 +207,7 @@ title: Projects
                     <div class="project-item mb-4">
                         <h4>
                             <a href="#" class="qtcat-toggle" data-bs-toggle="collapse" data-bs-target="#qtcatDetails">
-                                Q,T-Catalan Chain Decompositions
+                                <span>Q,T-Catalan Chain Decompositions</span>
                                 <i class="fas fa-chevron-down ms-2"></i>
                             </a>
                         </h4>
@@ -155,19 +261,21 @@ title: Projects
 }
 
 .equations {
-    margin: 1rem 0;
-    padding: 1rem;
-    background-color: white;
-    border-radius: 4px;
+    margin: 0.35rem 0;
+    padding: 0;
     overflow-x: auto;
 }
 
 .equations p {
-    margin: 0.5rem 0;
+    margin: 0;
     text-align: center;
 }
 
-.sihr-toggle, .sihrs-toggle, .qtcat-toggle, .blog-toggle, .math495-toggle {
+.collapse mjx-container[display="true"] {
+    margin: 0.45em 0 !important;
+}
+
+.sihr-toggle, .sihrs-toggle, .qtcat-toggle, .factorial-toggle, .tunnell-toggle, .moh-toggle, .blog-toggle, .math495-toggle {
     color: #007bff;
     text-decoration: none;
     display: flex;
@@ -175,7 +283,7 @@ title: Projects
     justify-content: space-between;
 }
 
-.sihr-toggle:hover, .sihrs-toggle:hover, .qtcat-toggle:hover, .blog-toggle:hover, .math495-toggle:hover {
+.sihr-toggle:hover, .sihrs-toggle:hover, .qtcat-toggle:hover, .factorial-toggle:hover, .tunnell-toggle:hover, .moh-toggle:hover, .blog-toggle:hover, .math495-toggle:hover {
     color: #0056b3;
 }
 
@@ -188,11 +296,11 @@ title: Projects
     color: #0056b3;
 }
 
-.sihr-toggle .fa-chevron-down, .sihrs-toggle .fa-chevron-down, .qtcat-toggle .fa-chevron-down, .blog-toggle .fa-chevron-down, .math495-toggle .fa-chevron-down {
+.sihr-toggle .fa-chevron-down, .sihrs-toggle .fa-chevron-down, .qtcat-toggle .fa-chevron-down, .factorial-toggle .fa-chevron-down, .tunnell-toggle .fa-chevron-down, .moh-toggle .fa-chevron-down, .blog-toggle .fa-chevron-down, .math495-toggle .fa-chevron-down {
     transition: transform 0.3s ease;
 }
 
-.sihr-toggle[aria-expanded="true"] .fa-chevron-down, .sihrs-toggle[aria-expanded="true"] .fa-chevron-down, .qtcat-toggle[aria-expanded="true"] .fa-chevron-down, .blog-toggle[aria-expanded="true"] .fa-chevron-down, .math495-toggle[aria-expanded="true"] .fa-chevron-down {
+.sihr-toggle[aria-expanded="true"] .fa-chevron-down, .sihrs-toggle[aria-expanded="true"] .fa-chevron-down, .qtcat-toggle[aria-expanded="true"] .fa-chevron-down, .factorial-toggle[aria-expanded="true"] .fa-chevron-down, .tunnell-toggle[aria-expanded="true"] .fa-chevron-down, .moh-toggle[aria-expanded="true"] .fa-chevron-down, .blog-toggle[aria-expanded="true"] .fa-chevron-down, .math495-toggle[aria-expanded="true"] .fa-chevron-down {
     transform: rotate(180deg);
 }
 
@@ -231,36 +339,52 @@ document.addEventListener('DOMContentLoaded', function() {
     const sihrToggle = document.querySelector('.sihr-toggle');
     const sihrsToggle = document.querySelector('.sihrs-toggle');
     const qtcatToggle = document.querySelector('.qtcat-toggle');
-    
-    sihrToggle.addEventListener('click', function(e) {
-        e.preventDefault();
-        const icon = this.querySelector('.fa-chevron-down');
-        if (this.getAttribute('aria-expanded') === 'true') {
-            this.setAttribute('aria-expanded', 'false');
-        } else {
-            this.setAttribute('aria-expanded', 'true');
+    const factorialToggle = document.querySelector('.factorial-toggle');
+    const factorialDetails = document.getElementById('factorialDetails');
+    const tunnellToggle = document.querySelector('.tunnell-toggle');
+    const tunnellDetails = document.getElementById('tunnellDetails');
+    const mohToggle = document.querySelector('.moh-toggle');
+    const mohDetails = document.getElementById('mohDetails');
+
+    function wireToggle(toggle) {
+        if (!toggle) return;
+        toggle.addEventListener('click', function(e) {
+            e.preventDefault();
+            if (this.getAttribute('aria-expanded') === 'true') {
+                this.setAttribute('aria-expanded', 'false');
+            } else {
+                this.setAttribute('aria-expanded', 'true');
+            }
+        });
+    }
+
+    wireToggle(sihrToggle);
+    wireToggle(sihrsToggle);
+    wireToggle(qtcatToggle);
+    wireToggle(factorialToggle);
+    wireToggle(tunnellToggle);
+    wireToggle(mohToggle);
+
+    if (window.bootstrap) {
+        if (window.location.hash === '#ai-assisted-mathematics' && factorialDetails) {
+            new bootstrap.Collapse(factorialDetails, { show: true });
+            if (factorialToggle) {
+                factorialToggle.setAttribute('aria-expanded', 'true');
+            }
         }
-    });
-    
-    sihrsToggle.addEventListener('click', function(e) {
-        e.preventDefault();
-        const icon = this.querySelector('.fa-chevron-down');
-        if (this.getAttribute('aria-expanded') === 'true') {
-            this.setAttribute('aria-expanded', 'false');
-        } else {
-            this.setAttribute('aria-expanded', 'true');
+        if (window.location.hash === '#tunnell-ternary-forms' && tunnellDetails) {
+            new bootstrap.Collapse(tunnellDetails, { show: true });
+            if (tunnellToggle) {
+                tunnellToggle.setAttribute('aria-expanded', 'true');
+            }
         }
-    });
-    
-    qtcatToggle.addEventListener('click', function(e) {
-        e.preventDefault();
-        const icon = this.querySelector('.fa-chevron-down');
-        if (this.getAttribute('aria-expanded') === 'true') {
-            this.setAttribute('aria-expanded', 'false');
-        } else {
-            this.setAttribute('aria-expanded', 'true');
+        if (window.location.hash === '#moh-p3-curve' && mohDetails) {
+            new bootstrap.Collapse(mohDetails, { show: true });
+            if (mohToggle) {
+                mohToggle.setAttribute('aria-expanded', 'true');
+            }
         }
-    });
+    }
     
 });
 </script> 

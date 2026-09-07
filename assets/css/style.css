@@ -211,6 +211,21 @@ body {
     text-decoration: underline;
 }
 
+#ai-assisted-mathematics,
+#tunnell-ternary-forms,
+#moh-p3-curve {
+    scroll-margin-top: 5rem;
+}
+
+.verified-meta {
+    margin: 0.75rem 0 0;
+    padding-left: 1.2rem;
+}
+
+.verified-meta li {
+    margin-bottom: 0.25rem;
+}
+
 .publication-title {
     color: #2c3e50;
     margin-bottom: 0.5rem;
