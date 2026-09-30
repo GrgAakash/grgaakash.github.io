@@ -22,7 +22,7 @@ title: Projects
                             </a>
                         </h4>
                         <div id="factorialDetails" class="collapse">
-                            <p class="text-muted">PALOMAR-verified core · ongoing manuscript development</p>
+                            <p class="text-muted">PALOMAR-verified core · no separate human exposition planned</p>
                             <p>A weighted prime-coloured hypergraph framework for factorial residues, in which compatible residue covers correspond exactly to Chinese-remainder covering systems. The main structural result gives a fixed proportional saving in the minimum compatible covering cost,</p>
                             <div class="equations">
                                 <p>\[\kappa(L)\le (1-\delta)L\log L\]</p>
@@ -33,7 +33,7 @@ title: Projects
                                 <p>\[2L!&lt;n\le (L+1)!\]</p>
                             </div>
                             <p>such that \(n-k!\) is composite for every \(1\le k\le L\).</p>
-                            <p>The formally verified version of the auxiliary theorem is registered as <strong>PALOMAR-2026-08-27-000003 v1</strong>. The current manuscript is being reorganized around the broader factorial-residue hypergraph and covering-congruence theory.</p>
+                            <p>The formally verified version of the auxiliary theorem is registered as <strong>PALOMAR-2026-08-27-000003 v1</strong>.</p>
                             <p>
                                 <a href="https://palomar-registry.org/entry.html?id=PALOMAR-2026-08-27-000003&amp;version=1" target="_blank" rel="noopener noreferrer" class="btn btn-primary">PALOMAR</a>
                                 <a href="https://github.com/GrgAakash/factorial-hypergraph-auxiliary-erdos" target="_blank" rel="noopener noreferrer" class="btn btn-primary">GitHub</a>
@@ -42,7 +42,8 @@ title: Projects
                                 <li><strong>Discovery and proof development:</strong> mostly AI-assisted using ChatGPT Web (GPT-5.6 Sol Pro), Codex (GPT-5.6 Sol Max), and Aristotle (Harmonic). Human involvement consisted of selecting and reframing the problem, proposing the broader factorial-residue hypergraph interpretation, and reviewing the resulting arguments</li>
                                 <li><strong>Formal verification:</strong> Lean 4 · Comparator · Lean kernel · NanoDa</li>
                                 <li><strong>Verified scope:</strong> quantitative auxiliary Erdős theorem and its problem-specific proof chain</li>
-                                <li><strong>Working draft</strong> (human exposition and revision in progress)</li>
+                                <li><strong>Why this problem:</strong> a secondary open problem I chose during RIPS; the primary one was the Tunnell map below. I wanted a question with a short elementary statement that could be checked in Lean. Erdős’s auxiliary factorial question fit that; the factorial-residue hypergraph framing was the part I added</li>
+                                <li><strong>Human exposition:</strong> none planned, since a stronger result has since appeared and this one does not add much</li>
                             </ul>
                         </div>
                     </div>
@@ -54,7 +55,7 @@ title: Projects
                             </a>
                         </h4>
                         <div id="tunnellDetails" class="collapse">
-                            <p class="text-muted">PALOMAR-verified core · ongoing manuscript development</p>
+                            <p class="text-muted">PALOMAR-verified core</p>
                             <p>A deterministic arithmetic-combinatorial framework for Tunnell’s ternary quadratic forms, in which the numerical \(2{:}1\) relation between two representation sets is realized by an explicit map. Writing</p>
                             <div class="equations">
                                 <p>\[\mathcal{B}_n=\left\{(x,y,z)\in\mathbb{Z}^3:2x^2+y^2+8z^2=n\right\},\qquad \mathcal{A}_n=\left\{(u,v,w)\in\mathbb{Z}^3:2u^2+v^2+32w^2=n\right\},\]</p>
@@ -73,8 +74,8 @@ title: Projects
                                 <li><strong>Discovery and proof development:</strong> AI-assisted using ChatGPT Web (GPT-5.6 Sol Pro), Codex (GPT-5.6 Sol Max), and Aristotle (Harmonic), with human direction in preventing dead ends and guiding the argument</li>
                                 <li><strong>Formal verification:</strong> Lean 4 · Mathlib · Comparator · Lean kernel · NanoDa</li>
                                 <li><strong>Verified scope:</strong> deterministic global map, inverse identities, exactly-two fibre theorem, and the complete \(n=41\) example</li>
+                                <li><strong>Why this problem:</strong> this was the primary problem my professor gave me during RIPS. It is not open in the usual sense as Tunnell’s theorem already gives the counting identity. What we wanted was a constructive map. As this had elementary statement, a combinatorial flavor and a constructive proof which would also let me see how good the LLM is regarding non counterexample Maths (if that makes sense)</li>
                                 <li><strong>Human mentor:</strong> Professor Kyungyong Lee, who aided me in the process of verification</li>
-                                <li><strong>Working draft</strong> (human exposition and revision in progress)</li>
                             </ul>
                         </div>
                     </div>
@@ -86,7 +87,7 @@ title: Projects
                             </a>
                         </h4>
                         <div id="mohDetails" class="collapse">
-                            <p class="text-muted">PALOMAR-verified core · ongoing manuscript development</p>
+                            <p class="text-muted">PALOMAR-verified core</p>
                             <p>A global solution for the classical Moh \(P_3\) curve, arising from the family introduced by T. T. Moh in 1974 (<a href="https://www.jstage.jst.go.jp/article/jmath1948/26/4/26_4_722/_article/-char/en" target="_blank" rel="noopener noreferrer">Moh</a>).</p>
                             <p>Let
                             \[\mathfrak{p}=\ker\!\left(\mathbb{Q}[x,y,z]\to\mathbb{Q}[t]\right),\qquad (x,y,z)\mapsto(t^6+t^{31},t^8,t^{10}).\]
@@ -102,12 +103,12 @@ title: Projects
                                 <a href="https://github.com/GrgAakash/moh-p3-set-theoretic-complete-intersection" target="_blank" rel="noopener noreferrer" class="btn btn-primary">GitHub</a>
                             </p>
                             <ul class="verified-meta">
-                                <li><strong>Discovery and proof development:</strong> heavily AI-assisted using ChatGPT Web (GPT-5.6 Sol Pro and GPT-6 Pro)</li>
+                                <li><strong>Discovery and proof development:</strong> AI-assisted using ChatGPT Web (GPT-5.6 Sol Pro and GPT-6 Pro)</li>
                                 <li><strong>Explicit witnesses:</strong> two degree-\(16\) polynomials \(H_1,H_2\)</li>
                                 <li><strong>Exact verification:</strong> 12 explicit polynomial identities over \(\mathbb{Q}\)</li>
                                 <li><strong>Formal verification:</strong> Lean 4 · Mathlib · Comparator · Lean kernel · NanoDa</li>
                                 <li><strong>Macaulay2:</strong> independent replay script prepared; external execution pending</li>
-                                <li><strong>Working draft</strong> (human exposition and revision in progress)</li>
+                                <li><strong>Why this problem:</strong> during my Algebraic D-modules course I had planned Hartshorne’s quartic as a semester project. While reading, I encountered this smaller problem in Clare D’Cruz’s paper, <a href="https://arxiv.org/abs/2003.09101" target="_blank" rel="noopener noreferrer"><em>Symbolic Powers, Set-Theoretic Complete Intersection and Certain Invariants</em></a>, and used it as a test: if AI could not solve it with minimal guidance, I would take it as the project; otherwise I would return to Hartshorne. It solved with minimal guidance, so it is not my semester project</li>
                             </ul>
                         </div>
                     </div>

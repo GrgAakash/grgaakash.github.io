@@ -25,7 +25,7 @@ permalink: /
 
 <section class="home-section">
     <p>
-        I am a mathematics student at the University of Alabama in the Accelerated Master's Program, completing a B.S. and an M.A. in Mathematics (expected December 2026). My research interests lie broadly in geometric measure theory, algebraic combinatorics, and mathematical modeling. I am particularly drawn to problems that connect <em>seemingly</em> different areas of mathematics.
+        I am a mathematics student at the University of Alabama in the Accelerated Master's Program, completing a B.S. and an M.A. in Mathematics (expected December 2026). I also completed a minor in Digital, Public, and Professional Writing. My research interests lie broadly in geometric measure theory, algebraic combinatorics, and mathematical modeling. I am particularly drawn to problems that connect <em>seemingly</em> different areas of mathematics.
     </p>
     <p>
         I currently work with Professor Kyungyong Lee on the combinatorics of \(q,t\)-Catalan polynomials, with Professor Simon Bortz on rectifiability, and with Professor Chuntian Wang and Professor Jia Zhao on LLM distillation for epidemic models.
