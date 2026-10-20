@@ -14,12 +14,6 @@ title: Research
                 </div>
                 <div class="card-body">
                     <div class="research-item mb-4">
-                        <h4>LLM Distillation</h4>
-                        <p class="text-muted">March 2026 - Present</p>
-                        <p>Along with a graduate student, working on LLM distillation in network-based epidemic simulation.</p>
-                        <p>Mentors: Professor Chuntian Wang and Professor Jia Zhao</p>
-                    </div>
-                    <div class="research-item mb-4">
                         <h4>Rectifiability</h4>
                         <p class="text-muted">Feb 2026 - Present</p>
                         <p>Along with a postdoctoral researcher, studying rectifiability characterization in the parabolic setting and connections to Riesz transforms and tangent measures.</p>
@@ -39,6 +33,12 @@ title: Research
                     <h3>Past Research Experience</h3>
                 </div>
                 <div class="card-body">
+                    <div class="research-item mb-4">
+                        <h4>LLM Distillation</h4>
+                        <p class="text-muted">March 2026 - October 2026</p>
+                        <p>Along with a graduate student, worked on LLM distillation in network-based epidemic simulation.</p>
+                        <p>Mentors: Professor Chuntian Wang and Professor Jia Zhao</p>
+                    </div>
                     <div class="research-item mb-4">
                         <h4>Multi-Agent AI for Mathematical Reasoning</h4>
                         <p class="text-muted">June 2026 - Aug 2026</p>

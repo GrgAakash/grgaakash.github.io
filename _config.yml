@@ -4,7 +4,7 @@ email: aakash.grg159@gmail.com
 description: >-
   Aakash Gurung is a mathematician at the University of Alabama.
   Research interests include geometric measure theory, algebraic combinatorics,
-  epidemic modeling, and mathematical AI.
+  epidemic modeling.
 baseurl: "" # the subpath of your site, e.g. /blog
 url: "https://grgaakash.github.io" # the base hostname & protocol for your site
 repository: grgaakash/grgaakash.github.io

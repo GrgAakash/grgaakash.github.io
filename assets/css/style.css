@@ -120,7 +120,17 @@ body {
 }
 
 .plain-list li {
-    margin-bottom: 0.45rem;
+    margin-bottom: 0.55rem;
+}
+
+.plain-list li:has(.home-meta) {
+    margin-bottom: 0.9rem;
+}
+
+.plain-list .home-meta {
+    display: block;
+    line-height: 1.45;
+    margin-top: 0.05rem;
 }
 
 .pub-list {
@@ -209,21 +219,6 @@ body {
 
 .site-main .card.mb-4 a:hover {
     text-decoration: underline;
-}
-
-#ai-assisted-mathematics,
-#tunnell-ternary-forms,
-#moh-p3-curve {
-    scroll-margin-top: 5rem;
-}
-
-.verified-meta {
-    margin: 0.75rem 0 0;
-    padding-left: 1.2rem;
-}
-
-.verified-meta li {
-    margin-bottom: 0.25rem;
 }
 
 .publication-title {

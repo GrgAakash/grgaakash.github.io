@@ -28,7 +28,7 @@ permalink: /
         I am a mathematics student at the University of Alabama in the Accelerated Master's Program, completing a B.S. and an M.A. in Mathematics (expected December 2026). I also completed a minor in Digital, Public, and Professional Writing. My research interests lie broadly in geometric measure theory, algebraic combinatorics, and mathematical modeling. I am particularly drawn to problems that connect <em>seemingly</em> different areas of mathematics.
     </p>
     <p>
-        I currently work with Professor Kyungyong Lee on the combinatorics of \(q,t\)-Catalan polynomials, with Professor Simon Bortz on rectifiability, and with Professor Chuntian Wang and Professor Jia Zhao on LLM distillation for epidemic models.
+        I currently work with Professor Kyungyong Lee on the combinatorics of \(q,t\)-Catalan polynomials and with Professor Simon Bortz on rectifiability.
     </p>
     <p>
         I also enjoy astronomy and soccer.
@@ -36,7 +36,7 @@ permalink: /
 </section>
 
 <section class="home-section">
-    <h2>Publications &amp; Preprints</h2>
+    <h2>Publications</h2>
     <ol class="pub-list">
         <li>
             <span class="text-muted">(first author)</span>
@@ -46,6 +46,12 @@ permalink: /
             <a href="https://doi.org/10.1017/S0956792526100497" target="_blank" rel="noopener noreferrer">[DOI]</a>
             <a href="https://github.com/GrgAakash/Code-collection--REU-25/tree/main/SIHRS" target="_blank" rel="noopener noreferrer">[Code]</a>
         </li>
+    </ol>
+</section>
+
+<section class="home-section">
+    <h2>Expository/Other Works</h2>
+    <ol class="pub-list">
         <li>
             <strong>A. Gurung</strong> and C.-H. Pan.
             “Continued Fractions, <em>a</em>-Fibonacci numbers, and the middle <em>b</em>-noise,”
@@ -64,13 +70,23 @@ permalink: /
 <section class="home-section">
     <h2>Research Experience</h2>
     <p>See the <a href="{{ '/research' | relative_url }}">full list of current and past research experience</a>, with dates and mentors.</p>
-    <p>I have also been trying AI-assisted mathematical discoveries with Lean-verified results; those experiments are collected under <a href="{{ '/projects#ai-assisted-mathematics' | relative_url }}">AI-Assisted Mathematics</a>.</p>
 </section>
 
 <section class="home-section">
     <h2>Conferences &amp; Workshops</h2>
     <ul class="plain-list">
-        <li>March 2026: AMS Southeastern Sectional Meeting, <strong>Presenter</strong></li>
+        <li>
+            November 2026: Algecom-XXVIII, <strong>Poster Presentation</strong>
+            <div class="home-meta">Supported by NSF ALGECOM and UIUC RTG</div>
+        </li>
+        <li>
+            October 2026: SIAM CSS 2026, Jackson State University, <strong>Invited Talk</strong>
+            <div class="home-meta">Partially Supported by ASSURE</div>
+        </li>
+        <li>
+            March 2026: AMS Southeastern Sectional Meeting, <strong>Presenter</strong>
+            <div class="home-meta">Supported by ASSURE</div>
+        </li>
         <li>May 2024: CUNY Undergraduate Research Day 2024, <strong>Presenter</strong></li>
         <li>Aug 2024: MathFest 2024, <strong>Presenter</strong></li>
         <li>Sept-Nov 2024: Preliminary Arizona Winter School 2024: Symmetries of Root Systems, <strong>Attendee</strong></li>
