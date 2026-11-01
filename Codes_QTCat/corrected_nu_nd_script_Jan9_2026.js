@@ -193,20 +193,20 @@ function matchesNU2RuleB(qdv) {
     if (qdv.length < 3) return null;
     if (qdv[0] !== 0 || qdv[1] !== 1 || qdv[2] !== 2) return null;
     
-    let consecutive2s = 0;
+    // k is the length of the initial run of 2s (B starts with an entry <= 1).
+    // B itself may end in -1, so the final run of -1s can be longer than k:
+    // only the last k entries are the (-1)^k block (HLLL rule (b)).
+    let k = 0;
     let i = 2;
     while (i < qdv.length && qdv[i] === 2) {
-        consecutive2s++;
+        k++;
         i++;
     }
-    let trailingNeg1s = 0;
-    for (let j = qdv.length - 1; j >= 0 && qdv[j] === -1; j--) {
-        trailingNeg1s++;
+    if (k < 1 || qdv.length < 2 + 2 * k) return null;
+    for (let j = qdv.length - k; j < qdv.length; j++) {
+        if (qdv[j] !== -1) return null;
     }
 
-    const k = trailingNeg1s;
-    if (k < 1 || consecutive2s !== k) return null;
-    
     const startB = 2 + k;
     const endB = qdv.length - k;
     const B = qdv.slice(startB, endB);
@@ -415,7 +415,10 @@ function computeTI2(muPartition) {
                 }
             }
             
-            const nd2Q = ND2(currentQDV, true);
+            // ND2's templates need the representative of the class that starts 00
+            // (e.g. 011212012 must be read as 0,0,1,0,1,-1,0,1).
+            const rep00 = get00Representative(reduceQDVToReducedDyck(currentQDV)) || currentQDV;
+            const nd2Q = ND2(rep00, true);
             if (nd2Q) {
                 const defcNext = calculateDeficit(QDVToPartition(nd2Q));
                 if (defcNext === defc0) {
@@ -526,8 +529,15 @@ function isType3(v) {
     return (m === n) || (m === n - 1);
 }
 
+// Flagpole partition (HLLL Definition 4.1): |mu| + 8 <= 2 * minDelta(TI2(mu)).
+// |mu| is the deficit of TI2(mu); minDelta is the length of its reduced Dyck vector.
+// (Every second-order tail initiator has one of the three types below, so the
+// type alone does not decide flagpoles.)
 function isFlagpoleTI2(v) {
-    return isType1(v) || isType2(v) || isType3(v);
+    if (!(isType1(v) || isType2(v) || isType3(v))) return false;
+    const red = reduceQDVToReducedDyck(v);
+    const size = calculateDeficit(QDVToPartition(red));
+    return size + 8 <= 2 * red.length;
 }
 
 function getTI2Type(v) {
