@@ -16,13 +16,13 @@ title: Research
                     <div class="research-item mb-4">
                         <h4>Rectifiability</h4>
                         <p class="text-muted">Feb 2026 - Present</p>
-                        <p>Along with a postdoctoral researcher, studying rectifiability characterization in the parabolic setting and connections to Riesz transforms and tangent measures.</p>
+                        <p>Along with two postdoctoral researchers, studying rectifiability characterization in the parabolic setting and connections to Riesz transforms and tangent measures.</p>
                         <p>Mentor: Professor Simon Bortz</p>
                     </div>
                     <div class="research-item mb-4">
                         <h4>Combinatorial Perspective of \(q,t\)-Catalan Symmetry</h4>
                         <p class="text-muted">Feb 2025 - Present</p>
-                        <p>Working on a subset of the combinatorial proof of the \(q,t\)-Catalan symmetry.</p>
+                        <p>Working on the combinatorial proof of the \(q,t\)-Catalan symmetry.</p>
                         <p>Mentor: Professor Kyungyong Lee</p>
                     </div>
                 </div>

@@ -25,7 +25,7 @@ permalink: /
 
 <section class="home-section">
     <p>
-        I am a mathematics student at the University of Alabama in the Accelerated Master's Program, completing a B.S. and an M.A. in Mathematics (expected December 2026). I also completed a minor in Digital, Public, and Professional Writing. My research interests lie broadly in geometric measure theory, algebraic combinatorics, and mathematical modeling. I am particularly drawn to problems that connect <em>seemingly</em> different areas of mathematics.
+        I am a mathematics student at the University of Alabama in the Accelerated Master's Program, completing a B.S. and an M.A. in Mathematics (expected December 2026). I also completed a minor in Digital, Public, and Professional Writing. My research interests lie broadly in geometric measure theory, algebraic combinatorics, and applied mathematics. I am particularly drawn to problems that connect <em>seemingly</em> different areas of mathematics.
     </p>
     <p>
         I currently work with Professor Kyungyong Lee on the combinatorics of \(q,t\)-Catalan polynomials and with Professor Simon Bortz on rectifiability. Recently I worked with Professor Chuntian Wang and Professor Jia Zhao on LLM distillation for epidemic models.
@@ -76,7 +76,7 @@ permalink: /
     <h2>Conferences &amp; Workshops</h2>
     <ul class="plain-list">
         <li>
-            November 2026: Algecom-XXVIII, <strong>Poster Presentation</strong>
+            November 2026: Algecom-XXVIII, <strong>Lightning Talk</strong>
             <div class="home-meta">Supported by NSF ALGECOM and UIUC RTG</div>
         </li>
         <li>
@@ -90,6 +90,16 @@ permalink: /
         <li>May 2024: CUNY Undergraduate Research Day 2024, <strong>Presenter</strong></li>
         <li>Aug 2024: MathFest 2024, <strong>Presenter</strong></li>
         <li>Sept-Nov 2024: Preliminary Arizona Winter School 2024: Symmetries of Root Systems, <strong>Attendee</strong></li>
+    </ul>
+</section>
+
+<section class="home-section">
+    <h2>Service &amp; Leadership</h2>
+    <ul class="plain-list">
+        <li>
+            Secretary, Pi Mu Epsilon (PME), University of Alabama<br>
+            Organize mathematical presentations, guest speaker sessions, and student workshops
+        </li>
     </ul>
 </section>
 
