@@ -22,7 +22,7 @@ title: Research
                     <div class="research-item mb-4">
                         <h4>Rectifiability</h4>
                         <p class="text-muted">Feb 2026 - Present</p>
-                        <p>Along with two postdoctoral researchers, studying rectifiability characterization in the parabolic setting and connections to Riesz transforms and tangent measures.</p>
+                        <p>Along with two postdoctoral researchers, studying rectifiability characterization in the parabolic setting.</p>
                         <p>Mentor: Professor Simon Bortz</p>
                     </div>
                     <div class="research-item mb-4">
