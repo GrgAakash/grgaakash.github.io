@@ -14,6 +14,12 @@ title: Research
                 </div>
                 <div class="card-body">
                     <div class="research-item mb-4">
+                        <h4>Drug Forecasting</h4>
+                        <p class="text-muted">Nov 2026 - Present</p>
+                        <p>Using drug-lab data to forecast new drugs and simulate opioid overdose deaths in the U.S. South.</p>
+                        <p>Mentors: Professor Chuntian Wang and Professor Jia Zhao</p>
+                    </div>
+                    <div class="research-item mb-4">
                         <h4>Rectifiability</h4>
                         <p class="text-muted">Feb 2026 - Present</p>
                         <p>Along with two postdoctoral researchers, studying rectifiability characterization in the parabolic setting and connections to Riesz transforms and tangent measures.</p>
