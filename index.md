@@ -46,6 +46,12 @@ permalink: /
             <a href="https://doi.org/10.1017/S0956792526100497" target="_blank" rel="noopener noreferrer">[DOI]</a>
             <a href="https://github.com/GrgAakash/Code-collection--REU-25/tree/main/SIHRS" target="_blank" rel="noopener noreferrer">[Code]</a>
         </li>
+        <li>
+            S. Bortz, <strong>A. Gurung</strong>, P. Hidalgo-Palencia and M. Hyde.
+            “Characterization of parabolic rectifiability in terms of Jones’ square function.”
+            Preprint, 2026.
+            <a href="https://arxiv.org/abs/2611.22866" target="_blank" rel="noopener noreferrer">[arXiv]</a>
+        </li>
     </ol>
 </section>
 

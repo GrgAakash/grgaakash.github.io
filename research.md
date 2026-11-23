@@ -18,6 +18,7 @@ title: Research
                         <p class="text-muted">Feb 2026 - Present</p>
                         <p>Along with two postdoctoral researchers, studying rectifiability characterization in the parabolic setting and connections to Riesz transforms and tangent measures.</p>
                         <p>Mentor: Professor Simon Bortz</p>
+                        <p><a href="https://arxiv.org/abs/2611.22866" target="_blank" rel="noopener noreferrer">Preprint: arXiv:2611.22866</a></p>
                     </div>
                     <div class="research-item mb-4">
                         <h4>Combinatorial Perspective of \(q,t\)-Catalan Symmetry</h4>
